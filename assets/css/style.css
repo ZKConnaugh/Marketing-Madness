@@ -190,15 +190,15 @@ a {
 /* tilted, blurred collage of all 49 covers behind the hero content */
 .hero__bg {
   position: absolute;
-  inset: -22% -14%;
+  inset: -30% -20%;
   z-index: 0;
   background:
     linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
     url("../hero-collage.jpg") center / cover no-repeat;
   transform: perspective(1300px) rotateX(11deg) rotateY(-9deg) rotateZ(-2deg)
-    scale(1.32);
+    scale(1.14);
   transform-origin: center;
-  filter: blur(6px) brightness(0.78) saturate(1.08);
+  filter: blur(4px) brightness(0.78) saturate(1.08);
   pointer-events: none;
 }
 
