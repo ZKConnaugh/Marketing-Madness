@@ -115,6 +115,22 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+/* header logo doubles as a home link */
+.logo-link {
+  display: inline-flex;
+  border-radius: 8px;
+  transition: opacity 0.2s var(--ease);
+}
+
+.logo-link:hover {
+  opacity: 0.75;
+}
+
+.logo-link:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 4px;
+}
+
 .byline {
   font-size: 0.8rem;
   font-weight: 500;
