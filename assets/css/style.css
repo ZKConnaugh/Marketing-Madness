@@ -198,10 +198,11 @@ a {
   background:
     linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
     url("../hero-collage.jpg") center / cover no-repeat;
-  transform: perspective(1300px) rotateX(11deg) rotateY(-9deg) rotateZ(-2deg)
-    scale(1.14);
+  transform: translate3d(0, var(--hero-shift, 0px), 0) perspective(1300px)
+    rotateX(11deg) rotateY(-9deg) rotateZ(-2deg) scale(1.14);
   transform-origin: center;
   filter: blur(2.5px) brightness(0.78) saturate(1.08);
+  will-change: transform;
   pointer-events: none;
 }
 

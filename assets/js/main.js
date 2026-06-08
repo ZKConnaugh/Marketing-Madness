@@ -124,7 +124,37 @@ function setYear() {
   if (year) year.textContent = new Date().getFullYear();
 }
 
+/* Parallax: the hero collage follows the scroll at a slower rate. */
+function initHeroParallax() {
+  const bg = document.querySelector(".hero__bg");
+  const hero = document.querySelector(".hero");
+  if (!bg || !hero) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let ticking = false;
+  const update = () => {
+    const y = window.scrollY;
+    // only update while the hero is still on screen
+    if (y <= hero.offsetHeight + 100) {
+      bg.style.setProperty("--hero-shift", (y * 0.35).toFixed(1) + "px");
+    }
+    ticking = false;
+  };
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
+  update();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   setYear();
+  initHeroParallax();
 });
