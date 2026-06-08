@@ -39,8 +39,6 @@ function buildCard(item) {
          alt="${item.ep} cover — ${item.animal}" loading="lazy" decoding="async" />
     <span class="card__badge">${item.ep}</span>
     <div class="card__body">
-      <h3 class="card__animal">${item.animal}</h3>
-      <p class="card__meta">Marketing Madness · ${item.ep}</p>
       <span class="card__open">Read episode →</span>
     </div>
     <span class="card__rule" aria-hidden="true"></span>
