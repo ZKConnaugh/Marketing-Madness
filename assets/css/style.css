@@ -187,30 +187,40 @@ a {
   overflow: hidden;
 }
 
-/* glow wash behind the wordmark */
+/* tilted, blurred collage of all 49 covers behind the hero content */
+.hero__bg {
+  position: absolute;
+  inset: -22% -14%;
+  z-index: 0;
+  background:
+    linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
+    url("../hero-collage.jpg") center / cover no-repeat;
+  transform: perspective(1300px) rotateX(11deg) rotateY(-9deg) rotateZ(-2deg)
+    scale(1.32);
+  transform-origin: center;
+  filter: blur(6px) brightness(0.78) saturate(1.08);
+  pointer-events: none;
+}
+
+/* fade the collage into the page background at the bottom edge */
 .hero::before {
   content: "";
   position: absolute;
-  width: 80vw;
-  max-width: 900px;
-  aspect-ratio: 1;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(
-    circle,
-    rgba(143, 224, 0, 0.14),
-    rgba(255, 45, 138, 0.08) 45%,
-    transparent 70%
-  );
-  filter: blur(40px);
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
-  z-index: 0;
+  background: radial-gradient(
+      120% 90% at 50% 38%,
+      transparent 0%,
+      rgba(8, 8, 8, 0.35) 70%,
+      rgba(8, 8, 8, 0.8) 100%
+    ),
+    linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
 }
 
 .hero__inner {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   max-width: 760px;
 }
 
