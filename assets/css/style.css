@@ -299,7 +299,7 @@ a {
 }
 
 .card__badge {
-  align-self: flex-start;
+  flex: none;
   position: relative;
   font-size: 0.72rem;
   font-weight: 800;
@@ -313,18 +313,23 @@ a {
   -webkit-backdrop-filter: blur(6px);
 }
 
+/* bottom row: EP badge on the left, "Read episode" on the right */
 .card__body {
   margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
 }
 
 .card__open {
-  margin-top: 1rem;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent);
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  white-space: nowrap;
   transition: gap 0.25s var(--ease);
 }
 
@@ -389,5 +394,11 @@ a {
   }
   .byline {
     display: none;
+  }
+  /* narrow cards: stack the EP badge just above "Read episode" */
+  .card__body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
   }
 }

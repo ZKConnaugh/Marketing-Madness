@@ -37,8 +37,8 @@ function buildCard(item) {
   card.innerHTML = `
     <img class="card__cover" src="assets/covers/${item.ep}.jpg"
          alt="${item.ep} cover — ${item.animal}" loading="lazy" decoding="async" />
-    <span class="card__badge">${item.ep}</span>
     <div class="card__body">
+      <span class="card__badge">${item.ep}</span>
       <span class="card__open">Read episode →</span>
     </div>
     <span class="card__rule" aria-hidden="true"></span>
