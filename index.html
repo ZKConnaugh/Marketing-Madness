@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketing Madness — LinkedIn Magazine for Marketers</title>
+  <meta name="description" content="Marketing Madness — a LinkedIn magazine series for marketers, by Connaugh. Interactive, episode-by-episode magazine viewers." />
+  <meta name="author" content="Connaugh" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Marketing Madness — LinkedIn Magazine for Marketers" />
+  <meta property="og:description" content="An interactive LinkedIn magazine series for marketers, by Connaugh." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wordmark wordmark--sm">
+      <span class="wordmark__marketing">Marketing</span>
+      <span class="wordmark__madness">Madness</span>
+    </div>
+    <span class="byline">By Connaugh</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <div class="wordmark wordmark--lg">
+          <span class="wordmark__marketing">Marketing</span>
+          <span class="wordmark__madness">Madness</span>
+        </div>
+        <p class="hero__subtitle">LinkedIn Magazine for Marketers</p>
+        <p class="hero__tagline">
+          A LinkedIn magazine series for marketers — bold, creative, and built one
+          episode at a time. Browse the collection below.
+        </p>
+        <a class="hero__cta" href="#episodes">View the episodes ↓</a>
+      </div>
+    </section>
+
+    <section id="episodes" class="episodes">
+      <div class="episodes__head">
+        <h2 class="episodes__title">Episodes</h2>
+        <p class="episodes__count" id="episode-count"></p>
+      </div>
+      <div class="grid" id="episode-grid">
+        <!-- Cards injected by assets/js/main.js -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wordmark wordmark--sm">
+      <span class="wordmark__marketing">Marketing</span>
+      <span class="wordmark__madness">Madness</span>
+    </div>
+    <p class="site-footer__meta">LinkedIn Magazine for Marketers · By Connaugh</p>
+    <p class="site-footer__copy">© <span id="year"></span> Connaugh. All rights reserved.</p>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
