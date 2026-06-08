@@ -8,11 +8,12 @@ interactive episode magazine viewers.
 ## Structure
 
 ```
-index.html              homepage (hero + episode grid)
-episodes/EP*.html        self-contained StPageFlip magazine viewers
-assets/css/style.css     theme + layout
-assets/js/main.js        renders the episode grid
-vercel.json              static hosting config
+index.html               homepage (hero + episode grid)
+episodes/EP*.html         self-contained StPageFlip magazine viewers
+assets/covers/EP*.jpg     card thumbnails (each episode's cover page)
+assets/css/style.css      theme + layout
+assets/js/main.js         renders the episode grid
+vercel.json               static hosting config
 ```
 
 ## Local preview

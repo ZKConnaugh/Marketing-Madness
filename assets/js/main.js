@@ -35,6 +35,8 @@ function buildCard(item) {
   card.setAttribute("aria-label", `Open ${item.ep} — ${item.animal}`);
 
   card.innerHTML = `
+    <img class="card__cover" src="assets/covers/${item.ep}.jpg"
+         alt="${item.ep} cover — ${item.animal}" loading="lazy" decoding="async" />
     <span class="card__badge">${item.ep}</span>
     <div class="card__body">
       <h3 class="card__animal">${item.animal}</h3>
