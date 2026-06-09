@@ -35,7 +35,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 .badge{background:var(--green);color:#000;font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:5px 12px;border-radius:100px;}
 
 .book-viewer{display:none;flex-direction:column;align-items:center;width:100%;padding:40px 24px 28px;gap:24px;position:relative;z-index:10;}
-@media(min-width:720px){.book-viewer{display:flex;}.mobile-viewer{display:none!important;}}
+@media(min-width:720px) and (min-height:600px){.book-viewer{display:flex;}.mobile-viewer{display:none!important;}}
 .glow{position:relative;display:flex;justify-content:center;}
 #flipbook{
   position:relative;z-index:1;
@@ -71,7 +71,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 .mh{font-size:10px;color:rgba(255,255,255,0.1);letter-spacing:0.1em;text-transform:uppercase;}
 @keyframes mFade{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
 .mf{animation:mFade 0.22s ease forwards;}
-</style>
+@media (orientation:landscape) and (max-height:600px){.mobile-viewer{padding:4px 8px 10px;gap:6px;}#mflip{width:100%;max-width:calc((100vh - 116px) * 1.566);margin:0 auto;align-self:center;}.mh{display:none;}}</style>
 </head>
 <body>
 
@@ -254,46 +254,31 @@ document.addEventListener('keydown', e => {
 
 window.addEventListener('load', init);
 
-// ── Mobile: real StPageFlip in single-page portrait mode ──
+// ── Mobile: responsive — single page (portrait) / fitted spread (landscape) ──
 const mpbEl = document.getElementById('mpb');
 const mnbEl = document.getElementById('mnb');
 const mctEl = document.getElementById('mct');
-const mTotal = MOBILE_IDX.length;
-let mpf = null;
+let mpf = null, mMode = null;
 
-function syncMobileControls(p) {
-  mctEl.textContent = (p + 1) + ' / ' + mTotal;
-  mpbEl.disabled = p === 0;
-  mnbEl.disabled = p === mTotal - 1;
+function mSync() {
+  if (!mpf) return;
+  const total = mpf.getPageCount(), p = mpf.getCurrentPageIndex();
+  mctEl.textContent = (p + 1) + ' / ' + total;
+  mpbEl.disabled = p <= 0; mnbEl.disabled = p >= total - 1;
 }
-
-function buildMobileFlip() {
-  if (mpf) return;
-  const host = document.getElementById('mflip');
-  host.innerHTML = '';
-  MOBILE_IDX.forEach(idx => {
+function mAddPages(host, srcs, fixed) {
+  srcs.forEach(src => {
     const d = document.createElement('div');
     d.className = 'page';
-    d.style.cssText = 'overflow:hidden;background:#fff;';
+    d.style.cssText = fixed ? 'width:' + PW + 'px;height:' + PH + 'px;overflow:hidden;background:#fff;'
+                            : 'overflow:hidden;background:#fff;';
     const img = document.createElement('img');
-    img.src = PAGES[idx];
+    img.src = src;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;';
-    d.appendChild(img);
-    host.appendChild(d);
+    d.appendChild(img); host.appendChild(d);
   });
-  mpf = new St.PageFlip(host, {
-    width: PW, height: PH, size: 'stretch',
-    minWidth: 220, maxWidth: 540, minHeight: 280, maxHeight: 820,
-    usePortrait: true, showCover: false, autoSize: true, drawShadow: true,
-    flippingTime: 800, maxShadowOpacity: 0.5, mobileScrollSupport: false,
-    useMouseEvents: true, showPageCorners: true, swipeDistance: 12,
-    clickEventForward: true, disableFlipByClick: false,
-  });
-  mpf.loadFromHTML(host.querySelectorAll('.page'));
-  mpf.on('flip', e => syncMobileControls(e.data));
-  syncMobileControls(0);
-
-  // turn sooner: commit the flip past ~20% of a drag instead of the default ~50%
+}
+function mTurnSooner() {
   try {
     const fc = mpf.getFlipController();
     if (fc && typeof fc.stopMove === 'function') {
@@ -301,28 +286,60 @@ function buildMobileFlip() {
       fc.stopMove = function () {
         try {
           if (this.calc == null) return;
-          const rect = this.getBoundsRect();
-          const pos = this.calc.getPosition();
+          const rect = this.getBoundsRect(), pos = this.calc.getPosition();
           const yT = this.calc.getCorner() === 'bottom' ? rect.height : 0;
-          if (this.calc.getFlippingProgress() > 30)
-            this.animateFlippingTo(pos, { x: -rect.pageWidth, y: yT }, true);
-          else
-            this.animateFlippingTo(pos, { x: rect.pageWidth, y: yT }, false);
+          if (this.calc.getFlippingProgress() > 30) this.animateFlippingTo(pos, { x: -rect.pageWidth, y: yT }, true);
+          else this.animateFlippingTo(pos, { x: rect.pageWidth, y: yT }, false);
         } catch (err) { orig(); }
       };
     }
   } catch (err) {}
 }
-
-function mgo(d) {
-  if (!mpf) return;
-  if (d > 0) mpf.flipNext(); else mpf.flipPrev();
+function buildMobileFlip() {
+  const land = window.matchMedia('(orientation: landscape)').matches;
+  const mode = land ? 'land' : 'port';
+  if (mpf && mMode === mode) return;
+  if (mpf) { try { mpf.destroy(); } catch (e) {} mpf = null; }
+  mMode = mode;
+  const wrap = document.getElementById('mflip');
+  wrap.innerHTML = '';
+  const host = document.createElement('div');
+  host.style.cssText = 'width:100%;';
+  wrap.appendChild(host);
+  if (land) {
+    mAddPages(host, PAGES, true);
+    mpf = new St.PageFlip(host, {
+      width: PW, height: PH, size: 'stretch', minWidth: 200, maxWidth: 2000,
+      minHeight: 200, maxHeight: 2000, usePortrait: false, showCover: true,
+      autoSize: true, drawShadow: true, flippingTime: 800, maxShadowOpacity: 0.6,
+      mobileScrollSupport: false, useMouseEvents: true, showPageCorners: true,
+      swipeDistance: 12, clickEventForward: true, disableFlipByClick: false,
+    });
+  } else {
+    mAddPages(host, MOBILE_IDX.map(i => PAGES[i]), false);
+    mpf = new St.PageFlip(host, {
+      width: PW, height: PH, size: 'stretch', minWidth: 220, maxWidth: 540,
+      minHeight: 280, maxHeight: 820, usePortrait: true, showCover: false,
+      autoSize: true, drawShadow: true, flippingTime: 800, maxShadowOpacity: 0.5,
+      mobileScrollSupport: false, useMouseEvents: true, showPageCorners: true,
+      swipeDistance: 12, clickEventForward: true, disableFlipByClick: false,
+    });
+  }
+  mpf.loadFromHTML(host.querySelectorAll('.page'));
+  mpf.on('flip', mSync); mpf.on('changeState', mSync);
+  mSync(); mTurnSooner();
 }
-const mMq = window.matchMedia('(max-width: 719px)');
-function maybeBuildMobile() { if (mMq.matches) buildMobileFlip(); }
-if (mMq.addEventListener) mMq.addEventListener('change', maybeBuildMobile);
-else mMq.addListener(maybeBuildMobile);
-window.addEventListener('load', maybeBuildMobile);
+function mgo(d) { if (!mpf) return; if (d > 0) mpf.flipNext(); else mpf.flipPrev(); }
+function mMaybe() {
+  const active = window.matchMedia('(max-width: 719px)').matches ||
+                 (window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 600);
+  if (active) buildMobileFlip();
+}
+let mRT;
+window.addEventListener('load', mMaybe);
+window.addEventListener('resize', () => { clearTimeout(mRT); mRT = setTimeout(mMaybe, 200); });
+const mOq = window.matchMedia('(orientation: landscape)');
+if (mOq.addEventListener) mOq.addEventListener('change', mMaybe);
 </script>
 </body>
 </html>
