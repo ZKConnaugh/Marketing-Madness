@@ -286,12 +286,32 @@ function buildMobileFlip() {
     minWidth: 220, maxWidth: 540, minHeight: 280, maxHeight: 820,
     usePortrait: true, showCover: false, autoSize: true, drawShadow: true,
     flippingTime: 800, maxShadowOpacity: 0.5, mobileScrollSupport: false,
-    useMouseEvents: true, showPageCorners: true, swipeDistance: 30,
+    useMouseEvents: true, showPageCorners: true, swipeDistance: 12,
     clickEventForward: true, disableFlipByClick: false,
   });
   mpf.loadFromHTML(host.querySelectorAll('.page'));
   mpf.on('flip', e => syncMobileControls(e.data));
   syncMobileControls(0);
+
+  // turn sooner: commit the flip past ~20% of a drag instead of the default ~50%
+  try {
+    const fc = mpf.getFlipController();
+    if (fc && typeof fc.stopMove === 'function') {
+      const orig = fc.stopMove.bind(fc);
+      fc.stopMove = function () {
+        try {
+          if (this.calc == null) return;
+          const rect = this.getBoundsRect();
+          const pos = this.calc.getPosition();
+          const yT = this.calc.getCorner() === 'bottom' ? rect.height : 0;
+          if (this.calc.getFlippingProgress() > 30)
+            this.animateFlippingTo(pos, { x: -rect.pageWidth, y: yT }, true);
+          else
+            this.animateFlippingTo(pos, { x: rect.pageWidth, y: yT }, false);
+        } catch (err) { orig(); }
+      };
+    }
+  } catch (err) {}
 }
 
 function mgo(d) {

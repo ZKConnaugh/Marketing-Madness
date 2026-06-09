@@ -254,54 +254,70 @@ document.addEventListener('keydown', e => {
 
 window.addEventListener('load', init);
 
-// ── Mobile: two-page spread StPageFlip (matches the desktop engine) ──
+// ── Mobile: real StPageFlip in single-page portrait mode ──
 const mpbEl = document.getElementById('mpb');
 const mnbEl = document.getElementById('mnb');
 const mctEl = document.getElementById('mct');
+const mTotal = MOBILE_IDX.length;
 let mpf = null;
 
-function syncMobileControls() {
-  if (!mpf) return;
-  const p = mpf.getCurrentPageIndex();
-  const total = mpf.getPageCount();
-  mctEl.textContent = (p + 1) + ' / ' + total;
-  mpbEl.disabled = p <= 0;
-  mnbEl.disabled = p >= total - 1;
+function syncMobileControls(p) {
+  mctEl.textContent = (p + 1) + ' / ' + mTotal;
+  mpbEl.disabled = p === 0;
+  mnbEl.disabled = p === mTotal - 1;
 }
 
 function buildMobileFlip() {
   if (mpf) return;
   const host = document.getElementById('mflip');
   host.innerHTML = '';
-  PAGES.forEach(src => {
+  MOBILE_IDX.forEach(idx => {
     const d = document.createElement('div');
     d.className = 'page';
-    d.style.cssText = `width:${PW}px;height:${PH}px;overflow:hidden;background:#fff;`;
+    d.style.cssText = 'overflow:hidden;background:#fff;';
     const img = document.createElement('img');
-    img.src = src;
+    img.src = PAGES[idx];
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;';
     d.appendChild(img);
     host.appendChild(d);
   });
   mpf = new St.PageFlip(host, {
     width: PW, height: PH, size: 'stretch',
-    minWidth: 140, maxWidth: 1200, minHeight: 180, maxHeight: 1600,
-    usePortrait: false, showCover: true, autoSize: true, drawShadow: true,
-    flippingTime: 800, maxShadowOpacity: 0.6, mobileScrollSupport: false,
+    minWidth: 220, maxWidth: 540, minHeight: 280, maxHeight: 820,
+    usePortrait: true, showCover: false, autoSize: true, drawShadow: true,
+    flippingTime: 800, maxShadowOpacity: 0.5, mobileScrollSupport: false,
     useMouseEvents: true, showPageCorners: true, swipeDistance: 12,
     clickEventForward: true, disableFlipByClick: false,
   });
   mpf.loadFromHTML(host.querySelectorAll('.page'));
-  mpf.on('flip', syncMobileControls);
-  mpf.on('changeOrientation', syncMobileControls);
-  syncMobileControls();
+  mpf.on('flip', e => syncMobileControls(e.data));
+  syncMobileControls(0);
+
+  // turn sooner: commit the flip past ~20% of a drag instead of the default ~50%
+  try {
+    const fc = mpf.getFlipController();
+    if (fc && typeof fc.stopMove === 'function') {
+      const orig = fc.stopMove.bind(fc);
+      fc.stopMove = function () {
+        try {
+          if (this.calc == null) return;
+          const rect = this.getBoundsRect();
+          const pos = this.calc.getPosition();
+          const yT = this.calc.getCorner() === 'bottom' ? rect.height : 0;
+          if (this.calc.getFlippingProgress() > 30)
+            this.animateFlippingTo(pos, { x: -rect.pageWidth, y: yT }, true);
+          else
+            this.animateFlippingTo(pos, { x: rect.pageWidth, y: yT }, false);
+        } catch (err) { orig(); }
+      };
+    }
+  } catch (err) {}
 }
 
 function mgo(d) {
   if (!mpf) return;
   if (d > 0) mpf.flipNext(); else mpf.flipPrev();
 }
-
 const mMq = window.matchMedia('(max-width: 719px)');
 function maybeBuildMobile() { if (mMq.matches) buildMobileFlip(); }
 if (mMq.addEventListener) mMq.addEventListener('change', maybeBuildMobile);
