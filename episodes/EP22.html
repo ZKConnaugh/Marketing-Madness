@@ -49,7 +49,7 @@ html,body{width:100%;height:100%;background:var(--black);color:#fff;font-family:
 .mc{display:flex;align-items:center;gap:16px;margin-top:14px}
 .mc .nav-btn{width:44px;height:44px;font-size:18px}
 .mcount{font-size:13px;color:rgba(255,255,255,0.5);min-width:50px;text-align:center}
-@media (orientation:landscape) and (max-height:600px){.mobile-viewer{padding:4px 8px;gap:0;}#mflip{width:calc((100vh - 80px) * 1.566);max-width:94vw;max-height:calc(100vh - 80px);margin:0 auto;align-self:center;}.mc{position:fixed;top:46px;left:0;right:0;bottom:0;margin:0;padding:0 8px;display:flex;align-items:center;justify-content:space-between;gap:0;pointer-events:none;z-index:30;}.mc .nav-btn{pointer-events:auto;}.mcount{position:fixed;left:0;right:0;bottom:5px;text-align:center;}}</style>
+@media (orientation:landscape) and (max-height:600px){.mobile-viewer{padding:0;gap:0;justify-content:center;}#mflip{margin:0 auto;}.mc{position:fixed;top:0;left:0;right:0;bottom:0;margin:0;padding:0 6px;display:flex;align-items:center;justify-content:space-between;gap:0;pointer-events:none;z-index:30;}.mc .nav-btn{pointer-events:auto;}.mcount{position:fixed;left:0;right:0;bottom:4px;text-align:center;}}</style>
 </head>
 <body>
 <canvas id="bgCanvas"></canvas>
@@ -205,7 +205,7 @@ document.addEventListener('keydown', e => {
 const mpbEl = document.getElementById('mprev');
 const mnbEl = document.getElementById('mnext');
 const mctEl = document.getElementById('mcount');
-let mpf = null, mMode = null;
+let mpf = null, mMode = null, mW = 0, mH = 0;
 
 function mSync() {
   if (!mpf) return;
@@ -213,12 +213,12 @@ function mSync() {
   mctEl.textContent = (p + 1) + ' / ' + total;
   mpbEl.disabled = p <= 0; mnbEl.disabled = p >= total - 1;
 }
-function mAddPages(host, srcs, fixed) {
+function mAddPages(host, srcs, w, h) {
   srcs.forEach(src => {
     const d = document.createElement('div');
     d.className = 'page';
-    d.style.cssText = fixed ? 'width:' + PW + 'px;height:' + PH + 'px;overflow:hidden;background:#fff;'
-                            : 'overflow:hidden;background:#fff;';
+    d.style.cssText = w ? ('width:' + w + 'px;height:' + h + 'px;overflow:hidden;background:#fff;')
+                        : 'overflow:hidden;background:#fff;';
     const img = document.createElement('img');
     img.src = src;
     img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;';
@@ -242,33 +242,40 @@ function mTurnSooner() {
     }
   } catch (err) {}
 }
-function buildMobileFlip() {
+function buildMobileFlip(force) {
   const land = window.matchMedia('(orientation: landscape)').matches;
   const mode = land ? 'land' : 'port';
-  if (mpf && mMode === mode) return;
+  if (!force && mpf && mMode === mode) return;
   if (mpf) { try { mpf.destroy(); } catch (e) {} mpf = null; }
-  mMode = mode;
+  mMode = mode; mW = window.innerWidth; mH = window.innerHeight;
   const wrap = document.getElementById('mflip');
   wrap.innerHTML = '';
   const host = document.createElement('div');
-  host.style.cssText = 'width:100%;';
   wrap.appendChild(host);
   if (land) {
-    mAddPages(host, PAGES, true);
+    const tb = document.querySelector('.topbar');
+    const reserveH = (tb && getComputedStyle(tb).display !== 'none' ? tb.offsetHeight : 0) + 30;
+    const reserveW = 16;
+    const aspect = (2 * PW) / PH;
+    let sw = window.innerWidth - reserveW;
+    let sh = sw / aspect;
+    const maxH = window.innerHeight - reserveH;
+    if (sh > maxH) { sh = maxH; sw = sh * aspect; }
+    const pageW = Math.max(120, Math.floor(sw / 2)), pageH = Math.max(160, Math.floor(sh));
+    host.style.cssText = 'width:' + (pageW * 2) + 'px;height:' + pageH + 'px;';
+    mAddPages(host, PAGES, pageW, pageH);
     mpf = new St.PageFlip(host, {
-      width: PW, height: PH, size: 'stretch', minWidth: 200, maxWidth: 2000,
-      minHeight: 200, maxHeight: 2000, usePortrait: false, showCover: false,
-      autoSize: true, drawShadow: true, flippingTime: 800, maxShadowOpacity: 0.6,
-      mobileScrollSupport: false, useMouseEvents: true, showPageCorners: true,
-      swipeDistance: 12, clickEventForward: true, disableFlipByClick: false,
+      width: pageW, height: pageH, size: 'fixed', usePortrait: false, showCover: false,
+      drawShadow: true, flippingTime: 800, maxShadowOpacity: 0.6, mobileScrollSupport: false,
+      useMouseEvents: true, showPageCorners: true, swipeDistance: 12, clickEventForward: true, disableFlipByClick: false,
     });
   } else {
-    mAddPages(host, MOBILE_IDX.map(i => PAGES[i]), false);
+    host.style.cssText = 'width:100%;';
+    mAddPages(host, MOBILE_IDX.map(i => PAGES[i]), 0, 0);
     mpf = new St.PageFlip(host, {
-      width: PW, height: PH, size: 'stretch', minWidth: 220, maxWidth: 540,
-      minHeight: 280, maxHeight: 820, usePortrait: true, showCover: false,
-      autoSize: true, drawShadow: true, flippingTime: 800, maxShadowOpacity: 0.5,
-      mobileScrollSupport: false, useMouseEvents: true, showPageCorners: true,
+      width: PW, height: PH, size: 'stretch', minWidth: 220, maxWidth: 540, minHeight: 280, maxHeight: 820,
+      usePortrait: true, showCover: false, autoSize: true, drawShadow: true, flippingTime: 800,
+      maxShadowOpacity: 0.5, mobileScrollSupport: false, useMouseEvents: true, showPageCorners: true,
       swipeDistance: 12, clickEventForward: true, disableFlipByClick: false,
     });
   }
@@ -282,11 +289,15 @@ mnbEl.addEventListener('click', () => mgo(1));
 function mMaybe() {
   const active = window.matchMedia('(max-width: 719px)').matches ||
                  (window.matchMedia('(orientation: landscape)').matches && window.innerHeight <= 600);
-  if (active) buildMobileFlip();
+  if (!active) return;
+  const land = window.matchMedia('(orientation: landscape)').matches;
+  const mode = land ? 'land' : 'port';
+  const sizeChanged = land && (Math.abs(window.innerWidth - mW) > 16 || Math.abs(window.innerHeight - mH) > 16);
+  buildMobileFlip(mMode !== mode || sizeChanged);
 }
 let mRT;
 window.addEventListener('load', mMaybe);
-window.addEventListener('resize', () => { clearTimeout(mRT); mRT = setTimeout(mMaybe, 200); });
+window.addEventListener('resize', () => { clearTimeout(mRT); mRT = setTimeout(mMaybe, 180); });
 const mOq = window.matchMedia('(orientation: landscape)');
 if (mOq.addEventListener) mOq.addEventListener('change', mMaybe);
 </script>
