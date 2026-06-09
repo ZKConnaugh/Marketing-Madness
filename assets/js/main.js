@@ -59,6 +59,7 @@ const EPISODES = [
 function buildCard(item) {
   const card = document.createElement("a");
   card.className = "card";
+  card.id = `card-${item.ep}`;
   card.style.setProperty("--accent", item.accent);
   card.href = `episodes/${item.ep}.html`;
   card.setAttribute("aria-label", `Open ${item.ep}`);
@@ -205,10 +206,27 @@ function initBackToTop() {
   });
 }
 
+/* When returning from an episode via "Go back to magazines", scroll the grid
+   to the episode the visitor just read (set in sessionStorage by the episode). */
+function initReturnToEpisode() {
+  let ep = null;
+  try {
+    ep = sessionStorage.getItem("mm-return-ep");
+    if (ep) sessionStorage.removeItem("mm-return-ep");
+  } catch (e) {}
+  if (!ep) return;
+  const card = document.getElementById("card-" + ep);
+  if (!card) return;
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => card.scrollIntoView({ block: "center" }))
+  );
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   setYear();
   initHeroParallax();
   initScrollMemory();
   initBackToTop();
+  initReturnToEpisode();
 });
