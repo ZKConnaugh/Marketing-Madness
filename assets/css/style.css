@@ -295,6 +295,32 @@ a {
   gap: 1.5rem;
 }
 
+/* "Back to episode one" — appears after the last episode */
+.episodes__foot {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--brand-green);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--brand-green) 45%, transparent);
+  border-radius: 999px;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+}
+
+.back-to-top:hover {
+  background: rgba(143, 224, 0, 0.1);
+  transform: translateY(-2px);
+}
+
 /* ---------- Episode card ---------- */
 .card {
   position: relative;

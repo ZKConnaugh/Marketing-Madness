@@ -193,9 +193,22 @@ function initScrollMemory() {
   );
 }
 
+/* "Back to episode one" — smooth-scroll up to the start of the grid. */
+function initBackToTop() {
+  const btn = document.querySelector(".back-to-top");
+  if (!btn) return;
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const ep = document.getElementById("episodes");
+    if (ep) ep.scrollIntoView({ behavior: "smooth", block: "start" });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   setYear();
   initHeroParallax();
   initScrollMemory();
+  initBackToTop();
 });
