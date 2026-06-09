@@ -72,7 +72,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 .mh{font-size:10px;color:rgba(255,255,255,0.1);letter-spacing:0.1em;text-transform:uppercase;}
 @keyframes mFade{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
 .mf{animation:mFade 0.22s ease forwards;}
-</style>
+.goback{position:fixed;top:0;left:0;right:0;z-index:50;box-sizing:border-box;display:block;text-align:center;text-decoration:none;padding:9px 12px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);background:rgba(8,8,8,0.92);border-bottom:1px solid rgba(255,255,255,0.10);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}.goback:active{background:rgba(143,224,0,0.16);}.topbar{margin-top:34px;}@media(min-width:720px) and (min-height:600px){.goback{display:none;}.topbar{margin-top:0;}}</style>
 </head>
 <body>
 
@@ -80,6 +80,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 <canvas id="bgCanvas"></canvas>
 <div id="bgBlur"></div>
 
+<a class="goback" id="goback" href="../index.html#episodes">&#8249;&nbsp; Go back to magazines</a>
 <div class="topbar">
   <a class="wm-home" href="../index.html" aria-label="Marketing Madness — home" style="display:flex;align-items:center;text-decoration:none;color:inherit;cursor:pointer"><div class="wordmark">
     <span class="tm-centered">MARKETING</span>
@@ -309,7 +310,9 @@ function buildMobileFlip(force) {
   if (land) {
     // Fit a two-page spread to the REAL viewport (avoids mobile 100vh quirks).
     const tb = document.querySelector('.topbar');
-    const reserveH = (tb && getComputedStyle(tb).display !== 'none' ? tb.offsetHeight : 0) + 30;
+    const gb = document.querySelector('.goback');
+    const gbH = (gb && getComputedStyle(gb).display !== 'none') ? gb.offsetHeight : 0;
+    const reserveH = (tb && getComputedStyle(tb).display !== 'none' ? tb.offsetHeight : 0) + gbH + 30;
     const reserveW = 16;
     const aspect = (2 * PW) / PH;
     let sw = window.innerWidth - reserveW;
@@ -354,6 +357,16 @@ window.addEventListener('load', mMaybe);
 window.addEventListener('resize', () => { clearTimeout(mRT); mRT = setTimeout(mMaybe, 180); });
 const mOq = window.matchMedia('(orientation: landscape)');
 if (mOq.addEventListener) mOq.addEventListener('change', mMaybe);
+
+// Go back to the magazines grid, preserving the previous scroll position
+(function () {
+  var b = document.getElementById('goback');
+  if (!b) return;
+  b.addEventListener('click', function (e) {
+    var sameSite = document.referrer && document.referrer.indexOf(location.host) !== -1;
+    if (sameSite && history.length > 1) { e.preventDefault(); history.back(); }
+  });
+})();
 </script>
 </body>
 </html>

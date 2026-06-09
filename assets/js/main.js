@@ -153,8 +153,49 @@ function initHeroParallax() {
   update();
 }
 
+/* Remember the grid scroll position so "Go back" from an episode returns
+   the visitor to exactly where they were. The browser's back/forward cache
+   handles this when available; this is the fallback when the page reloads. */
+function initScrollMemory() {
+  const KEY = "mm-grid-scroll";
+  let t;
+  window.addEventListener(
+    "scroll",
+    () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        try {
+          sessionStorage.setItem(KEY, String(window.scrollY));
+        } catch (e) {}
+      }, 120);
+    },
+    { passive: true }
+  );
+
+  // Only restore on a back/forward navigation (not a fresh visit or logo-home).
+  let navType = "navigate";
+  try {
+    const nav = performance.getEntriesByType("navigation")[0];
+    if (nav) navType = nav.type;
+  } catch (e) {}
+  if (navType !== "back_forward") return;
+
+  let saved = null;
+  try {
+    saved = sessionStorage.getItem(KEY);
+  } catch (e) {}
+  if (saved === null) return;
+  const y = parseInt(saved, 10);
+  if (!y) return;
+  // wait for the grid to lay out before restoring
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => window.scrollTo(0, y))
+  );
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   setYear();
   initHeroParallax();
+  initScrollMemory();
 });
