@@ -36,7 +36,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 
 .book-viewer{display:none;flex-direction:column;align-items:center;width:100%;padding:40px 24px 28px;gap:24px;position:relative;z-index:10;}
 @media(min-width:720px) and (min-height:600px){.book-viewer{display:flex;}.mobile-viewer{display:none!important;}}
-@media (orientation:landscape) and (max-height:600px){.mobile-viewer{padding:0;gap:0;justify-content:center;}#mflip{margin:0 auto;}.mh{display:none;}.mc{position:fixed;top:0;left:0;right:0;bottom:0;margin:0;padding:0 6px;display:flex;align-items:center;justify-content:space-between;gap:0;pointer-events:none;z-index:30;}.mc .nav-btn{pointer-events:auto;}.mct{position:fixed;left:0;right:0;bottom:4px;text-align:center;}}
+@media (orientation:landscape) and (max-height:600px){.mobile-viewer{padding:0;gap:0;justify-content:center;}#mflip{margin:0 auto;}.mh{display:none;}.mc{position:fixed;top:0;left:0;right:0;bottom:0;margin:0;padding:0 6px;display:flex;align-items:center;justify-content:space-between;gap:0;pointer-events:none;z-index:30;}.mc .nav-btn{pointer-events:auto;}.mct{position:fixed;left:0;right:0;bottom:62px;text-align:center;}}
 .glow{position:relative;display:flex;justify-content:center;}
 #flipbook{
   position:relative;z-index:1;
@@ -72,7 +72,7 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 .mh{font-size:10px;color:rgba(255,255,255,0.1);letter-spacing:0.1em;text-transform:uppercase;}
 @keyframes mFade{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}
 .mf{animation:mFade 0.22s ease forwards;}
-.goback{position:fixed;top:0;left:0;right:0;z-index:50;box-sizing:border-box;display:block;text-align:center;text-decoration:none;padding:9px 12px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);background:rgba(8,8,8,0.92);border-bottom:1px solid rgba(255,255,255,0.10);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}.goback:active{background:rgba(143,224,0,0.16);}.topbar{margin-top:34px;}@media(min-width:720px) and (min-height:600px){.goback{display:none;}.topbar{margin-top:0;}}</style>
+.goback{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;box-sizing:border-box;display:inline-block;white-space:nowrap;text-decoration:none;padding:9px 22px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);background:rgba(8,8,8,0.82);border:1px solid var(--green);border-radius:100px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 6px 22px rgba(0,0,0,0.5);}.goback:active{background:rgba(143,224,0,0.18);}/* portrait: keep nav controls above the floating pill */@media (orientation:portrait){.mobile-viewer{padding-bottom:64px;}}@media(min-width:720px) and (min-height:600px){.goback{display:none;}}</style>
 </head>
 <body>
 
@@ -310,9 +310,7 @@ function buildMobileFlip(force) {
   if (land) {
     // Fit a two-page spread to the REAL viewport (avoids mobile 100vh quirks).
     const tb = document.querySelector('.topbar');
-    const gb = document.querySelector('.goback');
-    const gbH = (gb && getComputedStyle(gb).display !== 'none') ? gb.offsetHeight : 0;
-    const reserveH = (tb && getComputedStyle(tb).display !== 'none' ? tb.offsetHeight : 0) + gbH + 30;
+    const reserveH = (tb && getComputedStyle(tb).display !== 'none' ? tb.offsetHeight : 0) + 82;
     const reserveW = 16;
     const aspect = (2 * PW) / PH;
     let sw = window.innerWidth - reserveW;
