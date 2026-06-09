@@ -81,9 +81,7 @@ html,body{width:100%;height:100%;background:var(--black);color:#fff;font-family:
 <!-- Mobile viewer -->
 <div class="mobile-viewer">
   <div class="mpw" id="mpw">
-    <img id="mi" src="" alt="page">
-    <div class="tap-zone tap-left" id="tapL"></div>
-    <div class="tap-zone tap-right" id="tapR"></div>
+    <div id="mflip"></div>
   </div>
   <div class="mc">
     <button class="nav-btn" id="mprev" disabled>&#8592;</button>
@@ -203,39 +201,57 @@ document.addEventListener('keydown', e => {
   if(e.key==='ArrowLeft') pf.flipPrev();
 });
 
-// Mobile viewer
-let mCur = 0;
+// ── Mobile: real StPageFlip in single-page portrait mode ──
+const mpbEl = document.getElementById('mprev');
+const mnbEl = document.getElementById('mnext');
+const mctEl = document.getElementById('mcount');
 const mTotal = MOBILE_IDX.length;
-const mi = document.getElementById('mi');
-const mcount = document.getElementById('mcount');
-const mprev = document.getElementById('mprev');
-const mnext = document.getElementById('mnext');
+let mpf = null;
 
-function mUpd(){
-  mi.src = PAGES[MOBILE_IDX[mCur]];
-  mcount.textContent = (mCur+1) + ' / ' + mTotal;
-  mprev.disabled = mCur===0;
-  mnext.disabled = mCur>=mTotal-1;
+function syncMobileControls(p) {
+  mctEl.textContent = (p + 1) + ' / ' + mTotal;
+  mpbEl.disabled = p === 0;
+  mnbEl.disabled = p === mTotal - 1;
 }
-function mgo(d){
-  mCur = Math.max(0, Math.min(mTotal-1, mCur+d));
-  mUpd();
-}
-mUpd();
-mprev.addEventListener('click', ()=>mgo(-1));
-mnext.addEventListener('click', ()=>mgo(1));
-document.getElementById('tapL').addEventListener('click', ()=>mgo(-1));
-document.getElementById('tapR').addEventListener('click', ()=>mgo(1));
 
-// Touch swipe on mobile
-let tx0=0;
-const mpw = document.getElementById('mpw');
-mpw.addEventListener('touchstart', e=>{ tx0=e.touches[0].clientX; }, {passive:true});
-mpw.addEventListener('touchend', e=>{
-  const dx = e.changedTouches[0].clientX - tx0;
-  if(dx < -40) mgo(1);
-  else if(dx > 40) mgo(-1);
-}, {passive:true});
+function buildMobileFlip() {
+  if (mpf) return;
+  const host = document.getElementById('mflip');
+  host.innerHTML = '';
+  MOBILE_IDX.forEach(idx => {
+    const d = document.createElement('div');
+    d.className = 'page';
+    d.style.cssText = 'overflow:hidden;background:#fff;';
+    const img = document.createElement('img');
+    img.src = PAGES[idx];
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;';
+    d.appendChild(img);
+    host.appendChild(d);
+  });
+  mpf = new St.PageFlip(host, {
+    width: PW, height: PH, size: 'stretch',
+    minWidth: 220, maxWidth: 540, minHeight: 280, maxHeight: 820,
+    usePortrait: true, showCover: false, autoSize: true, drawShadow: true,
+    flippingTime: 800, maxShadowOpacity: 0.5, mobileScrollSupport: false,
+    useMouseEvents: true, showPageCorners: true, swipeDistance: 30,
+    clickEventForward: true, disableFlipByClick: false,
+  });
+  mpf.loadFromHTML(host.querySelectorAll('.page'));
+  mpf.on('flip', e => syncMobileControls(e.data));
+  syncMobileControls(0);
+}
+
+function mgo(d) {
+  if (!mpf) return;
+  if (d > 0) mpf.flipNext(); else mpf.flipPrev();
+}
+mpbEl.addEventListener('click', () => mgo(-1));
+mnbEl.addEventListener('click', () => mgo(1));
+const mMq = window.matchMedia('(max-width: 719px)');
+function maybeBuildMobile() { if (mMq.matches) buildMobileFlip(); }
+if (mMq.addEventListener) mMq.addEventListener('change', maybeBuildMobile);
+else mMq.addListener(maybeBuildMobile);
+window.addEventListener('load', maybeBuildMobile);
 </script>
 </body>
 </html>
