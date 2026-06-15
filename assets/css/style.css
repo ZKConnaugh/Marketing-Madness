@@ -3,6 +3,19 @@
    Dark editorial theme. Brand green #8FE000, MADNESS gradient.
    ============================================================ */
 
+/* Self-hosted Inter (variable, latin subset) — removes the render-blocking
+   Google Fonts request. One file covers the full 100–900 weight range. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/inter-latin-var.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --bg: #080808;
   --bg-elevated: #111111;
@@ -195,9 +208,17 @@ a {
   position: absolute;
   inset: -30% -20%;
   z-index: 0;
+  /* JPEG fallback first, then AVIF via image-set for browsers that support it */
   background:
     linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
     url("../hero-collage.jpg") center / cover no-repeat;
+  background:
+    linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
+    image-set(
+        url("../hero-collage.avif") type("image/avif"),
+        url("../hero-collage.jpg") type("image/jpeg")
+      )
+      center / cover no-repeat;
   transform: translate3d(0, var(--hero-shift, 0px), 0) perspective(1300px)
     rotateX(11deg) rotateY(-9deg) rotateZ(-2deg) scale(1.14);
   transform-origin: center;
@@ -469,6 +490,12 @@ a {
   background-image:
     linear-gradient(rgba(8, 8, 8, 0.62), rgba(8, 8, 8, 0.72)),
     url("../hero-collage.jpg");
+  background-image:
+    linear-gradient(rgba(8, 8, 8, 0.62), rgba(8, 8, 8, 0.72)),
+    image-set(
+      url("../hero-collage.avif") type("image/avif"),
+      url("../hero-collage.jpg") type("image/jpeg")
+    );
   background-repeat: no-repeat, repeat;
   background-position: center, right 30%;
   background-size: auto, 34% auto;
@@ -520,5 +547,27 @@ a {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.55rem;
+  }
+}
+
+/* Phones get the smaller hero collage (≈71 KB AVIF) — it's the mobile LCP.
+   The footer reuses the same small image (it's tiled at 34%, so detail is moot). */
+@media (max-width: 768px) {
+  .hero__bg {
+    background:
+      linear-gradient(rgba(8, 8, 8, 0.5), rgba(8, 8, 8, 0.62)),
+      image-set(
+          url("../hero-collage-mobile.avif") type("image/avif"),
+          url("../hero-collage.jpg") type("image/jpeg")
+        )
+        center / cover no-repeat;
+  }
+  .footer__bg {
+    background-image:
+      linear-gradient(rgba(8, 8, 8, 0.62), rgba(8, 8, 8, 0.72)),
+      image-set(
+        url("../hero-collage-mobile.avif") type("image/avif"),
+        url("../hero-collage.jpg") type("image/jpeg")
+      );
   }
 }

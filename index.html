@@ -28,9 +28,11 @@
   <meta name="twitter:description" content="An interactive LinkedIn magazine series for marketers, by Connaugh." />
   <meta name="twitter:image" content="https://www.connaugh.me/assets/og-cover.jpg" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Self-hosted Inter (variable) — preloaded so text paints without a round-trip -->
+  <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- Preload the hero collage (the LCP element): small AVIF on phones, full on desktop -->
+  <link rel="preload" as="image" href="assets/hero-collage-mobile.avif" type="image/avif" media="(max-width: 768px)" />
+  <link rel="preload" as="image" href="assets/hero-collage.avif" type="image/avif" media="(min-width: 769px)" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>

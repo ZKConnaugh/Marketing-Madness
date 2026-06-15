@@ -65,7 +65,7 @@ function buildCard(item) {
   card.setAttribute("aria-label", `Open ${item.ep}`);
 
   card.innerHTML = `
-    <img class="card__cover" src="assets/covers/${item.ep}.jpg"
+    <img class="card__cover" src="assets/covers/${item.ep}.avif"
          alt="Marketing Madness ${item.ep} cover" loading="lazy" decoding="async" />
     <div class="card__body">
       <span class="card__badge">${item.ep}</span>
