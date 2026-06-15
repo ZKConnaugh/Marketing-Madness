@@ -522,6 +522,17 @@ a {
   color: var(--fg-faint);
 }
 
+.site-footer__admin {
+  font-size: 0.78rem;
+  color: var(--fg-faint);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.site-footer__admin:hover {
+  color: var(--fg-muted);
+}
+
 /* ---------- Motion / responsive ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
