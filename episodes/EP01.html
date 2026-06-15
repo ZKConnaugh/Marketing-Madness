@@ -422,5 +422,35 @@ function showComplete() {
   });
 })();
 </script>
+<script>/*mm-center-bar*/
+/* Mobile: center the reading-progress bar vertically between the arrow row
+   and the "go back" button (instead of hugging the arrows). */
+(function () {
+  function center() {
+    var bar = document.querySelector('.mbar');
+    var back = document.getElementById('goback');
+    var prev = document.getElementById('mpb') || document.getElementById('mprev');
+    if (!bar || !back || !prev) return;
+    // Only when the mobile controls are actually visible (skip desktop layout).
+    if (prev.offsetParent === null) {
+      ['position', 'left', 'top', 'bottom', 'transform', 'margin', 'zIndex']
+        .forEach(function (p) { bar.style[p] = ''; });
+      return;
+    }
+    var mid = (prev.getBoundingClientRect().bottom + back.getBoundingClientRect().top) / 2;
+    bar.style.position = 'fixed';
+    bar.style.left = '50%';
+    bar.style.transform = 'translateX(-50%)';
+    bar.style.bottom = 'auto';
+    bar.style.margin = '0';
+    bar.style.zIndex = '60';
+    bar.style.top = Math.round(mid - bar.offsetHeight / 2) + 'px';
+  }
+  function run() { requestAnimationFrame(function () { center(); requestAnimationFrame(center); }); }
+  addEventListener('load', run);
+  addEventListener('resize', run);
+  addEventListener('orientationchange', function () { setTimeout(run, 250); });
+})();
+</script>
 </body>
 </html>
