@@ -74,34 +74,20 @@ a { color: inherit; }
 }
 .zk-hero__inner { position: relative; z-index: 2; text-align: center; }
 
-.zk-hero__collage { position: absolute; inset: 0; z-index: 0; perspective: 1200px; }
-.collage__field {
-  position: absolute; inset: -6%; transform-style: preserve-3d;
-  animation: collage-drift 82s ease-in-out infinite alternate;
-}
+.zk-hero__collage { position: absolute; inset: 0; z-index: 0; perspective: 1000px; perspective-origin: 50% 46%; }
+.collage__field { position: absolute; inset: 0; transform-style: preserve-3d; }
 .zk-hero__collage::after {
   content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background:
-    radial-gradient(48% 44% at 50% 44%, rgba(7,8,11,0.84), rgba(7,8,11,0.36) 64%, rgba(7,8,11,0.10) 100%),
+    radial-gradient(46% 42% at 50% 44%, rgba(7,8,11,0.86), rgba(7,8,11,0.38) 62%, rgba(7,8,11,0.10) 100%),
     linear-gradient(180deg, rgba(7,8,11,0.45), transparent 26%, transparent 72%, var(--bg));
 }
 .ctile {
-  position: absolute; border-radius: 7px; overflow: hidden;
-  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 14px 50px rgba(0,0,0,0.55);
-  transform: translateZ(var(--tz)) rotateY(var(--rot)); will-change: transform;
-  animation: ctile-float var(--dur) ease-in-out var(--delay) infinite alternate;
+  position: absolute; left: 50%; top: 50%; border-radius: 7px; overflow: hidden;
+  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 16px 60px rgba(0,0,0,0.6);
+  will-change: transform, opacity; backface-visibility: hidden;
 }
 .ctile img { width: 100%; height: auto; display: block; }
-
-@keyframes collage-drift {
-  from { transform: translate3d(-1.6%, 1.2%, 0) rotateY(-5deg); }
-  to   { transform: translate3d(1.6%, -1.2%, 0) rotateY(5deg); }
-}
-@keyframes ctile-float {
-  from { transform: translateZ(var(--tz)) rotateY(var(--rot)) translateY(0); }
-  to   { transform: translateZ(var(--tz)) rotateY(var(--rot)) translateY(-16px); }
-}
-@media (prefers-reduced-motion: reduce) { .collage__field, .ctile { animation: none; } }
 .zk-hero__mark { font-family: var(--mono); font-weight: 800; font-size: clamp(64px,16vw,180px); letter-spacing: 0.04em; line-height: 0.9; color: var(--green); text-shadow: 4px 0 var(--magenta), -4px 0 var(--cyan); }
 .zk-hero__tagline { max-width: 640px; margin: 24px auto 0; font-family: var(--font-accent); font-style: italic; font-size: clamp(19px,2.8vw,26px); color: var(--cream); }
 .zk-hero__stats { margin-top: 30px; font-family: var(--mono); font-size: clamp(12px,2vw,15px); letter-spacing: 0.12em; color: var(--green); text-transform: uppercase; }

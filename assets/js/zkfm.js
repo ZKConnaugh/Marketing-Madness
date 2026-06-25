@@ -199,41 +199,80 @@ document.getElementById("frequencies").innerHTML = FREQUENCIES.map(frequencyAct)
 const yEl = document.getElementById("year");
 if (yEl) yEl.textContent = new Date().getFullYear();
 
-// ---- Hero 3D collage (slow cinematic drift of every asset) -----------------
+// ---- Hero 3D collage — continuous fly-through of every asset ----------------
 
 (function buildCollage() {
   const host = document.getElementById("collage");
   if (!host) return;
+
   const pool = [];
   Object.keys(VIDEO_IDS).forEach((k) => {
     const m = k.match(/D(\d+)V(\d+)/);
-    pool.push({ src: `/assets/zkfm/thumbs/d${pad(+m[1])}v${m[2]}.avif`, w: 230 });
+    pool.push({ src: `/assets/zkfm/thumbs/d${pad(+m[1])}v${m[2]}.avif`, w: 240 });
   });
   FREQUENCIES.forEach((f) => f.days.forEach((d) => {
-    if (!d.special) pool.push({ src: `/assets/zkfm/posters/day${pad(d.day)}-lineup.avif`, w: 150 });
+    if (!d.special) pool.push({ src: `/assets/zkfm/posters/day${pad(d.day)}-lineup.avif`, w: 156 });
   }));
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
+
   const field = document.createElement("div");
   field.className = "collage__field";
-  const N = Math.min(30, pool.length);
-  for (let i = 0; i < N; i++) {
-    const a = pool[i];
-    const tz = Math.round(-420 + Math.random() * 580);   // depth
-    const depth = (tz + 420) / 580;                        // 0 far … 1 near
-    const tile = document.createElement("div");
-    tile.className = "ctile";
-    tile.style.cssText =
-      `left:${(Math.random() * 90).toFixed(1)}%;top:${(Math.random() * 86).toFixed(1)}%;` +
-      `width:${a.w}px;--tz:${tz}px;--rot:${(Math.random() * 16 - 8).toFixed(1)}deg;` +
-      `--dur:${(11 + Math.random() * 13).toFixed(1)}s;--delay:${(-Math.random() * 12).toFixed(1)}s;` +
-      `opacity:${(0.5 + depth * 0.5).toFixed(2)};filter:blur(${((1 - depth) * 1.4).toFixed(1)}px);`;
-    tile.innerHTML = `<img src="${a.src}" alt="" loading="lazy" decoding="async" />`;
-    field.appendChild(tile);
-  }
   host.appendChild(field);
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const gsap = window.gsap;
+  const N = Math.min(reduce ? 16 : 36, pool.length);
+  const tiles = [];
+  for (let i = 0; i < N; i++) {
+    const a = pool[i % pool.length];
+    const el = document.createElement("div");
+    el.className = "ctile";
+    el.style.width = a.w + "px";
+    el.style.opacity = "0";
+    el.innerHTML = `<img src="${a.src}" alt="" loading="lazy" decoding="async" />`;
+    field.appendChild(el);
+    tiles.push(el);
+  }
+
+  const spread = () => ({
+    x: (Math.random() * 1.7 - 0.85) * window.innerWidth,
+    y: (Math.random() * 1.6 - 0.8) * window.innerHeight,
+    rot: Math.random() * 22 - 11,
+  });
+
+  // Reduced motion / no GSAP: a still 3D scatter.
+  if (!gsap || reduce) {
+    tiles.forEach((el) => {
+      const s = spread();
+      const z = -300 + Math.random() * 360;
+      const depth = (z + 300) / 660;
+      el.style.transform =
+        `translate(-50%,-50%) translate3d(${s.x * 0.45}px,${s.y * 0.45}px,${z}px) rotateY(${s.rot}deg)`;
+      el.style.opacity = (0.3 + depth * 0.5).toFixed(2);
+      el.style.filter = `blur(${((1 - depth) * 1.6).toFixed(1)}px)`;
+    });
+    return;
+  }
+
+  // Continuous fly-through: each tile travels from deep back toward the camera,
+  // fades in far, fades out as it passes, then recycles to a new spot. Seeded at
+  // a random progress so the field is full immediately.
+  gsap.set(tiles, { xPercent: -50, yPercent: -50, force3D: true });
+  tiles.forEach((el) => {
+    (function loop(seed) {
+      const s = spread();
+      const dur = 18 + Math.random() * 16;
+      gsap.set(el, { x: s.x, y: s.y, rotateY: s.rot });
+      const tl = gsap.timeline({ onComplete: () => loop(false) });
+      tl.fromTo(el, { z: -1600, opacity: 0 }, { z: -760, opacity: 0.92, duration: dur * 0.34, ease: "none" })
+        .to(el, { z: 180, opacity: 0.92, duration: dur * 0.46, ease: "none" })
+        .to(el, { z: 540, opacity: 0, duration: dur * 0.2, ease: "none" });
+      if (seed) tl.progress(Math.random());
+    })(true);
+  });
 })();
 
 // ---- Click-to-play modal ---------------------------------------------------
