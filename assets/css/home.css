@@ -169,6 +169,62 @@ em { font-style: italic; }
 
 a:focus-visible, summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
+/* ---- Experimental: kinetic name ---- */
+.char { display: inline-block; will-change: transform; }
+@media (prefers-reduced-motion: no-preference) {
+  .cv-name.split .char { opacity: 0; transform: translateY(0.5em) rotate(3deg); }
+  .cv-name.split.is-revealed .char {
+    opacity: 1; transform: none;
+    transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--d, 0s);
+  }
+}
+
+/* ---- Experimental: section dial as a tuner ---- */
+.cv-eyebrow.is-tuning b { color: var(--ink-soft); }
+.cv-dial a { position: relative; }
+.cv-dial a.is-active::before {
+  content: ""; position: absolute; right: -4px; top: 50%; width: 6px; height: 6px;
+  margin-top: -3px; border-radius: 50%; background: var(--lime);
+  box-shadow: 0 0 0 4px rgba(191, 226, 31, 0.25);
+}
+
+/* ---- Experimental: portal entry transition ---- */
+.portal-enter {
+  position: fixed; inset: 0; z-index: 400; pointer-events: none;
+  display: grid; place-items: center;
+  clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+}
+.portal-enter.is-on {
+  clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+  transition: clip-path 0.6s cubic-bezier(0.7, 0, 0.25, 1);
+}
+.portal-enter--zkfm { background: #07080b; }
+.portal-enter--mm { background: #0d0f14; }
+.portal-enter__label {
+  font-family: var(--mono); letter-spacing: 0.25em; text-transform: uppercase; font-size: 13px;
+  opacity: 0; transition: opacity 0.3s ease 0.25s;
+}
+.portal-enter.is-on .portal-enter__label { opacity: 1; }
+.portal-enter--zkfm .portal-enter__label { color: #cdee4a; }
+.portal-enter--mm .portal-enter__label { color: #f5a623; }
+
+/* ---- Experimental: custom cursor + magnetic ---- */
+@media (hover: hover) and (pointer: fine) {
+  body.has-cursor { cursor: none; }
+  body.has-cursor a, body.has-cursor summary, body.has-cursor button { cursor: none; }
+  .cv-cursor {
+    position: fixed; top: 0; left: 0; width: 26px; height: 26px; z-index: 350;
+    border: 1.5px solid var(--ink); border-radius: 50%; pointer-events: none;
+    transform: translate(-50%, -50%); mix-blend-mode: difference;
+    transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    opacity: 0;
+  }
+  .cv-cursor.is-ready { opacity: 1; }
+  .cv-cursor.is-hot { width: 56px; height: 56px; background: #fff; }
+  .magnetic { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 720px) {
   .cv-dial { display: none; }
