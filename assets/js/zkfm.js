@@ -358,17 +358,17 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     }
   });
 
-  // Frequency intro cards: distinct fold-in per frequency.
+  // Frequency intro cards: a distinct "fold" per frequency as you scroll in.
   gsap.utils.toArray(".act").forEach((act) => {
     const card = act.querySelector(".act__card");
+    const st = { trigger: act, start: "top 80%", end: "top 34%", scrub: true };
     const fold = act.dataset.fold;
-    const base = { scrollTrigger: { trigger: act, start: "top 70%", end: "top 25%", scrub: true } };
-    if (fold === "flip") {
-      gsap.from(card, { ...base, rotateY: 80, transformOrigin: "left center", opacity: 0 });
-    } else if (fold === "cube") {
-      gsap.from(card, { ...base, rotateX: -80, transformOrigin: "center top", opacity: 0 });
-    } else {
-      gsap.from(card, { ...base, scale: 0.6, filter: "blur(14px)", opacity: 0 });
+    if (fold === "flip") {            // Nullify — door folds open from the left
+      gsap.from(card, { scrollTrigger: st, rotateY: 90, transformOrigin: "left center", opacity: 0, ease: "none" });
+    } else if (fold === "cube") {     // Witness This — panel folds down from above
+      gsap.from(card, { scrollTrigger: st, rotateX: -90, transformOrigin: "center top", opacity: 0, ease: "none" });
+    } else {                          // Ground Zero — CRT/transmission power-on
+      gsap.from(card, { scrollTrigger: st, scaleY: 0.03, scaleX: 1.25, filter: "brightness(2.4)", opacity: 0, ease: "none" });
     }
   });
 })();
