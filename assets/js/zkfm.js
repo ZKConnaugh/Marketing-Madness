@@ -145,16 +145,31 @@ function videoCard(day, v) {
     </button>`;
 }
 
+// The frequency's portrait "intro" poster — shown highlighted alongside Day 1's
+// posters instead of as a full-screen banner (it's the wrong shape for that).
+function introPoster(f) {
+  return `
+          <figure class="poster poster--intro">
+            <figcaption>Freq ${f.n} · Intro</figcaption>
+            <button class="poster__zoom" aria-label="Enlarge Frequency ${f.n} intro — ${esc(f.name)}">
+              ${pic(`/assets/zkfm/posters/freq${f.n}.avif`, `alt="Frequency ${f.n} — ${esc(f.name)} intro poster (${esc(f.range)})" loading="lazy"`)}
+            </button>
+          </figure>`;
+}
+
 // One day = one carousel panel. Day number + title + X link are surfaced by the
 // persistent weekbar (built in frequencyAct), so they live as data-* here.
-function dayScene(d, freq) {
+// isFirst === Day 1 of the frequency → carries the highlighted intro poster.
+function dayScene(d, freq, isFirst) {
   const dd = pad(d.day);
   const xHref = d.x || X_ACCOUNT;
   const data = `data-day="${d.day}" data-num="DAY ${dd}" data-title="${esc(d.title)}"`;
+  const intro = isFirst ? introPoster(freq) : "";
   if (d.special) {
     return `
       <section class="scene scene--special" ${data}>
         <div class="scene__inner">
+          ${intro ? `<div class="scene__posters scene__posters--solo">${intro}</div>` : ""}
           <span class="scene__special">◉ Special Broadcast</span>
           <p class="scene__points">${esc(d.points || "")}</p>
           <a class="scene__x" href="${xHref}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
@@ -172,8 +187,8 @@ function dayScene(d, freq) {
   return `
     <section class="scene" ${data}>
       <div class="scene__inner">
-        <div class="scene__posters">
-          <figure class="poster poster--lineup">
+        <div class="scene__posters${isFirst ? " scene__posters--intro" : ""}">
+          ${intro}<figure class="poster poster--lineup">
             <figcaption>On Air Today</figcaption>
             <button class="poster__zoom" aria-label="Enlarge lineup — ${esc(d.title)}">
               ${pic(`/assets/zkfm/posters/day${dd}-lineup.avif`, `alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy"`)}
@@ -192,14 +207,13 @@ function frequencyAct(f) {
     .map((d, i) => `<button class="day-dot" type="button" data-i="${i}" aria-label="Go to day ${pad(d.day)}">${pad(d.day)}</button>`)
     .join("");
   return `
-    <section class="act" id="freq-${f.n}" data-fold="${f.fold}" data-vibe="${f.vibe}">
-      <div class="act__intro">
-        <h2 class="sr-only">Frequency ${f.n} · ${esc(f.code)} — ${esc(f.name)} (${esc(f.range)})</h2>
-        <figure class="act__poster">
-          ${pic(`/assets/zkfm/posters/freq${f.n}.avif`, `alt="Frequency ${f.n} — ${esc(f.name)} intro (${esc(f.range)})" loading="lazy"`)}
-        </figure>
-        <span class="act__cue">tune in ↓ · then flip the dial →</span>
-      </div>
+    <section class="act" id="freq-${f.n}" data-vibe="${f.vibe}">
+      <header class="act__head">
+        <p class="act__station">FREQ ${f.n} · ${esc(f.code)}</p>
+        <h2 class="act__name">${esc(f.name)}</h2>
+        <p class="act__range">${esc(f.range)}</p>
+        <p class="act__blurb">${esc(f.blurb)}</p>
+      </header>
       <div class="act__week">
         <div class="act__weekbar">
           <button class="week__arrow week__arrow--prev" type="button" aria-label="Previous day">‹</button>
@@ -210,7 +224,7 @@ function frequencyAct(f) {
           <button class="week__arrow week__arrow--next" type="button" aria-label="Next day">›</button>
         </div>
         <div class="act__scenes" role="region" aria-roledescription="carousel" aria-label="Frequency ${f.n} — ${esc(f.name)}, ${f.days.length} days" tabindex="0">
-          ${f.days.map((d) => dayScene(d, f)).join("")}
+          ${f.days.map((d, i) => dayScene(d, f, i === 0)).join("")}
         </div>
         <div class="act__days" role="group" aria-label="Frequency ${f.n} day selector">${dots}</div>
       </div>
@@ -423,6 +437,11 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     const playlist = act && FREQUENCIES.find((f) => `freq-${f.n}` === act.id)?.playlist;
     openVideo(btn.dataset.vid, playlist);
   });
+
+  // Featured launch broadcast (static block above the frequencies). The <a> falls
+  // back to the YouTube watch page without JS; here we intercept to open the modal.
+  const feat = document.querySelector(".zk-feature__btn");
+  if (feat) feat.addEventListener("click", (e) => { e.preventDefault(); openVideo(feat.dataset.vid, null); });
 })();
 
 // ---- Poster lightbox (click to enlarge & read briefings) -------------------
@@ -488,24 +507,26 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 (function initMotion() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce || !window.gsap || !window.ScrollTrigger) {
-    document.querySelectorAll(".poster, .vid, .act__poster").forEach((el) => el.classList.add("is-in"));
+    document.querySelectorAll(".poster, .vid").forEach((el) => el.classList.add("is-in"));
     return;
   }
   const { gsap } = window;
   gsap.registerPlugin(window.ScrollTrigger);
 
-  // Frequency intro cards: a distinct "fold" per frequency as you scroll in.
-  gsap.utils.toArray(".act").forEach((act) => {
-    const card = act.querySelector(".act__poster");
-    if (!card) return;
-    const st = { trigger: act, start: "top 80%", end: "top 34%", scrub: true };
-    const fold = act.dataset.fold;
-    if (fold === "flip") {            // Nullify — door folds open from the left
-      gsap.from(card, { scrollTrigger: st, rotateY: 90, transformOrigin: "left center", opacity: 0, ease: "none" });
-    } else if (fold === "cube") {     // Witness This — panel folds down from above
-      gsap.from(card, { scrollTrigger: st, rotateX: -90, transformOrigin: "center top", opacity: 0, ease: "none" });
-    } else {                          // Ground Zero — CRT/transmission power-on
-      gsap.from(card, { scrollTrigger: st, scaleY: 0.03, scaleX: 1.25, filter: "brightness(2.4)", opacity: 0, ease: "none" });
-    }
+  // Launch feature: a bold rise as it enters (never fades fully out — stays legible).
+  const feat = document.querySelector(".zk-feature");
+  if (feat) {
+    gsap.from(feat, {
+      scrollTrigger: { trigger: feat, start: "top 88%", end: "top 46%", scrub: true },
+      y: 56, scale: 0.95, ease: "none",
+    });
+  }
+
+  // Frequency headers: a gentle staggered fade-up as each station arrives.
+  gsap.utils.toArray(".act__head").forEach((head) => {
+    gsap.from(head.children, {
+      scrollTrigger: { trigger: head, start: "top 86%", end: "top 52%", scrub: true },
+      y: 28, opacity: 0, stagger: 0.06, ease: "none",
+    });
   });
 })();

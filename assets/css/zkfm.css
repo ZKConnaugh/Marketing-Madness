@@ -115,6 +115,39 @@ picture { display: contents; }
 .zk-hero__context { max-width: 640px; margin: 34px auto 0; font-size: 15px; color: var(--muted); }
 .zk-hero__context a { color: var(--green); }
 
+/* ---- Featured launch broadcast (between hero and the frequencies) ---- */
+.zk-feature { max-width: 1180px; margin: 0 auto; padding: clamp(40px,8vw,84px) 24px; text-align: center; }
+.zk-feature__eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 18px; }
+.zk-feature__btn {
+  position: relative; display: block; width: 100%; max-width: 1100px; margin: 0 auto;
+  aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; cursor: pointer;
+  border: 1px solid var(--line); background: #000; text-decoration: none;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.zk-feature__btn:hover { border-color: var(--green); transform: translateY(-4px); box-shadow: 0 40px 110px rgba(0,0,0,0.7), 0 0 50px rgba(205,238,74,0.18); }
+.zk-feature__btn img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.92; transition: opacity 0.25s ease; }
+.zk-feature__btn:hover img { opacity: 1; }
+.zk-feature__play {
+  position: absolute; inset: 0; margin: auto; width: 92px; height: 92px; border-radius: 50%;
+  background: rgba(7,8,11,0.55); border: 2px solid var(--green);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  transition: transform 0.25s ease, background 0.25s ease; animation: zk-pulse 2.6s ease-out infinite;
+}
+.zk-feature__play::after {
+  content: ""; position: absolute; top: 50%; left: 54%; transform: translate(-50%,-50%);
+  border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent var(--green);
+}
+.zk-feature__btn:hover .zk-feature__play { transform: scale(1.1); background: rgba(143,224,0,0.18); }
+@keyframes zk-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(205,238,74,0.45); }
+  70% { box-shadow: 0 0 0 22px rgba(205,238,74,0); }
+  100% { box-shadow: 0 0 0 0 rgba(205,238,74,0); }
+}
+.zk-feature__badge { position: absolute; top: 14px; left: 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--magenta); background: rgba(7,8,11,0.82); padding: 5px 10px; border-radius: 5px; }
+.zk-feature__title { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px,4.5vw,44px); letter-spacing: -0.01em; margin-top: 26px; }
+.zk-feature__sub { max-width: 560px; margin: 12px auto 0; color: var(--muted); font-size: clamp(15px,1.9vw,17px); }
+
 /* ---- Frequency act ---- */
 /* Per-frequency vibes — one machine, three stations */
 .act[data-vibe="ground"]  { --v1: #4a2c5a; --v2: #3a0e0e; --vacc: #f0a83c; }  /* the leak: plum/oxblood/amber */
@@ -154,22 +187,29 @@ picture { display: contents; }
   background-size: 7px 7px;
   opacity: 0.5; mix-blend-mode: screen;
 }
-.act__intro {
-  min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 132px 24px 48px;
-  perspective: 1300px;
-  background:
-    radial-gradient(75% 80% at 50% 22%, color-mix(in srgb, var(--vacc) 13%, transparent), transparent 70%),
-    radial-gradient(95% 100% at 50% 0%, color-mix(in srgb, var(--v1) 62%, transparent), transparent 75%);
-}
-.act__cue { display: inline-block; margin-top: 28px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-
-/* Frequency intro poster (replaces the generated banner card) */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-.act__poster { margin: 0; transform-style: preserve-3d; }
-.act__poster img {
-  display: block; margin: 0 auto; width: auto; height: auto;
-  max-width: min(92vw, 500px); max-height: calc(100svh - 200px);
-  border-radius: 10px; border: 1px solid var(--line); box-shadow: 0 28px 70px rgba(0,0,0,0.55);
+
+/* Compact frequency header (replaces the full-screen portrait poster intro) */
+.act__head { max-width: 760px; margin: 0 auto; text-align: center; padding: clamp(52px,9vw,88px) 24px 6px; }
+.act__station { font-family: var(--mono); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vacc, var(--green)); }
+.act__name { font-family: var(--font-display); font-weight: 500; font-size: clamp(34px,7vw,64px); letter-spacing: -0.01em; line-height: 1.02; margin-top: 8px; }
+.act__range { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
+.act__blurb { max-width: 560px; margin: 14px auto 0; color: var(--ink); opacity: 0.82; font-size: clamp(15px,1.8vw,17px); }
+
+/* The frequency's portrait intro poster, highlighted among Day 1's posters */
+.poster--intro figcaption { color: var(--vacc, var(--green)); }
+.poster--intro img {
+  border-color: color-mix(in srgb, var(--vacc, var(--green)) 60%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--vacc, var(--green)) 40%, transparent), 0 14px 40px rgba(0,0,0,0.5);
+}
+.poster--intro .poster__zoom:hover img { border-color: var(--vacc, var(--green)); }
+.scene__posters--intro .poster { width: 260px; max-width: 31%; }
+.scene__posters--solo { justify-content: center; }
+.scene__posters--solo .poster { width: 240px; max-width: 60%; }
+/* Small screens: Day 1's three posters become a compact tappable shelf */
+@media (max-width: 760px) {
+  .scene__posters--intro .poster { width: auto; max-width: none; flex: 1 1 0; min-width: 0; }
+  .scene__posters--intro figcaption { font-size: 10px; letter-spacing: 0.1em; margin-bottom: 7px; }
 }
 
 /* ---- Day carousel (horizontal: one day per panel) ---- */
@@ -292,7 +332,7 @@ picture { display: contents; }
 }
 
 /* reveal states (no-JS / reduced-motion fallback) */
-.vid.is-in, .act__poster.is-in { opacity: 1; }
+.vid.is-in { opacity: 1; }
 
 /* ---- Special (CLAIRE) scene ---- */
 .scene--special { text-align: center; }
@@ -349,4 +389,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lime); outline-
   .vid:hover, .poster__zoom:hover img { transform: none; }
   .scene { transition: none; }
   .act__scenes { scroll-behavior: auto; }
+  .zk-feature__play { animation: none; }
+  .zk-feature__btn:hover { transform: none; }
 }
