@@ -190,13 +190,11 @@ function frequencyAct(f) {
   return `
     <section class="act" id="freq-${f.n}" data-fold="${f.fold}" data-vibe="${f.vibe}">
       <div class="act__intro">
-        <div class="act__card">
-          <span class="act__label">FREQUENCY ${f.n} · ${esc(f.code)}</span>
-          <h2 class="act__name">${esc(f.name)}</h2>
-          <span class="act__range">${esc(f.range)}</span>
-          <p class="act__blurb">${esc(f.blurb)}</p>
-          <span class="act__cue">tune in ↓</span>
-        </div>
+        <h2 class="sr-only">Frequency ${f.n} · ${esc(f.code)} — ${esc(f.name)} (${esc(f.range)})</h2>
+        <figure class="act__poster">
+          ${pic(`/assets/zkfm/posters/freq${f.n}.avif`, `alt="Frequency ${f.n} — ${esc(f.name)} intro (${esc(f.range)})" loading="lazy"`)}
+        </figure>
+        <span class="act__cue">tune in ↓</span>
       </div>
       <div class="act__scenes">${f.days.map((d) => dayScene(d, f)).join("")}</div>
     </section>`;
@@ -407,7 +405,7 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 (function initMotion() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce || !window.gsap || !window.ScrollTrigger) {
-    document.querySelectorAll(".poster, .vid, .scene__head, .act__card").forEach((el) => el.classList.add("is-in"));
+    document.querySelectorAll(".poster, .vid, .scene__head, .act__poster").forEach((el) => el.classList.add("is-in"));
     return;
   }
   const { gsap } = window;
@@ -431,7 +429,8 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 
   // Frequency intro cards: a distinct "fold" per frequency as you scroll in.
   gsap.utils.toArray(".act").forEach((act) => {
-    const card = act.querySelector(".act__card");
+    const card = act.querySelector(".act__poster");
+    if (!card) return;
     const st = { trigger: act, start: "top 80%", end: "top 34%", scrub: true };
     const fold = act.dataset.fold;
     if (fold === "flip") {            // Nullify — door folds open from the left
