@@ -3,13 +3,11 @@
 /* Departure Mono — pixel/LCD: labels, station IDs, UI chrome (free OFL, stand-in for MD Thermochrome) */
 @font-face { font-family: "DepartureMono"; src: url("/assets/fonts/zkfm/departure-mono.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
 /* ABC Arizona Serif — display titles & editorial */
-@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-light.woff2") format("woff2"); font-weight: 300; font-display: swap; }
 @font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
 /* Epilogue — body (variable) */
 @font-face { font-family: "Epilogue"; src: url("/assets/fonts/zkfm/epilogue-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-/* Francesco — decorative serif accents */
-@font-face { font-family: "Francesco"; src: url("/assets/fonts/zkfm/francesco-regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+/* Francesco — decorative serif accent (italic only — the one cut actually used) */
 @font-face { font-family: "Francesco"; src: url("/assets/fonts/zkfm/francesco-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
 
 :root {
@@ -402,6 +400,15 @@ main { position: relative; z-index: 1; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 4px; }
 
 /* Honour reduced-motion for CSS hover transforms (GSAP motion is gated in JS) */
+/* Entrance reveals (JS adds .reveal; IO adds .is-in). No-JS = visible. */
+.zk-feature.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.zk-feature.reveal.is-in { opacity: 1; transform: none; }
+.act__head.reveal > * { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.act__head.reveal.is-in > * { opacity: 1; transform: none; }
+.act__head.reveal.is-in > *:nth-child(2) { transition-delay: 0.07s; }
+.act__head.reveal.is-in > *:nth-child(3) { transition-delay: 0.14s; }
+.act__head.reveal.is-in > *:nth-child(4) { transition-delay: 0.21s; }
+
 @media (prefers-reduced-motion: reduce) {
   .vid, .poster img, .vid__play { transition: none; }
   .vid:hover, .poster__zoom:hover img { transform: none; }

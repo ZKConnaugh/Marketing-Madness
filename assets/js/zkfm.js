@@ -615,31 +615,21 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   acts.forEach((a) => io.observe(a));
 })();
 
-// ---- Cinematic choreography (GSAP) -----------------------------------------
+// ---- Entrance reveals — IntersectionObserver + CSS (no ScrollTrigger) -------
+// The launch feature rises in and each frequency header staggers up as it
+// enters. Done with a CSS class so we don't ship the 44KB ScrollTrigger lib.
+// The .reveal class is added by JS, so with no JS the content stays visible.
 
-(function initMotion() {
+(function initReveals() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (reduce || !window.gsap || !window.ScrollTrigger) {
-    document.querySelectorAll(".poster, .vid").forEach((el) => el.classList.add("is-in"));
-    return;
-  }
-  const { gsap } = window;
-  gsap.registerPlugin(window.ScrollTrigger);
-
-  // Launch feature: a bold rise as it enters (never fades fully out — stays legible).
-  const feat = document.querySelector(".zk-feature");
-  if (feat) {
-    gsap.from(feat, {
-      scrollTrigger: { trigger: feat, start: "top 88%", end: "top 46%", scrub: true },
-      y: 56, scale: 0.95, ease: "none",
-    });
-  }
-
-  // Frequency headers: a gentle staggered fade-up as each station arrives.
-  gsap.utils.toArray(".act__head").forEach((head) => {
-    gsap.from(head.children, {
-      scrollTrigger: { trigger: head, start: "top 86%", end: "top 52%", scrub: true },
-      y: 28, opacity: 0, stagger: 0.06, ease: "none",
-    });
-  });
+  const targets = Array.from(document.querySelectorAll(".zk-feature, .act__head"));
+  if (reduce || !("IntersectionObserver" in window) || !targets.length) return;
+  targets.forEach((el) => el.classList.add("reveal"));
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+    }),
+    { rootMargin: "0px 0px -12% 0px", threshold: 0.15 }
+  );
+  targets.forEach((el) => io.observe(el));
 })();

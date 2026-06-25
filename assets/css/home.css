@@ -1,10 +1,8 @@
 /* connaugh.me — interactive CV. Editorial cream document with dark project portals. */
 
-@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
 @font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
-@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-mediumitalic.woff2") format("woff2"); font-weight: 500; font-style: italic; font-display: swap; }
 @font-face { font-family: "Epilogue"; src: url("/assets/fonts/zkfm/epilogue-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
 
 :root {
