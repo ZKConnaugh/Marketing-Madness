@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZKFM — Pirate-Radio Launch Campaign for Aztec, by Connaugh</title>
+  <meta name="description" content="ZKFM — a 21-day pirate-radio launch campaign for Aztec: 63 videos across 3 frequencies, broadcasting permissionless, composable content about networks that don't ask permission. By Connaugh." />
+  <meta name="author" content="Connaugh" />
+  <link rel="canonical" href="https://www.connaugh.me/zkfm/" />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.connaugh.me/zkfm/" />
+  <meta property="og:site_name" content="connaugh.me" />
+  <meta property="og:title" content="ZKFM — Pirate-Radio Launch Campaign for Aztec" />
+  <meta property="og:description" content="21 days. 63 videos. 03 pirate frequencies. A launch campaign for Aztec, by Connaugh." />
+
+  <link rel="preload" href="/assets/fonts/zkfm/departure-mono.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/zkfm/epilogue-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/zkfm/francesco-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/zkfm.css" />
+</head>
+<body>
+  <header class="zk-header">
+    <a class="zk-back" href="/">← connaugh.me</a>
+    <span class="zk-wordmark">ZKFM</span>
+    <a class="zk-x" href="https://x.com/ZKFMradio" target="_blank" rel="noopener noreferrer">@ZKFMradio</a>
+  </header>
+
+  <main>
+    <section class="zk-hero">
+      <div class="zk-hero__collage" id="collage" aria-hidden="true"></div>
+      <div class="zk-hero__inner">
+        <div class="zk-hero__mark">ZKFM</div>
+        <p class="zk-hero__tagline">Broadcasting permissionless, composable content about networks that don't ask permission.</p>
+        <p class="zk-hero__stats"><b>21</b> days · <b>63</b> videos · <b>03</b> pirate frequencies</p>
+        <p class="zk-hero__tuned">You <s>are tuned</s> into ZKFM.</p>
+        <p class="zk-hero__context">A 21-day pirate-radio launch campaign for <strong>Aztec</strong>, the privacy-first zero-knowledge L2 — three weekly "frequencies", three videos a day, each fronted by an Aztec Festival broadcast card. <a href="https://x.com/ZKFMradio/status/2054985092393496744" target="_blank" rel="noopener noreferrer">Watch the full broadcast on X →</a></p>
+      </div>
+    </section>
+
+    <div id="frequencies"></div>
+  </main>
+
+  <footer class="zk-footer">
+    <p>ZKFM · A campaign by <a href="/">Connaugh</a> · © <span id="year"></span></p>
+  </footer>
+
+  <script src="/assets/js/vendor/gsap.min.js"></script>
+  <script src="/assets/js/vendor/ScrollTrigger.min.js"></script>
+  <script src="/assets/js/zkfm.js"></script>
+</body>
+</html>

@@ -82,9 +82,9 @@ body{background:var(--black);font-family:system-ui,-apple-system,sans-serif;min-
 <canvas id="bgCanvas"></canvas>
 <div id="bgBlur"></div>
 
-<a class="goback" id="goback" href="../index.html#episodes">&#8249;&nbsp; Go back to magazines</a>
+<a class="goback" id="goback" href="../marketing-madness.html#episodes">&#8249;&nbsp; Go back to magazines</a>
 <div class="topbar">
-  <a class="wm-home" href="../index.html" aria-label="Marketing Madness — home" style="display:flex;align-items:center;text-decoration:none;color:inherit;cursor:pointer"><div class="wordmark">
+  <a class="wm-home" href="../marketing-madness.html" aria-label="Marketing Madness — home" style="display:flex;align-items:center;text-decoration:none;color:inherit;cursor:pointer"><div class="wordmark">
     <span class="tm-centered">MARKETING</span>
     <span class="mm-spectrum">MADNESS</span>
   </div></a>
@@ -389,7 +389,7 @@ if (mOq.addEventListener) mOq.addEventListener('change', mMaybe);
     if (e) e.preventDefault();
     var m = location.pathname.match(/EP\d+/i);
     try { if (m) sessionStorage.setItem('mm-return-ep', m[0].toUpperCase()); } catch (err) {}
-    location.href = '../index.html';
+    location.href = '../marketing-madness.html';
   }
   window.__goToMenu = goToMenu;
   var b = document.getElementById('goback');

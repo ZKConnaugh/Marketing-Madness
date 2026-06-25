@@ -1,0 +1,145 @@
+/* connaugh.me — portfolio hub. Separate from style.css / zkfm.css. */
+:root {
+  --bg: #0a0b0d;
+  --bg-2: #111319;
+  --ink: #f2f3f0;
+  --muted: #9aa0a6;
+  --line: rgba(255, 255, 255, 0.10);
+  --mm-grad: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ---- Header ---- */
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.home-header__name { font-weight: 700; letter-spacing: 0.02em; }
+.home-socials { display: flex; gap: 12px; }
+.home-socials svg { width: 22px; height: 22px; display: block; }
+.home-socials a { opacity: 0.85; }
+.home-socials a:hover { opacity: 1; }
+
+/* ---- Hero ---- */
+.home-hero {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 70px 24px 40px;
+}
+.home-hero__title {
+  font-size: clamp(34px, 6vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.home-hero__title .accent {
+  background: var(--mm-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.home-hero__sub {
+  margin-top: 18px;
+  max-width: 560px;
+  font-size: clamp(16px, 2.4vw, 19px);
+  color: var(--muted);
+}
+
+/* ---- Work grid ---- */
+.work {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 30px 24px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+.project {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-2);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.project:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.25); }
+
+.project__art {
+  height: 180px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+/* Marketing Madness art */
+.project--mm .project__art { background: #0d0f14; }
+.project--mm .art-word { font-weight: 800; font-size: 30px; line-height: 1; text-align: center; }
+.project--mm .art-word .m1 { color: #fff; display: block; letter-spacing: 0.02em; }
+.project--mm .art-word .m2 {
+  display: block;
+  background: var(--mm-grad);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  letter-spacing: 0.06em;
+}
+/* ZKFM art */
+.project--zkfm .project__art {
+  background:
+    radial-gradient(60% 90% at 50% 50%, rgba(143, 224, 0, 0.12), transparent 70%),
+    #07080b;
+}
+.project--zkfm .project__art::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.35) 3px);
+  pointer-events: none;
+}
+.project--zkfm .art-word {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 800; font-size: 44px; letter-spacing: 0.08em;
+  color: #8fe000; text-shadow: 3px 0 #ff2d8a, -3px 0 #00c8a0;
+  position: relative; z-index: 1;
+}
+
+.project__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+.project__kicker {
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+}
+.project__title { font-size: 22px; font-weight: 700; margin: 6px 0 8px; }
+.project__desc { font-size: 14px; color: var(--muted); flex: 1; }
+.project__cta { margin-top: 16px; font-size: 14px; font-weight: 600; }
+.project--mm .project__cta { color: #f5a623; }
+.project--zkfm .project__cta { color: #8fe000; }
+
+/* ---- Footer ---- */
+.home-footer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 30px 24px 60px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13px;
+}
+.home-footer a:hover { color: var(--ink); }
+.home-footer__admin { opacity: 0.5; font-size: 12px; }
+
+@media (max-width: 520px) {
+  .home-footer { flex-direction: column; gap: 12px; }
+}
