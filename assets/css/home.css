@@ -1,4 +1,10 @@
 /* connaugh.me — portfolio hub. Separate from style.css / zkfm.css. */
+@font-face {
+  font-family: "Inter";
+  src: url("/assets/fonts/inter-latin-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
 :root {
   --bg: #0a0b0d;
   --bg-2: #111319;
@@ -111,7 +117,7 @@ a { color: inherit; text-decoration: none; }
 .project--zkfm .art-word {
   font-family: ui-monospace, "SF Mono", Menlo, monospace;
   font-weight: 800; font-size: 44px; letter-spacing: 0.08em;
-  color: #8fe000; text-shadow: 3px 0 #ff2d8a, -3px 0 #00c8a0;
+  color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0;
   position: relative; z-index: 1;
 }
 
@@ -123,7 +129,7 @@ a { color: inherit; text-decoration: none; }
 .project__desc { font-size: 14px; color: var(--muted); flex: 1; }
 .project__cta { margin-top: 16px; font-size: 14px; font-weight: 600; }
 .project--mm .project__cta { color: #f5a623; }
-.project--zkfm .project__cta { color: #8fe000; }
+.project--zkfm .project__cta { color: #cdee4a; }
 
 /* ---- Footer ---- */
 .home-footer {
@@ -138,8 +144,10 @@ a { color: inherit; text-decoration: none; }
   font-size: 13px;
 }
 .home-footer a:hover { color: var(--ink); }
-.home-footer__admin { opacity: 0.5; font-size: 12px; }
 
 @media (max-width: 520px) {
   .home-footer { flex-direction: column; gap: 12px; }
 }
+
+/* Visible keyboard focus */
+a:focus-visible, button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }

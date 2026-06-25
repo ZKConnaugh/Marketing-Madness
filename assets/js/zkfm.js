@@ -150,9 +150,9 @@ function dayScene(d, freq) {
         <div class="scene__head">
           <span class="scene__num">DAY ${dd}</span>
           <span class="scene__special">◉ Special Broadcast</span>
-          <h3 class="scene__title">${d.title}</h3>
+          <h3 class="scene__title">${esc(d.title)}</h3>
         </div>
-        <p class="scene__points">${d.points || ""}</p>
+        <p class="scene__points">${esc(d.points || "")}</p>
         <a class="scene__x" href="${d.x || X_ACCOUNT}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
       </section>`;
   }
@@ -160,19 +160,23 @@ function dayScene(d, freq) {
   const briefing = d.briefing === false ? "" : `
         <figure class="poster poster--take">
           <figcaption>The Download</figcaption>
-          <img src="/assets/zkfm/posters/day${dd}-info.avif" alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy" />
+          <button class="poster__zoom" aria-label="Enlarge briefing — ${esc(d.title)}">
+            <img src="/assets/zkfm/posters/day${dd}-info.avif" alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy" />
+          </button>
         </figure>`;
   return `
     <section class="scene" data-day="${d.day}">
       <div class="scene__head">
         <span class="scene__num">DAY ${dd}</span>
-        <h3 class="scene__title">${d.title}</h3>
+        <h3 class="scene__title">${esc(d.title)}</h3>
         <a class="scene__x" href="${d.x || X_ACCOUNT}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
       </div>
       <div class="scene__posters">
         <figure class="poster poster--lineup">
           <figcaption>On Air Today</figcaption>
-          <img src="/assets/zkfm/posters/day${dd}-lineup.avif" alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy" />
+          <button class="poster__zoom" aria-label="Enlarge lineup — ${esc(d.title)}">
+            <img src="/assets/zkfm/posters/day${dd}-lineup.avif" alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy" />
+          </button>
         </figure>${briefing}
       </div>
       <div class="scene__videos" data-count="${d.videos.length}">${cards}</div>
@@ -184,10 +188,10 @@ function frequencyAct(f) {
     <section class="act" id="freq-${f.n}" data-fold="${f.fold}" data-vibe="${f.vibe}">
       <div class="act__intro">
         <div class="act__card">
-          <span class="act__label">FREQUENCY ${f.n} · ${f.code}</span>
-          <h2 class="act__name">${f.name}</h2>
-          <span class="act__range">${f.range}</span>
-          <p class="act__blurb">${f.blurb}</p>
+          <span class="act__label">FREQUENCY ${f.n} · ${esc(f.code)}</span>
+          <h2 class="act__name">${esc(f.name)}</h2>
+          <span class="act__range">${esc(f.range)}</span>
+          <p class="act__blurb">${esc(f.blurb)}</p>
           <span class="act__cue">tune in ↓</span>
         </div>
       </div>
@@ -232,7 +236,7 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     el.className = "ctile";
     el.style.width = a.w + "px";
     el.style.opacity = "0";
-    el.innerHTML = `<img src="${a.src}" alt="" loading="lazy" decoding="async" />`;
+    el.innerHTML = `<img src="${a.src}" alt="" loading="lazy" decoding="async" fetchpriority="low" />`;
     field.appendChild(el);
     tiles.push(el);
   }
@@ -289,27 +293,44 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 (function initPlayer() {
   const modal = document.createElement("div");
   modal.className = "player";
-  modal.innerHTML = `<div class="player__frame"></div><button class="player__close" aria-label="Close">✕</button>`;
+  modal.setAttribute("role", "dialog");
+  modal.setAttribute("aria-modal", "true");
+  modal.setAttribute("aria-label", "Video player");
+  modal.innerHTML = `<div class="player__frame"></div><button class="player__close" aria-label="Close video">✕</button>`;
   document.body.appendChild(modal);
   const frame = modal.querySelector(".player__frame");
+  const closeBtn = modal.querySelector(".player__close");
+  let lastFocus = null;
 
   function close() {
+    if (!modal.classList.contains("is-open")) return;
     modal.classList.remove("is-open");
     frame.innerHTML = "";
     document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function openVideo(id, fallbackPlaylist) {
+    lastFocus = document.activeElement;
     const src = id
       ? `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`
       : `https://www.youtube-nocookie.com/embed/videoseries?list=${fallbackPlaylist}&autoplay=1`;
-    frame.innerHTML = `<iframe src="${src}" title="ZKFM video" frameborder="0"
-      allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>`;
+    frame.innerHTML = `<iframe src="${src}" title="ZKFM video" frameborder="0" referrerpolicy="strict-origin-when-cross-origin"
+      allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     modal.classList.add("is-open");
     document.body.style.overflow = "hidden";
+    closeBtn.focus();
   }
 
   modal.addEventListener("click", (e) => { if (e.target === modal || e.target.closest(".player__close")) close(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  modal.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    const f = modal.querySelectorAll('button, iframe, [tabindex]:not([tabindex="-1"])');
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
 
   document.getElementById("frequencies").addEventListener("click", (e) => {
     const btn = e.target.closest(".vid");
@@ -325,18 +346,35 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 (function initPosterZoom() {
   const box = document.createElement("div");
   box.className = "lightbox";
-  box.innerHTML = `<img alt="" /><button class="lightbox__close" aria-label="Close">✕</button>`;
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-label", "Poster");
+  box.innerHTML = `<img alt="" /><button class="lightbox__close" aria-label="Close poster">✕</button>`;
   document.body.appendChild(box);
   const img = box.querySelector("img");
-  function close() { box.classList.remove("is-open"); img.src = ""; }
+  const closeBtn = box.querySelector(".lightbox__close");
+  let lastFocus = null;
+  function close() {
+    if (!box.classList.contains("is-open")) return;
+    box.classList.remove("is-open");
+    img.src = "";
+    document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
   box.addEventListener("click", close);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  box.addEventListener("keydown", (e) => { if (e.key === "Tab") { e.preventDefault(); closeBtn.focus(); } });
   document.getElementById("frequencies").addEventListener("click", (e) => {
-    const t = e.target.closest(".poster img");
-    if (!t) return;
-    img.src = t.src;
-    img.alt = t.alt;
+    const btn = e.target.closest(".poster__zoom");
+    if (!btn) return;
+    const src = btn.querySelector("img");
+    if (!src) return;
+    lastFocus = document.activeElement;
+    img.src = src.src;
+    img.alt = src.alt;
     box.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    closeBtn.focus();
   });
 })();
 

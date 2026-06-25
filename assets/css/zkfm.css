@@ -56,7 +56,7 @@ a { color: inherit; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 24px; border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 100;
-  background: rgba(7,8,11,0.85); backdrop-filter: blur(8px);
+  background: rgba(7,8,11,0.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
 }
 .zk-back, .zk-x { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .zk-back { color: var(--muted); }
@@ -148,7 +148,7 @@ a { color: inherit; }
   max-width: 680px; text-align: center; transform-style: preserve-3d;
   border: 1px solid color-mix(in srgb, var(--vacc) 45%, var(--line));
   border-radius: 14px; padding: 48px 40px;
-  background: color-mix(in srgb, var(--v1) 52%, rgba(10,10,12,0.55)); backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--v1) 52%, rgba(10,10,12,0.55)); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
 }
 .act__label { font-family: var(--mono); font-size: 13px; letter-spacing: 0.3em; color: var(--vacc); }
 .act__name {
@@ -185,12 +185,14 @@ a { color: inherit; }
   color: var(--green); margin-bottom: 12px; text-align: center;
 }
 .poster--take figcaption { color: var(--magenta); }
+.poster__zoom { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 .poster img {
   width: 100%; height: auto; display: block; background: #000;
-  border: 1px solid var(--line); border-radius: 8px; cursor: zoom-in;
+  aspect-ratio: 732 / 1024; object-fit: cover;
+  border: 1px solid var(--line); border-radius: 8px;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
-.poster img:hover { border-color: var(--green); transform: translateY(-3px); }
+.poster__zoom:hover img { border-color: var(--green); transform: translateY(-3px); }
 
 .scene__videos { display: grid; gap: 18px; perspective: 1100px; grid-template-columns: repeat(3, 1fr); }
 .scene__videos[data-count="2"] { grid-template-columns: repeat(2, 1fr); max-width: 800px; }
@@ -207,7 +209,7 @@ a { color: inherit; }
 .vid__thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
 .vid__play {
   position: absolute; inset: 0; margin: auto; width: 58px; height: 58px; border-radius: 50%;
-  background: rgba(7,8,11,0.6); border: 2px solid var(--green); backdrop-filter: blur(2px);
+  background: rgba(7,8,11,0.6); border: 2px solid var(--green); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
   transition: transform 0.2s ease, background 0.2s ease;
 }
 .vid__play::after {
@@ -233,7 +235,7 @@ a { color: inherit; }
 /* ---- Poster lightbox ---- */
 .lightbox {
   position: fixed; inset: 0; z-index: 10000; display: none; place-items: center;
-  padding: 4vh 4vw; background: rgba(3,4,6,0.92); backdrop-filter: blur(4px); cursor: zoom-out;
+  padding: 4vh 4vw; background: rgba(3,4,6,0.92); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); cursor: zoom-out;
 }
 .lightbox.is-open { display: grid; }
 .lightbox img { max-width: 100%; max-height: 92vh; border-radius: 8px; border: 1px solid var(--line); box-shadow: 0 0 60px rgba(143,224,0,0.15); }
@@ -243,7 +245,7 @@ a { color: inherit; }
 /* ---- Fullscreen player ---- */
 .player {
   position: fixed; inset: 0; z-index: 10000; display: none; place-items: center;
-  padding: 4vh 4vw; background: rgba(3,4,6,0.94); backdrop-filter: blur(6px);
+  padding: 4vh 4vw; background: rgba(3,4,6,0.94); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .player.is-open { display: grid; }
 .player__frame { width: min(100%, 1100px); aspect-ratio: 16/9; }
@@ -263,4 +265,19 @@ a { color: inherit; }
   .act__card { padding: 32px 22px; }
   .scene__posters { gap: 18px; }
   .poster { width: 100%; max-width: 340px; }
+}
+
+/* No-JS fallback */
+.zk-noscript { max-width: 720px; margin: 0 auto; padding: 60px 24px; color: var(--ink); }
+.zk-noscript h2 { font-family: var(--font-display); font-size: 28px; margin-bottom: 14px; }
+.zk-noscript ul { margin: 16px 0; padding-left: 20px; line-height: 1.9; }
+.zk-noscript a { color: var(--green); }
+
+/* Visible keyboard focus */
+a:focus-visible, button:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 4px; }
+
+/* Honour reduced-motion for CSS hover transforms (GSAP motion is gated in JS) */
+@media (prefers-reduced-motion: reduce) {
+  .vid, .poster img, .vid__play { transition: none; }
+  .vid:hover, .poster__zoom:hover img { transform: none; }
 }
