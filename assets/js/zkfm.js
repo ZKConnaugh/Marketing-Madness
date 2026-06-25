@@ -145,48 +145,52 @@ function videoCard(day, v) {
     </button>`;
 }
 
+// One day = one carousel panel. Day number + title + X link are surfaced by the
+// persistent weekbar (built in frequencyAct), so they live as data-* here.
 function dayScene(d, freq) {
   const dd = pad(d.day);
+  const xHref = d.x || X_ACCOUNT;
+  const data = `data-day="${d.day}" data-num="DAY ${dd}" data-title="${esc(d.title)}"`;
   if (d.special) {
     return `
-      <section class="scene scene--special" data-day="${d.day}">
-        <div class="scene__head">
-          <span class="scene__num">DAY ${dd}</span>
+      <section class="scene scene--special" ${data}>
+        <div class="scene__inner">
           <span class="scene__special">◉ Special Broadcast</span>
-          <h3 class="scene__title">${esc(d.title)}</h3>
+          <p class="scene__points">${esc(d.points || "")}</p>
+          <a class="scene__x" href="${xHref}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
         </div>
-        <p class="scene__points">${esc(d.points || "")}</p>
-        <a class="scene__x" href="${d.x || X_ACCOUNT}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
       </section>`;
   }
   const cards = d.videos.map((v) => videoCard(d.day, v)).join("");
   const briefing = d.briefing === false ? "" : `
-        <figure class="poster poster--take">
-          <figcaption>The Download</figcaption>
-          <button class="poster__zoom" aria-label="Enlarge briefing — ${esc(d.title)}">
-            ${pic(`/assets/zkfm/posters/day${dd}-info.avif`, `alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy"`)}
-          </button>
-        </figure>`;
+          <figure class="poster poster--take">
+            <figcaption>The Download</figcaption>
+            <button class="poster__zoom" aria-label="Enlarge briefing — ${esc(d.title)}">
+              ${pic(`/assets/zkfm/posters/day${dd}-info.avif`, `alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy"`)}
+            </button>
+          </figure>`;
   return `
-    <section class="scene" data-day="${d.day}">
-      <div class="scene__head">
-        <span class="scene__num">DAY ${dd}</span>
-        <h3 class="scene__title">${esc(d.title)}</h3>
-        <a class="scene__x" href="${d.x || X_ACCOUNT}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
+    <section class="scene" ${data}>
+      <div class="scene__inner">
+        <div class="scene__posters">
+          <figure class="poster poster--lineup">
+            <figcaption>On Air Today</figcaption>
+            <button class="poster__zoom" aria-label="Enlarge lineup — ${esc(d.title)}">
+              ${pic(`/assets/zkfm/posters/day${dd}-lineup.avif`, `alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy"`)}
+            </button>
+          </figure>${briefing}
+        </div>
+        <div class="scene__videos" data-count="${d.videos.length}">${cards}</div>
+        <a class="scene__x" href="${xHref}" target="_blank" rel="noopener noreferrer">Watch day ${dd} on X →</a>
       </div>
-      <div class="scene__posters">
-        <figure class="poster poster--lineup">
-          <figcaption>On Air Today</figcaption>
-          <button class="poster__zoom" aria-label="Enlarge lineup — ${esc(d.title)}">
-            ${pic(`/assets/zkfm/posters/day${dd}-lineup.avif`, `alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy"`)}
-          </button>
-        </figure>${briefing}
-      </div>
-      <div class="scene__videos" data-count="${d.videos.length}">${cards}</div>
     </section>`;
 }
 
 function frequencyAct(f) {
+  const first = f.days[0];
+  const dots = f.days
+    .map((d, i) => `<button class="day-dot" type="button" data-i="${i}" aria-label="Go to day ${pad(d.day)}">${pad(d.day)}</button>`)
+    .join("");
   return `
     <section class="act" id="freq-${f.n}" data-fold="${f.fold}" data-vibe="${f.vibe}">
       <div class="act__intro">
@@ -194,15 +198,94 @@ function frequencyAct(f) {
         <figure class="act__poster">
           ${pic(`/assets/zkfm/posters/freq${f.n}.avif`, `alt="Frequency ${f.n} — ${esc(f.name)} intro (${esc(f.range)})" loading="lazy"`)}
         </figure>
-        <span class="act__cue">tune in ↓</span>
+        <span class="act__cue">tune in ↓ · then flip the dial →</span>
       </div>
-      <div class="act__scenes">${f.days.map((d) => dayScene(d, f)).join("")}</div>
+      <div class="act__week">
+        <div class="act__weekbar">
+          <button class="week__arrow week__arrow--prev" type="button" aria-label="Previous day">‹</button>
+          <p class="week__now" aria-live="polite">
+            <span class="week__num">DAY ${pad(first.day)}</span>
+            <span class="week__title">${esc(first.title)}</span>
+          </p>
+          <button class="week__arrow week__arrow--next" type="button" aria-label="Next day">›</button>
+        </div>
+        <div class="act__scenes" role="region" aria-roledescription="carousel" aria-label="Frequency ${f.n} — ${esc(f.name)}, ${f.days.length} days" tabindex="0">
+          ${f.days.map((d) => dayScene(d, f)).join("")}
+        </div>
+        <div class="act__days" role="group" aria-label="Frequency ${f.n} day selector">${dots}</div>
+      </div>
     </section>`;
 }
 
 document.getElementById("frequencies").innerHTML = FREQUENCIES.map(frequencyAct).join("");
 const yEl = document.getElementById("year");
 if (yEl) yEl.textContent = new Date().getFullYear();
+
+// ---- Day carousel: flip horizontally through a frequency's week --------------
+// Each .scene is a full-width snap panel. The weekbar (DAY NN · Title) and the
+// bottom day-number strip both reflect and control the active day.
+
+(function initWeekCarousels() {
+  const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll(".act__week").forEach((week) => {
+    const track = week.querySelector(".act__scenes");
+    const panels = Array.from(track.querySelectorAll(".scene"));
+    const dots = Array.from(week.querySelectorAll(".day-dot"));
+    const prev = week.querySelector(".week__arrow--prev");
+    const next = week.querySelector(".week__arrow--next");
+    const numEl = week.querySelector(".week__num");
+    const titleEl = week.querySelector(".week__title");
+    if (!panels.length) return;
+    let cur = -1;
+
+    function setActive(i) {
+      i = Math.max(0, Math.min(panels.length - 1, i));
+      if (i === cur) return;
+      cur = i;
+      const p = panels[i];
+      numEl.textContent = p.dataset.num;
+      titleEl.textContent = p.dataset.title;
+      dots.forEach((d, j) => {
+        d.classList.toggle("is-active", j === i);
+        if (j === i) d.setAttribute("aria-current", "true");
+        else d.removeAttribute("aria-current");
+      });
+      panels.forEach((pa, j) => pa.classList.toggle("is-active", j === i));
+      prev.disabled = i === 0;
+      next.disabled = i === panels.length - 1;
+    }
+
+    const goto = (i) =>
+      track.scrollTo({ left: Math.max(0, Math.min(panels.length - 1, i)) * track.clientWidth, behavior: smooth ? "smooth" : "auto" });
+
+    // Active day follows the scroll position (rAF-throttled).
+    let raf = 0;
+    track.addEventListener("scroll", () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        setActive(Math.round(track.scrollLeft / track.clientWidth));
+      });
+    }, { passive: true });
+
+    dots.forEach((d) => d.addEventListener("click", () => goto(+d.dataset.i)));
+    prev.addEventListener("click", () => goto(cur - 1));
+    next.addEventListener("click", () => goto(cur + 1));
+    track.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); goto(cur + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); goto(cur - 1); }
+    });
+
+    // Keep the current panel aligned when the viewport width changes.
+    let rrf = 0;
+    window.addEventListener("resize", () => {
+      if (rrf) return;
+      rrf = requestAnimationFrame(() => { rrf = 0; track.scrollLeft = cur * track.clientWidth; });
+    }, { passive: true });
+
+    setActive(0);
+  });
+})();
 
 // ---- Hero 3D collage — continuous fly-through of every asset ----------------
 
@@ -405,27 +488,11 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 (function initMotion() {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduce || !window.gsap || !window.ScrollTrigger) {
-    document.querySelectorAll(".poster, .vid, .scene__head, .act__poster").forEach((el) => el.classList.add("is-in"));
+    document.querySelectorAll(".poster, .vid, .act__poster").forEach((el) => el.classList.add("is-in"));
     return;
   }
   const { gsap } = window;
   gsap.registerPlugin(window.ScrollTrigger);
-
-  // Day scenes: video thumbnails flow up out of 3D depth as the scene enters.
-  gsap.utils.toArray(".scene").forEach((scene) => {
-    const cards = scene.querySelectorAll(".poster, .vid");
-    const head = scene.querySelector(".scene__head");
-    gsap.from(head, {
-      scrollTrigger: { trigger: scene, start: "top 80%", end: "top 45%", scrub: true },
-      y: 40, opacity: 0,
-    });
-    if (cards.length) {
-      gsap.from(cards, {
-        scrollTrigger: { trigger: scene, start: "top 78%", end: "top 38%", scrub: true },
-        y: 80, z: -320, rotateY: -22, opacity: 0, stagger: 0.08,
-      });
-    }
-  });
 
   // Frequency intro cards: a distinct "fold" per frequency as you scroll in.
   gsap.utils.toArray(".act").forEach((act) => {

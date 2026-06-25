@@ -154,7 +154,6 @@ picture { display: contents; }
   background-size: 7px 7px;
   opacity: 0.5; mix-blend-mode: screen;
 }
-.act .scene__num { color: var(--vacc); border-color: color-mix(in srgb, var(--vacc) 35%, var(--line)); }
 .act__intro {
   min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 132px 24px 48px;
   perspective: 1300px;
@@ -173,14 +172,72 @@ picture { display: contents; }
   border-radius: 10px; border: 1px solid var(--line); box-shadow: 0 28px 70px rgba(0,0,0,0.55);
 }
 
-/* ---- Day scene ---- */
-.act__scenes { padding: 0 24px 40px; }
-.scene { max-width: 1180px; margin: 0 auto; padding: 56px 0; }
-.scene__head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; flex-wrap: wrap; }
-.scene__num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; color: var(--magenta); border: 1px solid var(--line); padding: 4px 9px; border-radius: 5px; }
-.scene__title { font-family: var(--font-display); font-size: clamp(22px,3.2vw,32px); font-weight: 500; letter-spacing: -0.01em; }
-.scene__x { margin-left: auto; display: inline-flex; align-items: center; min-height: 44px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--muted); }
+/* ---- Day carousel (horizontal: one day per panel) ---- */
+.act__week { position: relative; padding-bottom: 8px; }
+
+/* Persistent current-day readout + prev/next, pinned just below the tuner */
+.act__weekbar {
+  position: sticky; top: 116px; z-index: 40;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  width: fit-content; max-width: min(900px, calc(100% - 32px));
+  margin: 0 auto; padding: 9px 12px;
+  background: rgba(7,8,11,0.74); border: 1px solid var(--line); border-radius: 18px;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.week__arrow {
+  flex: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  background: rgba(7,8,11,0.7); border: 1px solid var(--line); color: var(--ink);
+  font-size: 22px; line-height: 1; display: grid; place-items: center;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.week__arrow:hover { border-color: var(--green); color: var(--green); }
+.week__arrow:disabled { opacity: 0.28; cursor: default; }
+.week__now { text-align: center; min-width: 0; }
+.week__num { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--vacc, var(--green)); }
+.week__title { display: block; font-family: var(--font-display); font-weight: 500; font-size: clamp(20px,3vw,30px); letter-spacing: -0.01em; line-height: 1.15; }
+
+/* Horizontal scroll-snap track. Vertical wheel still scrolls the page on to the
+   next frequency; days are reached by swipe / arrows / day strip / trackpad. */
+.act__scenes {
+  display: flex; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.act__scenes::-webkit-scrollbar { display: none; }
+.act__scenes:focus-visible { outline: 2px solid var(--lime); outline-offset: -4px; }
+
+.scene {
+  flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always;
+  display: grid; place-items: start center; padding: 10px 24px 24px;
+  opacity: 0.32; transition: opacity 0.45s ease;
+}
+.scene.is-active { opacity: 1; }
+.scene__inner { width: 100%; max-width: 1100px; }
+.scene__x { display: inline-flex; align-items: center; min-height: 44px; margin-top: 18px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--muted); }
 .scene__x:hover { color: var(--green); }
+
+/* Day selector strip — lights up the current day, pinned to the bottom in view */
+.act__days {
+  position: sticky; bottom: 0; z-index: 40;
+  display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(0deg, var(--bg) 38%, transparent);
+}
+.day-dot {
+  flex: none; min-width: 40px; min-height: 36px; padding: 6px 8px; cursor: pointer;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em;
+  color: var(--muted); background: rgba(7,8,11,0.6);
+  border: 1px solid var(--line); border-radius: 7px;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.day-dot:hover { color: var(--ink); border-color: color-mix(in srgb, var(--vacc, var(--green)) 50%, var(--line)); }
+.day-dot.is-active {
+  color: var(--bg); background: var(--vacc, var(--green));
+  border-color: var(--vacc, var(--green)); font-weight: 700;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--vacc, var(--green)) 45%, transparent);
+}
 
 /* Day posters (the storytelling lead-in: lineup + briefing) */
 .scene__posters {
@@ -235,12 +292,11 @@ picture { display: contents; }
 }
 
 /* reveal states (no-JS / reduced-motion fallback) */
-.vid.is-in, .scene__head.is-in, .act__poster.is-in { opacity: 1; }
+.vid.is-in, .act__poster.is-in { opacity: 1; }
 
 /* ---- Special (CLAIRE) scene ---- */
 .scene--special { text-align: center; }
-.scene--special .scene__head { justify-content: center; }
-.scene--special .scene__special { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta); }
+.scene--special .scene__special { display: block; margin-bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta); }
 .scene__points { max-width: 560px; margin: 0 auto 18px; color: var(--muted); font-size: 15px; }
 .scene--special .scene__x { margin: 0; color: var(--green); }
 
@@ -291,4 +347,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--lime); outline-
 @media (prefers-reduced-motion: reduce) {
   .vid, .poster img, .vid__play { transition: none; }
   .vid:hover, .poster__zoom:hover img { transform: none; }
+  .scene { transition: none; }
+  .act__scenes { scroll-behavior: auto; }
 }
