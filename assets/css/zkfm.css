@@ -57,7 +57,7 @@ picture { display: contents; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 24px; border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 100;
-  background: rgba(7,8,11,0.85); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  background: rgba(7,8,11,0.95);
 }
 .zk-back, .zk-x { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .zk-back { color: var(--muted); }
@@ -72,7 +72,7 @@ picture { display: contents; }
   display: flex; gap: 18px; justify-content: center; align-items: center;
   padding: 10px 16px; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
   border-bottom: 1px solid var(--line);
-  background: rgba(7,8,11,0.82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  background: rgba(7,8,11,0.93);
   font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
 }
 .zk-tuner::-webkit-scrollbar { display: none; }
@@ -88,7 +88,8 @@ picture { display: contents; }
   position: relative; min-height: 100vh; min-height: 100svh; display: grid; place-items: center;
   overflow: hidden; padding: 100px 24px;
   background: radial-gradient(60% 80% at 50% 0%, rgba(205,238,74,0.08), transparent 70%),
-              radial-gradient(50% 60% at 80% 30%, rgba(59,54,217,0.10), transparent 70%);
+              radial-gradient(50% 60% at 80% 30%, rgba(59,54,217,0.10), transparent 70%),
+              var(--bg);
 }
 .zk-hero__inner { position: relative; z-index: 2; text-align: center; }
 
@@ -106,6 +107,17 @@ picture { display: contents; }
   will-change: transform, opacity; backface-visibility: hidden;
 }
 .ctile img { width: 100%; height: auto; display: block; }
+
+/* ---- Page-wide blurred backdrop: the same collage, fixed behind all content ---- */
+.zk-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; perspective: 1000px; perspective-origin: 50% 50%; }
+.zk-bg .collage__field { position: absolute; inset: 0; transform-style: preserve-3d; }
+/* Per-tile blur is baked into each tile's GPU layer once → movement stays cheap. */
+.zk-bg .ctile { filter: blur(7px); box-shadow: none; border-color: rgba(205,238,74,0.05); }
+.zk-bg::after { content: ""; position: absolute; inset: 0; background: rgba(7,8,11,0.4); }
+/* Keep all real content above the backdrop. */
+main { position: relative; z-index: 1; }
+.zk-footer { position: relative; z-index: 1; }
+@media (max-width: 760px) { .zk-bg .ctile { filter: blur(5px); } }
 .zk-hero__mark { font-family: var(--mono); font-weight: 800; font-size: clamp(64px,16vw,180px); letter-spacing: 0.04em; line-height: 0.9; color: var(--green); text-shadow: 4px 0 var(--magenta), -4px 0 var(--cyan); }
 .zk-hero__tagline { max-width: 640px; margin: 24px auto 0; font-family: var(--font-accent); font-style: italic; font-size: clamp(19px,2.8vw,26px); color: var(--cream); }
 .zk-hero__stats { margin-top: 30px; font-family: var(--mono); font-size: clamp(12px,2vw,15px); letter-spacing: 0.12em; color: var(--green); text-transform: uppercase; }
@@ -157,7 +169,7 @@ picture { display: contents; }
 .act {
   position: relative;
   border-top: 1px solid var(--line);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--v1) 36%, var(--bg)) 0%, var(--bg) 68%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--v1) 40%, rgba(7,8,11,0.62)) 0%, rgba(7,8,11,0.74) 72%);
 }
 .act > * { position: relative; z-index: 1; }
 
@@ -221,15 +233,13 @@ picture { display: contents; }
   display: flex; align-items: center; justify-content: center; gap: 14px;
   width: fit-content; max-width: min(900px, calc(100% - 32px));
   margin: 0 auto; padding: 9px 12px;
-  background: rgba(7,8,11,0.74); border: 1px solid var(--line); border-radius: 18px;
-  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  background: rgba(7,8,11,0.92); border: 1px solid var(--line); border-radius: 18px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 .week__arrow {
   flex: none; width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
-  background: rgba(7,8,11,0.7); border: 1px solid var(--line); color: var(--ink);
+  background: rgba(7,8,11,0.9); border: 1px solid var(--line); color: var(--ink);
   font-size: 22px; line-height: 1; display: grid; place-items: center;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   transition: border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 .week__arrow:hover { border-color: var(--green); color: var(--green); }

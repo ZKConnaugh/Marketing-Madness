@@ -374,11 +374,16 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   });
 })();
 
-// ---- Hero 3D collage — continuous fly-through of every asset ----------------
+// ---- 3D collages: a dense sharp hero + a blurred page-wide backdrop ----------
+// Both draw from one shuffled pool of tiny (~200px) tiles. The backdrop reuses
+// images already cached by the hero, so it adds ~no download. The hero plays
+// while it's on screen; the backdrop plays only once you've scrolled past it —
+// so just one field animates at a time.
 
-(function buildCollage() {
-  const host = document.getElementById("collage");
-  if (!host) return;
+(function buildCollages() {
+  const heroHost = document.getElementById("collage");
+  const bgHost = document.getElementById("bg-collage");
+  if (!heroHost && !bgHost) return;
 
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const gsap = window.gsap;
@@ -386,8 +391,6 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   const W = () => window.innerWidth;
   const H = () => window.innerHeight;
 
-  // Pool of purpose-built tiny renders (~200px) — landscape video thumbs + portrait
-  // day posters — so the hero stays a few hundred KB instead of multiple MB.
   const pool = [];
   Object.keys(VIDEO_IDS).forEach((k) => {
     const m = k.match(/D(\d+)V(\d+)/);
@@ -401,78 +404,95 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
 
-  // Decouple tile count from downloads: load U unique images, render N tiles that
-  // reuse them (each unique image is fetched once) → a busy field, light payload.
-  const U = Math.min(reduce ? 12 : small ? 22 : 42, pool.length);
-  const N = reduce ? 14 : small ? 26 : 52;
-
-  const field = document.createElement("div");
-  field.className = "collage__field";
-  const tiles = [];
-  for (let i = 0; i < N; i++) {
-    const a = pool[i % U];
-    const w = a.portrait ? 95 + Math.random() * 55 : 130 + Math.random() * 70;
-    const el = document.createElement("div");
-    el.className = "ctile";
-    el.style.width = w.toFixed(0) + "px";
-    el.style.opacity = "0";
-    el.innerHTML = pic(a.src, `alt="" loading="lazy" decoding="async" fetchpriority="low"`);
-    field.appendChild(el);
-    tiles.push(el);
-  }
-  host.appendChild(field);
-
-  // A random point in a wide 3D box. z near +250 is close to camera, -1500 is deep.
   const rpt = () => ({
-    x: (Math.random() * 1.7 - 0.85) * W(),
-    y: (Math.random() * 1.6 - 0.8) * H(),
-    z: -1500 + Math.random() * 1750,
+    x: (Math.random() * 1.8 - 0.9) * W(),
+    y: (Math.random() * 1.7 - 0.85) * H(),
+    z: -1500 + Math.random() * 1750, // +250 = near camera, -1500 = deep
   });
-  const peak = (z) => 0.45 + ((z + 1500) / 1750) * 0.45; // closer = brighter
 
-  // Reduced motion / no GSAP: a still 3D scatter (depth via blur + opacity).
-  if (!gsap || reduce) {
-    tiles.forEach((el) => {
-      const p = rpt();
-      const d = (p.z + 1500) / 1750;
-      el.style.transform =
-        `translate(-50%,-50%) translate3d(${(p.x * 0.5).toFixed(0)}px,${(p.y * 0.5).toFixed(0)}px,${p.z.toFixed(0)}px) rotateY(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
-      el.style.opacity = peak(p.z).toFixed(2);
-      el.style.filter = `blur(${((1 - d) * 1.4).toFixed(1)}px)`;
-    });
-    return;
+  // Build one field. U unique images reused across N tiles (downloads bounded to U;
+  // a shared front-of-pool slice means the backdrop's images are already cached).
+  function build(host, cfg) {
+    const peak = (z) => (0.42 + ((z + 1500) / 1750) * 0.46) * cfg.peakMul;
+    const field = document.createElement("div");
+    field.className = "collage__field";
+    const tiles = [];
+    for (let i = 0; i < cfg.N; i++) {
+      const a = pool[i % cfg.U];
+      const w = a.portrait ? 95 + Math.random() * 60 : 130 + Math.random() * 75;
+      const el = document.createElement("div");
+      el.className = "ctile";
+      el.style.width = w.toFixed(0) + "px";
+      el.style.opacity = "0";
+      el.innerHTML = pic(a.src, `alt="" loading="lazy" decoding="async" fetchpriority="low"`);
+      field.appendChild(el);
+      tiles.push(el);
+    }
+    host.appendChild(field);
+
+    if (!gsap || reduce) {
+      tiles.forEach((el) => {
+        const p = rpt();
+        const d = (p.z + 1500) / 1750;
+        el.style.transform =
+          `translate(-50%,-50%) translate3d(${(p.x * 0.5).toFixed(0)}px,${(p.y * 0.5).toFixed(0)}px,${p.z.toFixed(0)}px) rotateY(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+        el.style.opacity = peak(p.z).toFixed(2);
+      });
+      return { tiles, fly: null };
+    }
+
+    gsap.set(tiles, { xPercent: -50, yPercent: -50, force3D: true });
+    // Each tile drifts between two random 3D points — every direction — then recycles.
+    function fly(el, seed) {
+      const a = rpt(), b = rpt();
+      const dur = cfg.durBase + Math.random() * cfg.durRange;
+      const pk = Math.min(peak(a.z), peak(b.z));
+      const ease = Math.random() < 0.5 ? "none" : "sine.inOut";
+      gsap.set(el, { x: a.x, y: a.y, z: a.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, opacity: 0 });
+      const tl = gsap.timeline({ onComplete: () => fly(el, false) });
+      el._zkTl = tl; // live ref (reassigned each recycle) so pause/resume never goes stale
+      tl.to(el, { x: b.x, y: b.y, z: b.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, duration: dur, ease }, 0)
+        .to(el, { opacity: pk, duration: dur * 0.26, ease: "sine.out" }, 0)
+        .to(el, { opacity: 0, duration: dur * 0.3, ease: "sine.in" }, dur * 0.7);
+      if (seed) tl.progress(Math.random());
+    }
+    return { tiles, fly };
   }
 
-  gsap.set(tiles, { xPercent: -50, yPercent: -50, force3D: true });
+  const insts = [];
+  if (heroHost) insts.push(Object.assign(
+    build(heroHost, { U: Math.min(small ? 28 : 52, pool.length), N: small ? 32 : 78, peakMul: 1, durBase: 6, durRange: 8 }),
+    { runsInHero: true }
+  ));
+  if (bgHost) insts.push(Object.assign(
+    build(bgHost, { U: Math.min(small ? 20 : 40, pool.length), N: small ? 22 : 52, peakMul: 0.82, durBase: 9, durRange: 11 }),
+    { runsInHero: false }
+  ));
 
-  // Each tile drifts between two random 3D points — so the field moves in every
-  // direction (toward, away, across, diagonal) — then recycles on a fresh path.
-  function fly(el, seed) {
-    const a = rpt(), b = rpt();
-    const dur = 6 + Math.random() * 8; // 6–14s: quicker and more alive
-    const pk = Math.min(peak(a.z), peak(b.z));
-    const ease = Math.random() < 0.5 ? "none" : "sine.inOut";
-    gsap.set(el, { x: a.x, y: a.y, z: a.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, opacity: 0 });
-    const tl = gsap.timeline({ onComplete: () => fly(el, false) });
-    el._zkTl = tl; // live ref (reassigned each recycle) so pause/resume never goes stale
-    tl.to(el, { x: b.x, y: b.y, z: b.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, duration: dur, ease }, 0)
-      .to(el, { opacity: pk, duration: dur * 0.28, ease: "sine.out" }, 0)
-      .to(el, { opacity: 0, duration: dur * 0.3, ease: "sine.in" }, dur * 0.7);
-    if (seed) tl.progress(Math.random());
-  }
+  if (!gsap || reduce) return; // static scatter, no timeline management needed
+
+  // Without a hero observer to drive the handoff, the backdrop just runs on its own.
+  const hasHandoff = heroHost && "IntersectionObserver" in window;
+  let heroVisible = true, started = false;
+  const applyAll = () => insts.forEach((inst) => {
+    const play = !document.hidden && (inst.runsInHero ? heroVisible : (!hasHandoff || !heroVisible));
+    inst.tiles.forEach((el) => el._zkTl && (play ? el._zkTl.play() : el._zkTl.pause()));
+  });
 
   // Defer the launch so the hero wordmark paints first (perceived load speed).
-  // apply() at the end honours the current on-screen state if the user already
-  // scrolled past during the idle window.
-  const start = () => { tiles.forEach((el) => fly(el, true)); apply(); };
+  const start = () => {
+    if (started) return;
+    started = true;
+    insts.forEach((inst) => inst.fly && inst.tiles.forEach((el) => inst.fly(el, true)));
+    applyAll();
+  };
   (window.requestIdleCallback || ((cb) => setTimeout(cb, 200)))(start, { timeout: 400 });
 
-  // Pause when the hero is off-screen or the tab is hidden (perf/battery).
-  let onScreen = true;
-  const apply = () => tiles.forEach((el) => el._zkTl && (onScreen && !document.hidden ? el._zkTl.play() : el._zkTl.pause()));
-  document.addEventListener("visibilitychange", apply);
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; apply(); }, { threshold: 0 }).observe(host);
+  document.addEventListener("visibilitychange", applyAll);
+  if (heroHost && "IntersectionObserver" in window) {
+    // Hand off at the halfway mark: hero field runs while the hero owns the screen,
+    // backdrop takes over once you're past it — so only one field animates at a time.
+    new IntersectionObserver((e) => { heroVisible = e[0].intersectionRatio >= 0.5; applyAll(); }, { threshold: [0, 0.5, 1] }).observe(heroHost);
   }
 })();
 
