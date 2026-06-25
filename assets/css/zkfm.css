@@ -162,21 +162,6 @@ picture { display: contents; }
     radial-gradient(75% 80% at 50% 22%, color-mix(in srgb, var(--vacc) 13%, transparent), transparent 70%),
     radial-gradient(95% 100% at 50% 0%, color-mix(in srgb, var(--v1) 62%, transparent), transparent 75%);
 }
-.act__card {
-  max-width: 680px; text-align: center; transform-style: preserve-3d;
-  border: 1px solid color-mix(in srgb, var(--vacc) 45%, var(--line));
-  border-radius: 14px; padding: 48px 40px;
-  background: color-mix(in srgb, var(--v1) 52%, rgba(10,10,12,0.55)); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-}
-.act__label { font-family: var(--mono); font-size: 13px; letter-spacing: 0.3em; color: var(--vacc); }
-.act__name {
-  font-family: var(--font-display); font-weight: 500; font-size: clamp(46px,10vw,100px);
-  letter-spacing: -0.01em; line-height: 0.95; margin: 10px 0; color: var(--cream);
-  text-shadow: 2px 0 var(--vacc), -2px 0 var(--cyan);
-}
-.act[data-vibe="witness"] .act__name { text-shadow: 2px 0 var(--vacc), -2px 0 var(--cobalt), 0 0 34px color-mix(in srgb, var(--vacc) 45%, transparent); }
-.act__range { font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em; color: var(--muted); }
-.act__blurb { max-width: 480px; margin: 18px auto 0; font-size: 15px; }
 .act__cue { display: inline-block; margin-top: 28px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
 
 /* Frequency intro poster (replaces the generated banner card) */
@@ -250,7 +235,7 @@ picture { display: contents; }
 }
 
 /* reveal states (no-JS / reduced-motion fallback) */
-.vid.is-in, .scene__head.is-in, .act__card.is-in { opacity: 1; }
+.vid.is-in, .scene__head.is-in, .act__poster.is-in { opacity: 1; }
 
 /* ---- Special (CLAIRE) scene ---- */
 .scene--special { text-align: center; }
@@ -289,7 +274,6 @@ picture { display: contents; }
 }
 @media (max-width: 460px) {
   .scene__videos, .scene__videos[data-count="2"], .scene__videos[data-count="4"] { grid-template-columns: 1fr; }
-  .act__card { padding: 32px 22px; }
   .scene__posters { gap: 18px; }
   .poster { width: 100%; max-width: 340px; }
 }
