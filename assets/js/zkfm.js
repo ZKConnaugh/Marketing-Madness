@@ -125,6 +125,9 @@ const FREQUENCIES = [
 
 const pad = (n) => String(n).padStart(2, "0");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+// <picture> with AVIF + WebP fallback (Safari < 16.4 lacks AVIF). imgAttrs is a raw attribute string.
+const pic = (avif, imgAttrs) =>
+  `<picture><source type="image/avif" srcset="${avif}" /><img src="${avif.replace(/\.avif$/, ".webp")}" ${imgAttrs} /></picture>`;
 
 // ---- Build the DOM ---------------------------------------------------------
 
@@ -136,7 +139,7 @@ function videoCard(day, v) {
   const t = esc(meta.t || `Day ${day} · Video ${v}`);
   return `
     <button class="vid" data-vid="${id}" data-key="${key}" title="${t}" aria-label="Play: ${t}">
-      <img class="vid__thumb" src="/assets/zkfm/thumbs/d${dd}v${v}.avif" alt="ZKFM Day ${day} Video ${v} — ${t}" loading="lazy" />
+      ${pic(`/assets/zkfm/thumbs/d${dd}v${v}.avif`, `class="vid__thumb" alt="ZKFM Day ${day} Video ${v} — ${t}" loading="lazy"`)}
       <span class="vid__play" aria-hidden="true"></span>
       <span class="vid__tag">D${day} · V${v}</span>
     </button>`;
@@ -161,7 +164,7 @@ function dayScene(d, freq) {
         <figure class="poster poster--take">
           <figcaption>The Download</figcaption>
           <button class="poster__zoom" aria-label="Enlarge briefing — ${esc(d.title)}">
-            <img src="/assets/zkfm/posters/day${dd}-info.avif" alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy" />
+            ${pic(`/assets/zkfm/posters/day${dd}-info.avif`, `alt="ZKFM Day ${d.day} briefing — ${esc(d.title)}" loading="lazy"`)}
           </button>
         </figure>`;
   return `
@@ -175,7 +178,7 @@ function dayScene(d, freq) {
         <figure class="poster poster--lineup">
           <figcaption>On Air Today</figcaption>
           <button class="poster__zoom" aria-label="Enlarge lineup — ${esc(d.title)}">
-            <img src="/assets/zkfm/posters/day${dd}-lineup.avif" alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy" />
+            ${pic(`/assets/zkfm/posters/day${dd}-lineup.avif`, `alt="ZKFM Day ${d.day} lineup — ${esc(d.title)}" loading="lazy"`)}
           </button>
         </figure>${briefing}
       </div>
@@ -236,7 +239,7 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     el.className = "ctile";
     el.style.width = a.w + "px";
     el.style.opacity = "0";
-    el.innerHTML = `<img src="${a.src}" alt="" loading="lazy" decoding="async" fetchpriority="low" />`;
+    el.innerHTML = pic(a.src, `alt="" loading="lazy" decoding="async" fetchpriority="low"`);
     field.appendChild(el);
     tiles.push(el);
   }
@@ -376,6 +379,27 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     document.body.style.overflow = "hidden";
     closeBtn.focus();
   });
+})();
+
+// ---- Tuner: highlight the active frequency while scrolling -----------------
+
+(function initTuner() {
+  const links = {};
+  document.querySelectorAll(".zk-tuner a[data-freq]").forEach((a) => (links[a.dataset.freq] = a));
+  const acts = document.querySelectorAll(".act");
+  if (!acts.length || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const n = e.target.id.replace("freq-", "");
+        Object.values(links).forEach((a) => a.classList.remove("is-active"));
+        if (links[n]) links[n].classList.add("is-active");
+      });
+    },
+    { rootMargin: "-45% 0px -45% 0px" }
+  );
+  acts.forEach((a) => io.observe(a));
 })();
 
 // ---- Cinematic choreography (GSAP) -----------------------------------------

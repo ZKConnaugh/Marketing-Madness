@@ -53,10 +53,7 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.05;
 }
 .home-hero__title .accent {
-  background: var(--mm-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #f5a623;
 }
 .home-hero__sub {
   margin-top: 18px;
