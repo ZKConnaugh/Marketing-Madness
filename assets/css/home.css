@@ -1,150 +1,178 @@
-/* connaugh.me — portfolio hub. Separate from style.css / zkfm.css. */
-@font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/inter-latin-var.woff2") format("woff2");
-  font-weight: 100 900;
-  font-display: swap;
-}
+/* connaugh.me — interactive CV. Editorial cream document with dark project portals. */
+
+@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Arizona"; src: url("/assets/fonts/zkfm/arizona-mediumitalic.woff2") format("woff2"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Epilogue"; src: url("/assets/fonts/zkfm/epilogue-var.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
 :root {
-  --bg: #0a0b0d;
-  --bg-2: #111319;
-  --ink: #f2f3f0;
-  --muted: #9aa0a6;
-  --line: rgba(255, 255, 255, 0.10);
-  --mm-grad: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff);
+  --paper: #f2ead8;
+  --paper-2: #ece2cd;
+  --ink: #16120b;
+  --ink-soft: #6c6557;
+  --line: rgba(22, 18, 11, 0.16);
+  --lime: #bfe21f;
+  --serif: "Arizona", Georgia, "Times New Roman", serif;
+  --mono: ui-monospace, "SF Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: "Epilogue", system-ui, -apple-system, sans-serif;
+  --maxw: 920px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html { scroll-behavior: auto; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
 body {
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
-  background: var(--bg);
+  font-family: var(--sans);
+  background: var(--paper);
   color: var(--ink);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
-a { color: inherit; text-decoration: none; }
+a { color: inherit; }
+em { font-style: italic; }
+
+/* ---- Reading progress ---- */
+.cv-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0;
+  background: var(--lime); z-index: 200; transition: width 0.1s linear;
+}
+
+/* ---- Section dial (right side) ---- */
+.cv-dial {
+  position: fixed; top: 50%; right: 26px; transform: translateY(-50%); z-index: 150;
+  display: flex; flex-direction: column; gap: 14px; align-items: flex-end;
+}
+.cv-dial a {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--ink-soft);
+  text-decoration: none; display: flex; align-items: center; gap: 9px; opacity: 0.5; transition: opacity 0.2s, color 0.2s;
+}
+.cv-dial a::after { content: ""; width: 22px; height: 2px; background: currentColor; display: block; transition: width 0.2s; }
+.cv-dial a:hover { opacity: 1; }
+.cv-dial a.is-active { opacity: 1; color: var(--ink); }
+.cv-dial a.is-active::after { width: 40px; background: var(--lime); }
+.cv-dial .label { display: none; }
+.cv-dial a.is-active .label { display: inline; }
+
+/* ---- Shell ---- */
+.cv-wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
 
 /* ---- Header ---- */
-.home-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 24px;
-  max-width: 1080px;
-  margin: 0 auto;
+.cv-head { padding: clamp(56px, 9vw, 110px) 0 36px; }
+.cv-eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 26px;
 }
-.home-header__name { font-weight: 700; letter-spacing: 0.02em; }
-.home-socials { display: flex; gap: 12px; }
-.home-socials svg { width: 22px; height: 22px; display: block; }
-.home-socials a { opacity: 0.85; }
-.home-socials a:hover { opacity: 1; }
+.cv-eyebrow b { color: var(--ink); font-weight: 400; }
+.cv-name {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 11vw, 124px);
+  line-height: 0.92; letter-spacing: -0.01em;
+}
+.cv-name em { font-weight: 400; }
+.cv-role {
+  margin-top: 22px; font-family: var(--mono); font-size: clamp(13px, 2vw, 16px);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.cv-role span { color: var(--ink-soft); }
+.cv-contact { margin-top: 12px; font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+.cv-contact a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--lime); }
+.cv-contact a:hover { color: var(--ink); }
+.cv-rule { height: 5px; background: var(--lime); margin: 30px 0 0; border-radius: 2px; }
 
-/* ---- Hero ---- */
-.home-hero {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 70px 24px 40px;
+/* ---- Sections ---- */
+.cv-section { padding: 60px 0; border-bottom: 1px solid var(--line); }
+.cv-label {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--ink-soft); margin-bottom: 30px;
 }
-.home-hero__title {
-  font-size: clamp(34px, 6vw, 60px);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-}
-.home-hero__title .accent {
-  color: #f5a623;
-}
-.home-hero__sub {
-  margin-top: 18px;
-  max-width: 560px;
-  font-size: clamp(16px, 2.4vw, 19px);
-  color: var(--muted);
-}
+.cv-label b { color: var(--ink); font-weight: 400; margin-right: 8px; }
 
-/* ---- Work grid ---- */
-.work {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 30px 24px 80px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 24px;
-}
-.project {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--bg-2);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-.project:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.25); }
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.is-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
 
-.project__art {
-  height: 180px;
-  display: grid;
-  place-items: center;
-  position: relative;
-  overflow: hidden;
-}
-/* Marketing Madness art */
-.project--mm .project__art { background: #0d0f14; }
-.project--mm .art-word { font-weight: 800; font-size: 30px; line-height: 1; text-align: center; }
-.project--mm .art-word .m1 { color: #fff; display: block; letter-spacing: 0.02em; }
-.project--mm .art-word .m2 {
-  display: block;
-  background: var(--mm-grad);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  letter-spacing: 0.06em;
-}
-/* ZKFM art */
-.project--zkfm .project__art {
-  background:
-    radial-gradient(60% 90% at 50% 50%, rgba(143, 224, 0, 0.12), transparent 70%),
-    #07080b;
-}
-.project--zkfm .project__art::after {
-  content: "";
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.35) 3px);
-  pointer-events: none;
-}
-.project--zkfm .art-word {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  font-weight: 800; font-size: 44px; letter-spacing: 0.08em;
-  color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0;
-  position: relative; z-index: 1;
-}
+/* ---- Profile ---- */
+.cv-profile p { font-family: var(--serif); font-size: clamp(19px, 2.5vw, 25px); line-height: 1.5; max-width: 760px; }
+.cv-profile .lead em { font-style: italic; }
 
-.project__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
-.project__kicker {
-  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+/* ---- Projects (dark portals) ---- */
+.cv-projects { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.portal {
+  display: flex; flex-direction: column; text-decoration: none;
+  background: #07080b; color: #f2ead8; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08); position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.project__title { font-size: 22px; font-weight: 700; margin: 6px 0 8px; }
-.project__desc { font-size: 14px; color: var(--muted); flex: 1; }
-.project__cta { margin-top: 16px; font-size: 14px; font-weight: 600; }
-.project--mm .project__cta { color: #f5a623; }
-.project--zkfm .project__cta { color: #cdee4a; }
+.portal:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.28); }
+.portal:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.portal__art { height: 168px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.portal--zkfm .portal__art { background: radial-gradient(70% 100% at 50% 50%, rgba(205,238,74,0.12), transparent 70%), #07080b; }
+.portal--zkfm .portal__art::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.35) 3px); }
+.portal--zkfm .pmark { font-family: var(--mono); font-weight: 800; font-size: 46px; letter-spacing: 0.08em; color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0; position: relative; z-index: 1; }
+.portal--mm .portal__art { background: #0d0f14; }
+.portal--mm .pmark { font-family: "Inter", system-ui, sans-serif; font-weight: 800; font-size: 30px; line-height: 1; text-align: center; }
+.portal--mm .pmark .m1 { display: block; color: #fff; }
+.portal--mm .pmark .m2 { display: block; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.05em; }
+.portal__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
+.portal__name { font-family: var(--serif); font-size: 26px; }
+.portal__meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: #9a9488; margin: 6px 0 12px; }
+.portal__sub { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.portal__desc { font-size: 13.5px; color: #c4bdad; flex: 1; }
+.portal__stats { display: flex; gap: 22px; margin: 16px 0 4px; }
+.portal__stats b { font-family: var(--serif); font-size: 26px; font-weight: 500; color: #cdee4a; display: block; line-height: 1; }
+.portal--mm .portal__stats b { color: #f5a623; }
+.portal__stats span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; color: #9a9488; text-transform: uppercase; }
+.portal__enter { margin-top: 16px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #cdee4a; }
+.portal--mm .portal__enter { color: #f5a623; }
+.portal__enter span { display: inline-block; transition: transform 0.2s ease; }
+.portal:hover .portal__enter span { transform: translateX(6px); }
+.cv-projects__note { font-family: var(--serif); font-style: italic; color: var(--ink-soft); font-size: 16px; margin-bottom: 22px; max-width: 760px; }
+
+/* ---- Experience ---- */
+.role { border-top: 1px solid var(--line); }
+.role:first-of-type { border-top: 0; }
+.role > summary {
+  list-style: none; cursor: pointer; padding: 20px 0; display: grid;
+  grid-template-columns: 1fr auto; align-items: baseline; gap: 8px 20px;
+}
+.role > summary::-webkit-details-marker { display: none; }
+.role__title { font-family: var(--serif); font-size: clamp(22px, 3vw, 30px); font-weight: 400; }
+.role__title .co { color: var(--ink-soft); }
+.role__dates { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); letter-spacing: 0.05em; white-space: nowrap; }
+.role__what { grid-column: 1 / -1; color: var(--ink-soft); font-size: 14px; margin-top: -6px; }
+.role__toggle { grid-column: 1 / -1; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--ink-soft); text-transform: uppercase; }
+.role[open] .role__toggle .more { display: none; }
+.role:not([open]) .role__toggle .less { display: none; }
+.role__bullets { padding: 0 0 24px; max-width: 800px; }
+.role__bullets li { list-style: none; position: relative; padding-left: 22px; margin: 12px 0; font-size: 15px; line-height: 1.55; }
+.role__bullets li::before { content: "–"; position: absolute; left: 0; color: var(--lime); font-weight: 700; }
+.num { font-variant-numeric: tabular-nums; }
+.role__bullets b, .num { font-weight: 600; }
+
+/* ---- Education ---- */
+.edu { display: grid; gap: 14px; }
+.edu__row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.edu__row:last-child { border-bottom: 0; }
+.edu__name { font-family: var(--serif); font-size: clamp(17px, 2.2vw, 20px); }
+.edu__meta { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
 
 /* ---- Footer ---- */
-.home-footer {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 30px 24px 60px;
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--muted);
-  font-size: 13px;
-}
-.home-footer a:hover { color: var(--ink); }
+.cv-foot { padding: 40px 0 70px; }
+.cv-foot .cv-rule { margin: 0 0 22px; }
+.cv-foot p { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+.cv-foot a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--lime); }
 
-@media (max-width: 520px) {
-  .home-footer { flex-direction: column; gap: 12px; }
-}
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-/* Visible keyboard focus */
-a:focus-visible, button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 4px; }
+/* ---- Responsive ---- */
+@media (max-width: 720px) {
+  .cv-dial { display: none; }
+  .cv-projects { grid-template-columns: 1fr; }
+  .role > summary { grid-template-columns: 1fr; }
+  .role__dates { white-space: normal; }
+}

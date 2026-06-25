@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Connaugh — Content & Marketing for Web3 / Zero-Knowledge</title>
-  <meta name="description" content="Connaugh Gaskin — content and marketing for web3 and zero-knowledge. Selected work: Marketing Madness (LinkedIn magazine) and ZKFM (pirate-radio launch campaign for Aztec)." />
-  <meta name="author" content="Connaugh" />
+  <title>Connaugh Gaskin — Marketing for Web3, ZK & Privacy</title>
+  <meta name="description" content="Connaugh Gaskin — marketing for Web3, zero-knowledge and privacy. An interactive CV: six years in tech marketing, two and a half inside the Mina ZK ecosystem, and two self-directed builds — Marketing Madness and ZKFM." />
+  <meta name="author" content="Connaugh Gaskin" />
   <link rel="canonical" href="https://www.connaugh.me/" />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
   <!-- Open Graph -->
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://www.connaugh.me/" />
   <meta property="og:site_name" content="connaugh.me" />
-  <meta property="og:title" content="Connaugh — Content & Marketing for Web3 / Zero-Knowledge" />
-  <meta property="og:description" content="Content and marketing for web3 and zero-knowledge. Selected work: Marketing Madness (LinkedIn magazine) and ZKFM (pirate-radio launch for Aztec)." />
+  <meta property="og:title" content="Connaugh Gaskin — Marketing for Web3, ZK & Privacy" />
+  <meta property="og:description" content="An interactive CV. Six years in tech marketing, two and a half inside the Mina ZK ecosystem — plus two self-directed builds: Marketing Madness and ZKFM." />
   <meta property="og:image" content="https://www.connaugh.me/assets/og-hub.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -26,11 +26,13 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:site" content="@zkMarketer" />
   <meta name="twitter:creator" content="@zkMarketer" />
-  <meta name="twitter:title" content="Connaugh — Content & Marketing for Web3 / Zero-Knowledge" />
-  <meta name="twitter:description" content="Content and marketing for web3 and zero-knowledge. Selected work: Marketing Madness and ZKFM." />
+  <meta name="twitter:title" content="Connaugh Gaskin — Marketing for Web3, ZK & Privacy" />
+  <meta name="twitter:description" content="An interactive CV. Marketing Madness, ZKFM, and six years in tech marketing." />
   <meta name="twitter:image" content="https://www.connaugh.me/assets/og-hub.jpg" />
 
-  <link rel="preload" href="/assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/zkfm/arizona-regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/zkfm/arizona-italic.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/zkfm/epilogue-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/css/home.css" />
 
   <script type="application/ld+json">
@@ -39,64 +41,193 @@
     "@type": "Person",
     "name": "Connaugh Gaskin",
     "url": "https://www.connaugh.me/",
-    "jobTitle": "Content & Marketing (Web3 / Zero-Knowledge)",
+    "jobTitle": "Marketing (Web3 / Zero-Knowledge / Privacy)",
+    "address": { "@type": "PostalAddress", "addressCountry": "United Kingdom" },
+    "alumniOf": "University of East Anglia",
     "sameAs": [
       "https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/",
-      "https://x.com/zkMarketer"
+      "https://x.com/zkMarketer",
+      "https://x.com/ZKFMradio"
     ]
   }
   </script>
 </head>
 <body>
-  <header class="home-header">
-    <span class="home-header__name">Connaugh</span>
-    <span class="home-socials">
-      <a href="https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/" target="_blank" rel="noopener noreferrer" aria-label="Connaugh on LinkedIn">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
-      </a>
-      <a href="https://x.com/zkMarketer" target="_blank" rel="noopener noreferrer" aria-label="Connaugh on X (Twitter)">
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </a>
-    </span>
-  </header>
+  <div class="cv-progress" id="progress" aria-hidden="true"></div>
 
-  <main>
-    <section class="home-hero">
-      <h1 class="home-hero__title">Content &amp; marketing for<br /><span class="accent">web3 &amp; zero-knowledge</span>.</h1>
-      <p class="home-hero__sub">I'm Connaugh — I build campaigns and content for crypto and privacy-first projects. A couple of recent ones below.</p>
+  <nav class="cv-dial" aria-label="CV sections">
+    <a href="#profile" data-sec="01"><span class="label">Profile</span> 01</a>
+    <a href="#projects" data-sec="02"><span class="label">Projects</span> 02</a>
+    <a href="#experience" data-sec="03"><span class="label">Experience</span> 03</a>
+    <a href="#education" data-sec="04"><span class="label">Education</span> 04</a>
+  </nav>
+
+  <main class="cv-wrap">
+    <header class="cv-head">
+      <p class="cv-eyebrow" id="eyebrow">You are now reading <b>— the top</b></p>
+      <h1 class="cv-name">Conn<em>augh</em> Gask<em>in</em></h1>
+      <p class="cv-role">Marketing <span>[ Web3 · ZK · Privacy ]</span></p>
+      <p class="cv-contact">United Kingdom · <a href="https://www.connaugh.me">connaugh.me</a> · <a href="https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/" target="_blank" rel="noopener noreferrer">linkedin.com/in/connaugh-gaskin</a> · <a href="https://x.com/ZKFMradio" target="_blank" rel="noopener noreferrer">@ZKFMRadio</a> · <a href="https://x.com/zkMarketer" target="_blank" rel="noopener noreferrer">@zkMarketer</a></p>
+      <div class="cv-rule" aria-hidden="true"></div>
+    </header>
+
+    <section id="profile" class="cv-section" data-sec="01">
+      <p class="cv-label"><b>01</b> Profile</p>
+      <div class="cv-profile reveal">
+        <p class="lead">The two projects below explain me better than adjectives can: a 49-issue magazine built over a year of evenings and weekends, and a pirate radio station built to win this job, 107 assets produced across three months and broadcast over three weeks. The pattern behind both is the same. Constant experimentation, a genuine love of the technology, and a flat refusal to let the work plateau: every asset a module in a compounding system, so the hundredth piece embarrasses the first. Six years in tech marketing include two and a half inside the Mina ecosystem at Mina Foundation and o1Labs, where I learned ZK first-hand from the engineers behind the Kimchi proof system. Not the deep maths, but their thinking and their vision, and it convinced me to point my career at this technology. My philosophy is Seth Godin's: <em>make work worth remarking on</em>, because ideas spread person to person and word of mouth carries trust no channel can. AI has been in my workflow since early 2022, and I study marketing constantly, mostly from outside crypto, because Web3 spends too much time looking at itself.</p>
+      </div>
     </section>
 
-    <section class="work">
-      <a class="project project--mm" href="/marketing-madness.html" aria-label="Marketing Madness">
-        <div class="project__art" aria-hidden="true">
-          <span class="art-word"><span class="m1">Marketing</span><span class="m2">Madness</span></span>
-        </div>
-        <div class="project__body">
-          <span class="project__kicker">LinkedIn Magazine</span>
-          <h2 class="project__title">Marketing Madness</h2>
-          <p class="project__desc">A 49-episode interactive magazine series for marketers — read it episode by episode.</p>
-          <span class="project__cta">Enter →</span>
-        </div>
-      </a>
+    <section id="projects" class="cv-section" data-sec="02">
+      <p class="cv-label"><b>02</b> Personal Projects</p>
+      <p class="cv-projects__note reveal">Two self-directed builds, four years apart, both finished. I treat personal projects as my R&amp;D lab — the place to take swings that day-to-day roles rarely allow. <strong>Click in to explore each one live.</strong></p>
+      <div class="cv-projects">
+        <a class="portal portal--zkfm reveal" href="/zkfm" aria-label="Enter the ZKFM broadcast">
+          <div class="portal__art" aria-hidden="true"><span class="pmark">ZKFM</span></div>
+          <div class="portal__body">
+            <span class="portal__name">ZK<em>FM</em></span>
+            <span class="portal__meta">[ Solo ] · Feb 2026 – present</span>
+            <span class="portal__sub">A pirate radio station built around the Aztec Alpha rollout.</span>
+            <span class="portal__desc">Three months of production, broadcast over three weeks on X across three series — Ground Zero, Nullify and Witness This — by cutting Aztec's own launch interviews to their sharpest moments and layering custom design. Run as proof that one person can be a full content operation. The real audience was the Aztec team itself. They reached out.</span>
+            <span class="portal__stats">
+              <span><b class="num" data-to="63">0</b><span>videos</span></span>
+              <span><b class="num" data-to="107">0</b><span>assets</span></span>
+              <span><b class="num" data-to="3">0</b><span>series</span></span>
+            </span>
+            <span class="portal__enter">Enter the broadcast <span>→</span></span>
+          </div>
+        </a>
 
-      <a class="project project--zkfm" href="/zkfm" aria-label="ZKFM">
-        <div class="project__art" aria-hidden="true">
-          <span class="art-word">ZKFM</span>
+        <a class="portal portal--mm reveal" href="/marketing-madness.html" aria-label="Enter the Marketing Madness magazine">
+          <div class="portal__art" aria-hidden="true"><span class="pmark"><span class="m1">Marketing</span><span class="m2">Madness</span></span></div>
+          <div class="portal__body">
+            <span class="portal__name">Mark<em>eting</em> Mad<em>ness</em></span>
+            <span class="portal__meta">[ Solo ] · 2022 – 2023</span>
+            <span class="portal__sub">A 49-issue magazine built from 20 books, read twice.</span>
+            <span class="portal__desc">Each issue distils one marketing or psychology text, filled out with worked examples from real campaigns and creators. Started in the first weeks of ChatGPT and Midjourney as a deliberate experiment in AI-assisted production — the early issues are raw; the final year shows the compounding. The export pipeline from Figma is automated in Node.js against the Figma REST API.</span>
+            <span class="portal__stats">
+              <span><b class="num" data-to="49">0</b><span>issues</span></span>
+              <span><b class="num" data-to="20">0</b><span>books</span></span>
+              <span><b class="num" data-to="1">0</b><span>year</span></span>
+            </span>
+            <span class="portal__enter">Enter the magazine <span>→</span></span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section id="experience" class="cv-section" data-sec="03">
+      <p class="cv-label"><b>03</b> Experience</p>
+      <div class="reveal">
+        <details class="role" open>
+          <summary>
+            <span class="role__title">Mark<em>eting</em> Manager <span class="co">· o1Labs</span></span>
+            <span class="role__dates">Nov 2024 – Feb 2026</span>
+            <span class="role__what">Engineering team behind the Mina Protocol. Promoted from Marketing Associate in April 2025.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Ran content operations across o1Labs: owned the editorial calendar, review workflow and source-of-truth documentation, all run through Slack, and coordinated engineers and researchers into writing blogs and appearing in videos alongside my own production.</li>
+            <li>Owned co-marketing across the Mina ecosystem. Produced video series with ZK Noid (ZK gaming), Nori (a trust-minimised Ethereum→Mina state bridge, proving Ethereum's state root inside Succinct's zkVM) and Zeko (an L2 on Mina). Builders have almost no spare time, so my method takes as little of it as possible: one hour of recording with ZK Noid became a plan for <b>12</b> videos.</li>
+            <li>Worked on o1Labs' explorations of a pivot towards products — created the video for an in-house proof of concept on image authenticity, and interviewed Roc Camera, the first ZK-provable camera, part of a push to take our content beyond Mina's own echo chamber.</li>
+            <li>Supported the launch of Project Untitled, a decentralised state management protocol, and owned the announcement content for its fundraise: five films covering the launch, the Punk Ventures and Echo rounds, the whitepaper and progress updates. Sat on the team that built the project's brand.</li>
+            <li>Produced weekly video updates with the CEO through the Mina Foundation wind-down — the lowest point in ecosystem confidence — then repeated the format with the incoming co-CEOs after the last co-founder left.</li>
+            <li>Led marketing for the announcement of Mina's next upgrade, filming three videos with the Head of Technology and two ecosystem projects, then ran the MIP (Mina Improvement Proposal) process from the marketing side as the upgrade moved through governance.</li>
+          </ul>
+        </details>
+
+        <details class="role" open>
+          <summary>
+            <span class="role__title">Mark<em>eting</em> Associate <span class="co">· Mina Foundation</span></span>
+            <span class="role__dates">Nov 2023 – Nov 2024</span>
+            <span class="role__what">Nonprofit steward of the Mina Protocol, a ZK Layer 1.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Worked on messaging and creative for the Berkeley upgrade, Mina's largest protocol milestone, alongside a digital agency. The three launch films took <b class="num" data-to="1100000" data-fmt="m">0</b> impressions on X: the main animation (573k), a meme-led teaser (490k) and a community film shot at an offsite (125k).</li>
+            <li>Helped shape the positioning that came out of that campaign: <em>Proof of Everything</em>, the Lego-brick framing for proof composability, and <em>HTTPZ</em>, the idea that ZK adds a verification layer to the internet the way the S in HTTPS added security.</li>
+            <li>Created Kimchi Bytes, an interview series named after Mina's proof system and modelled on Hot Ones, filming ecosystem founders over progressively hotter chillies.</li>
+            <li>Part of the team behind MinaCon, the first Mina conference, and filmed technical content at developer offsites that solved real onboarding problems for builders.</li>
+            <li>Led the onboarding of Brandwatch as Mina's analytics platform, took the training and built the dashboards myself, tracking share of voice across the ZK space and the wider industry. Also ran day-to-day website management and email marketing.</li>
+          </ul>
+        </details>
+
+        <details class="role">
+          <summary>
+            <span class="role__title">Mark<em>eting</em> Analyst &amp; Content Manager <span class="co">· Fetch.ai</span></span>
+            <span class="role__dates">Jul 2023 – Nov 2023</span>
+            <span class="role__what">Web3 AI agents startup.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Built the content strategy for the company's repositioning around AI agents and supported delivery of the new website that carried the messaging.</li>
+            <li>Set up Looker Studio dashboards and Google Tag Manager to give the team proper visibility on channel performance.</li>
+          </ul>
+        </details>
+
+        <details class="role">
+          <summary>
+            <span class="role__title">Dig<em>ital</em> Marketing Executive <span class="co">· CN Bio</span></span>
+            <span class="role__dates">Apr 2022 – Jul 2023</span>
+            <span class="role__what">B2B biotech — organ-on-a-chip platforms for drug discovery.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Connected GTM, GA4, Search Console, HubSpot and Looker Studio into a single attribution stack. Marketing-sourced revenue rose from roughly <b>20%</b> of company total to <b>55%</b> during my time there.</li>
+            <li>Grew website clicks and impressions by over <b>300%</b>, LinkedIn followers by <b>50%</b> and engagement by <b>75%</b>, while owning scientific copywriting, SEO, the WordPress rebuild and day-to-day site management, and paid campaigns across Google, Bing and LinkedIn.</li>
+          </ul>
+        </details>
+
+        <details class="role">
+          <summary>
+            <span class="role__title">Tran<em>sport</em> Manager <span class="co">· Van Duijn Transport B.V.</span></span>
+            <span class="role__dates">Feb 2021 – Apr 2022</span>
+            <span class="role__what">UK launch for a Dutch haulage group.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Took the UK subsidiary from dormant to operational in 12 months, dealing directly with TfL, the traffic commissioner and the police, and gained professional transport qualifications along the way.</li>
+          </ul>
+        </details>
+
+        <details class="role">
+          <summary>
+            <span class="role__title">Mark<em>eting</em> Executive <span class="co">· Dain Consulting</span></span>
+            <span class="role__dates">Feb 2020 – Jan 2021</span>
+            <span class="role__what">SEO consultancy — B2B and B2C clients.</span>
+            <span class="role__toggle"><span class="more">+ expand</span><span class="less">– collapse</span></span>
+          </summary>
+          <ul class="role__bullets">
+            <li>Managed WordPress builds, SEO and paid media across a client portfolio, with Analytics and Search Console reporting as standard.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <section id="education" class="cv-section" data-sec="04">
+      <p class="cv-label"><b>04</b> Education</p>
+      <div class="edu reveal">
+        <div class="edu__row">
+          <span class="edu__name">MSc Management (Marketing) — Distinction · School prize for best MSc performance</span>
+          <span class="edu__meta">UEA · 2019–2020</span>
         </div>
-        <div class="project__body">
-          <span class="project__kicker">Launch Campaign · Aztec</span>
-          <h2 class="project__title">ZKFM</h2>
-          <p class="project__desc">A 21-day pirate-radio launch campaign for Aztec — 63 videos across 3 frequencies.</p>
-          <span class="project__cta">Enter →</span>
+        <div class="edu__row">
+          <span class="edu__name">BSc Marketing and Management — First Class Honours</span>
+          <span class="edu__meta">UEA · 2016–2019</span>
         </div>
-      </a>
+        <div class="edu__row">
+          <span class="edu__name">Certified Digital Marketing Professional</span>
+          <span class="edu__meta">DMI · 2023</span>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="home-footer">
-    <span>© <span id="year"></span> Connaugh. All rights reserved.</span>
+  <footer class="cv-foot cv-wrap">
+    <div class="cv-rule" aria-hidden="true"></div>
+    <p>Connaugh Gaskin · United Kingdom · <a href="https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="https://x.com/zkMarketer" target="_blank" rel="noopener noreferrer">@zkMarketer</a> · © <span id="year"></span></p>
   </footer>
 
-  <script src="/assets/js/year.js"></script>
+  <script src="/assets/js/cv.js"></script>
 </body>
 </html>
