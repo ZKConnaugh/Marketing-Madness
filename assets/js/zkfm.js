@@ -224,7 +224,7 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const gsap = window.gsap;
-  const N = Math.min(reduce ? 16 : 36, pool.length);
+  const N = Math.min(reduce ? 16 : (window.innerWidth < 760 ? 18 : 36), pool.length);
   const tiles = [];
   for (let i = 0; i < N; i++) {
     const a = pool[i % pool.length];
@@ -267,12 +267,21 @@ if (yEl) yEl.textContent = new Date().getFullYear();
       const dur = 18 + Math.random() * 16;
       gsap.set(el, { x: s.x, y: s.y, rotateY: s.rot });
       const tl = gsap.timeline({ onComplete: () => loop(false) });
+      el._zkTl = tl; // live reference (reassigned each recycle) so pause/resume never goes stale
       tl.fromTo(el, { z: -1600, opacity: 0 }, { z: -760, opacity: 0.92, duration: dur * 0.34, ease: "none" })
         .to(el, { z: 180, opacity: 0.92, duration: dur * 0.46, ease: "none" })
         .to(el, { z: 540, opacity: 0, duration: dur * 0.2, ease: "none" });
       if (seed) tl.progress(Math.random());
     })(true);
   });
+
+  // Pause the fly-through when the hero is off-screen or the tab is hidden (perf/battery).
+  let onScreen = true;
+  const apply = () => tiles.forEach((el) => el._zkTl && (onScreen && !document.hidden ? el._zkTl.play() : el._zkTl.pause()));
+  document.addEventListener("visibilitychange", apply);
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; apply(); }, { threshold: 0 }).observe(host);
+  }
 })();
 
 // ---- Click-to-play modal ---------------------------------------------------
