@@ -380,77 +380,94 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   const host = document.getElementById("collage");
   if (!host) return;
 
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const gsap = window.gsap;
+  const small = window.innerWidth < 760;
+  const W = () => window.innerWidth;
+  const H = () => window.innerHeight;
+
+  // Pool of purpose-built tiny renders (~200px) — landscape video thumbs + portrait
+  // day posters — so the hero stays a few hundred KB instead of multiple MB.
   const pool = [];
   Object.keys(VIDEO_IDS).forEach((k) => {
     const m = k.match(/D(\d+)V(\d+)/);
-    pool.push({ src: `/assets/zkfm/thumbs/d${pad(+m[1])}v${m[2]}.avif`, w: 240 });
+    pool.push({ src: `/assets/zkfm/collage/d${pad(+m[1])}v${m[2]}.avif`, portrait: false });
   });
   FREQUENCIES.forEach((f) => f.days.forEach((d) => {
-    if (!d.special) pool.push({ src: `/assets/zkfm/posters/day${pad(d.day)}-lineup.avif`, w: 156 });
+    if (!d.special) pool.push({ src: `/assets/zkfm/collage/p${pad(d.day)}.avif`, portrait: true });
   }));
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
 
+  // Decouple tile count from downloads: load U unique images, render N tiles that
+  // reuse them (each unique image is fetched once) → a busy field, light payload.
+  const U = Math.min(reduce ? 12 : small ? 22 : 42, pool.length);
+  const N = reduce ? 14 : small ? 26 : 52;
+
   const field = document.createElement("div");
   field.className = "collage__field";
-  host.appendChild(field);
-
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const gsap = window.gsap;
-  const N = Math.min(reduce ? 16 : (window.innerWidth < 760 ? 18 : 36), pool.length);
   const tiles = [];
   for (let i = 0; i < N; i++) {
-    const a = pool[i % pool.length];
+    const a = pool[i % U];
+    const w = a.portrait ? 95 + Math.random() * 55 : 130 + Math.random() * 70;
     const el = document.createElement("div");
     el.className = "ctile";
-    el.style.width = a.w + "px";
+    el.style.width = w.toFixed(0) + "px";
     el.style.opacity = "0";
     el.innerHTML = pic(a.src, `alt="" loading="lazy" decoding="async" fetchpriority="low"`);
     field.appendChild(el);
     tiles.push(el);
   }
+  host.appendChild(field);
 
-  const spread = () => ({
-    x: (Math.random() * 1.7 - 0.85) * window.innerWidth,
-    y: (Math.random() * 1.6 - 0.8) * window.innerHeight,
-    rot: Math.random() * 22 - 11,
+  // A random point in a wide 3D box. z near +250 is close to camera, -1500 is deep.
+  const rpt = () => ({
+    x: (Math.random() * 1.7 - 0.85) * W(),
+    y: (Math.random() * 1.6 - 0.8) * H(),
+    z: -1500 + Math.random() * 1750,
   });
+  const peak = (z) => 0.45 + ((z + 1500) / 1750) * 0.45; // closer = brighter
 
-  // Reduced motion / no GSAP: a still 3D scatter.
+  // Reduced motion / no GSAP: a still 3D scatter (depth via blur + opacity).
   if (!gsap || reduce) {
     tiles.forEach((el) => {
-      const s = spread();
-      const z = -300 + Math.random() * 360;
-      const depth = (z + 300) / 660;
+      const p = rpt();
+      const d = (p.z + 1500) / 1750;
       el.style.transform =
-        `translate(-50%,-50%) translate3d(${s.x * 0.45}px,${s.y * 0.45}px,${z}px) rotateY(${s.rot}deg)`;
-      el.style.opacity = (0.3 + depth * 0.5).toFixed(2);
-      el.style.filter = `blur(${((1 - depth) * 1.6).toFixed(1)}px)`;
+        `translate(-50%,-50%) translate3d(${(p.x * 0.5).toFixed(0)}px,${(p.y * 0.5).toFixed(0)}px,${p.z.toFixed(0)}px) rotateY(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+      el.style.opacity = peak(p.z).toFixed(2);
+      el.style.filter = `blur(${((1 - d) * 1.4).toFixed(1)}px)`;
     });
     return;
   }
 
-  // Continuous fly-through: each tile travels from deep back toward the camera,
-  // fades in far, fades out as it passes, then recycles to a new spot. Seeded at
-  // a random progress so the field is full immediately.
   gsap.set(tiles, { xPercent: -50, yPercent: -50, force3D: true });
-  tiles.forEach((el) => {
-    (function loop(seed) {
-      const s = spread();
-      const dur = 18 + Math.random() * 16;
-      gsap.set(el, { x: s.x, y: s.y, rotateY: s.rot });
-      const tl = gsap.timeline({ onComplete: () => loop(false) });
-      el._zkTl = tl; // live reference (reassigned each recycle) so pause/resume never goes stale
-      tl.fromTo(el, { z: -1600, opacity: 0 }, { z: -760, opacity: 0.92, duration: dur * 0.34, ease: "none" })
-        .to(el, { z: 180, opacity: 0.92, duration: dur * 0.46, ease: "none" })
-        .to(el, { z: 540, opacity: 0, duration: dur * 0.2, ease: "none" });
-      if (seed) tl.progress(Math.random());
-    })(true);
-  });
 
-  // Pause the fly-through when the hero is off-screen or the tab is hidden (perf/battery).
+  // Each tile drifts between two random 3D points — so the field moves in every
+  // direction (toward, away, across, diagonal) — then recycles on a fresh path.
+  function fly(el, seed) {
+    const a = rpt(), b = rpt();
+    const dur = 6 + Math.random() * 8; // 6–14s: quicker and more alive
+    const pk = Math.min(peak(a.z), peak(b.z));
+    const ease = Math.random() < 0.5 ? "none" : "sine.inOut";
+    gsap.set(el, { x: a.x, y: a.y, z: a.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, opacity: 0 });
+    const tl = gsap.timeline({ onComplete: () => fly(el, false) });
+    el._zkTl = tl; // live ref (reassigned each recycle) so pause/resume never goes stale
+    tl.to(el, { x: b.x, y: b.y, z: b.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, duration: dur, ease }, 0)
+      .to(el, { opacity: pk, duration: dur * 0.28, ease: "sine.out" }, 0)
+      .to(el, { opacity: 0, duration: dur * 0.3, ease: "sine.in" }, dur * 0.7);
+    if (seed) tl.progress(Math.random());
+  }
+
+  // Defer the launch so the hero wordmark paints first (perceived load speed).
+  // apply() at the end honours the current on-screen state if the user already
+  // scrolled past during the idle window.
+  const start = () => { tiles.forEach((el) => fly(el, true)); apply(); };
+  (window.requestIdleCallback || ((cb) => setTimeout(cb, 200)))(start, { timeout: 400 });
+
+  // Pause when the hero is off-screen or the tab is hidden (perf/battery).
   let onScreen = true;
   const apply = () => tiles.forEach((el) => el._zkTl && (onScreen && !document.hidden ? el._zkTl.play() : el._zkTl.pause()));
   document.addEventListener("visibilitychange", apply);

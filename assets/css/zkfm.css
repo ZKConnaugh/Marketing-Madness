@@ -101,8 +101,8 @@ picture { display: contents; }
     linear-gradient(180deg, rgba(7,8,11,0.45), transparent 26%, transparent 72%, var(--bg));
 }
 .ctile {
-  position: absolute; left: 50%; top: 50%; border-radius: 7px; overflow: hidden;
-  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 16px 60px rgba(0,0,0,0.6);
+  position: absolute; left: 50%; top: 50%; border-radius: 6px; overflow: hidden;
+  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 8px 26px rgba(0,0,0,0.5);
   will-change: transform, opacity; backface-visibility: hidden;
 }
 .ctile img { width: 100%; height: auto; display: block; }
