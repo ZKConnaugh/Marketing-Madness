@@ -73,6 +73,75 @@ const VIDEO_IDS = {
   D21V3: { id: "7hChDUchSs8", t: "Privacy shouldn't be OWNED by anyone!" },
 };
 
+// Per-video headline as printed on each day's "On Air Today" lineup poster,
+// keyed "D{day}V{video}" (video number = the "VIDEO N" label on the poster).
+// Shown as a caption under each thumbnail so viewers know what they'll watch.
+const POSTER_NAMES = {
+  D1V1: `Privacy came to Ethereum. It took this long.`,
+  D1V2: `One obsession. Nine years.`,
+  D1V3: `Code; not companies. Cryptography; not trust.`,
+  D2V1: `Ethereum is constrained. Privacy is the release valve.`,
+  D2V2: `Seven years early. Right on time.`,
+  D2V3: `We weren't chasing privacy. Institutions dragged us there.`,
+  D3V1: `The real world demanded it. Blockchains finally listened.`,
+  D3V2: `Everyone else hit the ceiling: Aztec removed it.`,
+  D3V3: `Target: Four seconds. Current: 36.`,
+  D4V1: `5 years. Still naked on the blockchain.`,
+  D4V2: `He went from $4M to $100M. Then they hunted him.`,
+  D4V3: `L2s don't want to decentralize. The money's too good.`,
+  D5V1: `Privacy without identity is half a solution.`,
+  D5V2: `AI will crack your compliance check. Now what?`,
+  D5V3: `Privacy costs a little more. It's worth it.`,
+  D6V1: `Without privacy, crypto isn't freedom. It's a better cage.`,
+  D6V2: `The bandwagon found privacy. The builders had been there for years.`,
+  D6V3: `One contract. Public where you want it. Private where it counts.`,
+  D7V1: `Banks are terrified. They should be.`,
+  D7V2: `Compliance built in. Not bolted on.`,
+  D7V3: `First on-chain token launch with zero data leaked.`,
+  D8V1: `Prove who you are. Reveal nothing else.`,
+  D8V2: `Scan your passport. Match your face. Own your identity.`,
+  D8V3: `Verify anywhere. Aztec, Ethereum or off-chain.`,
+  D9V1: `Your passport chip is now a gateway to DeFi.`,
+  D9V2: `Swiss regulators said yes. A historic first.`,
+  D9V3: `App-level privacy fragments. Protocol level privacy compounds.`,
+  D10V1: `One proof. Every transaction. Verified by Ethereum.`,
+  D10V2: `Your device proves it. The network just checks.`,
+  D10V3: `Privacy is light. Public is the same as Ethereum.`,
+  D11V1: `Thousands of TPS on L2? Probably not. That's what L3s are for.`,
+  D11V2: `Zcash does one thing. Aztec does everything.`,
+  D12V1: `The EVM is brilliant. It just wasn't built for secrets.`,
+  D12V2: `Noir writes code. ACIR turns it into a proof.`,
+  D12V3: `Everyone built their own privacy tool. None of them talk to each other.`,
+  D13V1: `We tried to extend Rust. It stopped being Rust. So we built Noir.`,
+  D13V2: `One Transaction. Private swap. Identity check. Done.`,
+  D13V3: `Same fee model. As Ethereum. Different value entirely.`,
+  D14V1: `We rewrote Aztec in Noir. It took ten days.`,
+  D14V2: `Aztec's advisors were like, "WTF?"`,
+  D14V3: `For privacy, Aztec will always outrun Ethereum.`,
+  D16V1: `Hundreds of attestations. One identity. Zero data exposed.`,
+  D16V2: `Stake it. Use it. Shape it. The Aztec Token.`,
+  D16V3: `200,000 tokens. One seat at the table.`,
+  D16V4: `Airdrops print holders. They don't build believers.`,
+  D17V1: `They fought the SSL wars so you could have privacy.`,
+  D17V2: `You don't need to move to Aztec. Just route through Aztec.`,
+  D17V3: `Other chains win when Aztec wins. That's the point.`,
+  D17V4: `No backdoors. Over their dead bodies.`,
+  D18V1: `Bridge chains. Leave no trace.`,
+  D18V2: `Start from Aztec. End up anywhere. Arrive privately.`,
+  D18V3: `Private trade. Verified identity. One atomic transaction.`,
+  D18V4: `Aztec enforces the rules. The trade happens elsewhere.`,
+  D19V1: `Apps that can't exist anywhere else.`,
+  D19V2: `Your bank statement is your credit score. On-chain. Privately.`,
+  D19V3: `Other L2s take liquidity. Aztec gives something back.`,
+  D20V1: `Web3 first. Trad-fi next. Then the world.`,
+  D20V2: `Private stablecoins. Wallets with secrets.`,
+  D20V3: `Games without secrets are boring. Aztec brings the secrets.`,
+  D20V4: `Institutions talk about it. Builders ship it.`,
+  D21V1: `Stage 2. Ethereum grade. No training wheels.`,
+  D21V2: `Private identity. No middlemen. No exceptions.`,
+  D21V3: `Privacy shouldn't have an owner.`,
+};
+
 // Frequency playlists (fallback when a specific video ID isn't known yet).
 const FREQUENCIES = [
   {
@@ -136,12 +205,16 @@ function videoCard(day, v) {
   const key = `D${day}V${v}`;
   const meta = VIDEO_IDS[key] || {};
   const id = meta.id || "";
-  const t = esc(meta.t || `Day ${day} · Video ${v}`);
+  const name = POSTER_NAMES[key] || meta.t || `Day ${day} · Video ${v}`;
+  const label = esc(name);
   return `
-    <button class="vid" data-vid="${id}" data-key="${key}" title="${t}" aria-label="Play: ${t}">
-      ${pic(`/assets/zkfm/thumbs/d${dd}v${v}.avif`, `class="vid__thumb" alt="ZKFM Day ${day} Video ${v} — ${t}" loading="lazy"`)}
-      <span class="vid__play" aria-hidden="true"></span>
-      <span class="vid__tag">D${day} · V${v}</span>
+    <button class="vid" data-vid="${id}" data-key="${key}" aria-label="Play: ${label}">
+      <span class="vid__media">
+        ${pic(`/assets/zkfm/thumbs/d${dd}v${v}.avif`, `class="vid__thumb" alt="ZKFM Day ${day} Video ${v}" loading="lazy"`)}
+        <span class="vid__play" aria-hidden="true"></span>
+        <span class="vid__tag">D${day} · V${v}</span>
+      </span>
+      <span class="vid__name">${label}</span>
     </button>`;
 }
 
