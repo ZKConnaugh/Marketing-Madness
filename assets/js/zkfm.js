@@ -388,6 +388,7 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const gsap = window.gsap;
   const small = window.innerWidth < 760;
+  const sizeScale = small ? 0.62 : 1; // smaller tiles on phones (fill-rate + screen size)
   const W = () => window.innerWidth;
   const H = () => window.innerHeight;
 
@@ -405,21 +406,21 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   }
 
   const rpt = () => ({
-    x: (Math.random() * 1.8 - 0.9) * W(),
-    y: (Math.random() * 1.7 - 0.85) * H(),
-    z: -1500 + Math.random() * 1750, // +250 = near camera, -1500 = deep
+    x: (Math.random() * 1.3 - 0.65) * W(), // concentrate within the viewport
+    y: (Math.random() * 1.3 - 0.65) * H(),
+    z: -700 + Math.random() * 950, // closer band: +250 = near camera, -700 = back
   });
 
   // Build one field. U unique images reused across N tiles (downloads bounded to U;
   // a shared front-of-pool slice means the backdrop's images are already cached).
   function build(host, cfg) {
-    const peak = (z) => (0.42 + ((z + 1500) / 1750) * 0.46) * cfg.peakMul;
+    const peak = (z) => (0.55 + ((z + 700) / 1000) * 0.4) * cfg.peakMul;
     const field = document.createElement("div");
     field.className = "collage__field";
     const tiles = [];
     for (let i = 0; i < cfg.N; i++) {
       const a = pool[i % cfg.U];
-      const w = a.portrait ? 95 + Math.random() * 60 : 130 + Math.random() * 75;
+      const w = (a.portrait ? 95 + Math.random() * 80 : 140 + Math.random() * 110) * sizeScale;
       const el = document.createElement("div");
       el.className = "ctile";
       el.style.width = w.toFixed(0) + "px";
@@ -433,9 +434,8 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     if (!gsap || reduce) {
       tiles.forEach((el) => {
         const p = rpt();
-        const d = (p.z + 1500) / 1750;
         el.style.transform =
-          `translate(-50%,-50%) translate3d(${(p.x * 0.5).toFixed(0)}px,${(p.y * 0.5).toFixed(0)}px,${p.z.toFixed(0)}px) rotateY(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
+          `translate(-50%,-50%) translate3d(${(p.x * 0.7).toFixed(0)}px,${(p.y * 0.7).toFixed(0)}px,${p.z.toFixed(0)}px) rotateY(${(Math.random() * 24 - 12).toFixed(1)}deg)`;
         el.style.opacity = peak(p.z).toFixed(2);
       });
       return { tiles, fly: null };
@@ -452,8 +452,8 @@ if (yEl) yEl.textContent = new Date().getFullYear();
       const tl = gsap.timeline({ onComplete: () => fly(el, false) });
       el._zkTl = tl; // live ref (reassigned each recycle) so pause/resume never goes stale
       tl.to(el, { x: b.x, y: b.y, z: b.z, rotateY: Math.random() * 44 - 22, rotateZ: Math.random() * 10 - 5, duration: dur, ease }, 0)
-        .to(el, { opacity: pk, duration: dur * 0.26, ease: "sine.out" }, 0)
-        .to(el, { opacity: 0, duration: dur * 0.3, ease: "sine.in" }, dur * 0.7);
+        .to(el, { opacity: pk, duration: dur * 0.22, ease: "sine.out" }, 0)
+        .to(el, { opacity: 0, duration: dur * 0.24, ease: "sine.in" }, dur * 0.76);
       if (seed) tl.progress(Math.random());
     }
     return { tiles, fly };
@@ -461,12 +461,12 @@ if (yEl) yEl.textContent = new Date().getFullYear();
 
   const insts = [];
   if (heroHost) insts.push(Object.assign(
-    build(heroHost, { U: Math.min(small ? 28 : 52, pool.length), N: small ? 32 : 78, peakMul: 1, durBase: 6, durRange: 8 }),
-    { runsInHero: true }
+    build(heroHost, { U: Math.min(small ? 28 : 48, pool.length), N: small ? 32 : 48, peakMul: 1, durBase: 6, durRange: 8 }),
+    { runsInHero: true, host: heroHost }
   ));
   if (bgHost) insts.push(Object.assign(
-    build(bgHost, { U: Math.min(small ? 20 : 40, pool.length), N: small ? 22 : 52, peakMul: 0.82, durBase: 9, durRange: 11 }),
-    { runsInHero: false }
+    build(bgHost, { U: Math.min(small ? 18 : 34, pool.length), N: small ? 18 : 40, peakMul: 0.82, durBase: 9, durRange: 11 }),
+    { runsInHero: false, host: bgHost }
   ));
 
   if (!gsap || reduce) return; // static scatter, no timeline management needed
@@ -476,6 +476,9 @@ if (yEl) yEl.textContent = new Date().getFullYear();
   let heroVisible = true, started = false;
   const applyAll = () => insts.forEach((inst) => {
     const play = !document.hidden && (inst.runsInHero ? heroVisible : (!hasHandoff || !heroVisible));
+    // display:none the inactive field so its layers leave the render tree entirely
+    // (the fixed blurred backdrop isn't occlusion-culled behind the hero otherwise).
+    inst.host.style.display = play ? "" : "none";
     inst.tiles.forEach((el) => el._zkTl && (play ? el._zkTl.play() : el._zkTl.pause()));
   });
 

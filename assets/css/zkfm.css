@@ -103,7 +103,7 @@ picture { display: contents; }
 }
 .ctile {
   position: absolute; left: 50%; top: 50%; border-radius: 6px; overflow: hidden;
-  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 8px 26px rgba(0,0,0,0.5);
+  border: 1px solid rgba(205,238,74,0.10); box-shadow: 0 6px 18px rgba(0,0,0,0.45);
   will-change: transform, opacity; backface-visibility: hidden;
 }
 .ctile img { width: 100%; height: auto; display: block; }
