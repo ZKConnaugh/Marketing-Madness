@@ -204,19 +204,29 @@ const pic = (avif, imgAttrs) =>
 
 // ---- Build the DOM ---------------------------------------------------------
 
+// Snappy titles on at most TWO lines, never breaking mid-sentence: split into
+// sentences, then group them into 2 lines at the boundary that balances length.
+// (No regex lookbehind — it SyntaxErrors on Safari < 16.4 and would kill the file.)
+function twoLineTitle(name) {
+  const parts = name.replace(/([.?!])\s+/g, "$1\n").split("\n").map((s) => s.trim()).filter(Boolean);
+  if (parts.length <= 1) return esc(name);
+  let best = 1, bestMax = Infinity;
+  for (let k = 1; k < parts.length; k++) {
+    const m = Math.max(parts.slice(0, k).join(" ").length, parts.slice(k).join(" ").length);
+    if (m < bestMax) { bestMax = m; best = k; }
+  }
+  return `${esc(parts.slice(0, best).join(" "))}<br />${esc(parts.slice(best).join(" "))}`;
+}
+
 function videoCard(day, v) {
   const dd = pad(day);
   const key = `D${day}V${v}`;
   const meta = VIDEO_IDS[key] || {};
   const id = meta.id || "";
   const name = POSTER_NAMES[key] || meta.t || `Day ${day} · Video ${v}`;
-  // Snappy titles: one sentence per line so a line never breaks mid-sentence.
-  // (No regex lookbehind — it SyntaxErrors on Safari < 16.4 and would kill the whole file.)
-  const lines = name.replace(/([.?!])\s+/g, "$1\n").split("\n").map((s) => s.trim()).filter(Boolean)
-    .map((s) => `<span class="vid__line">${esc(s)}</span>`).join("");
   return `
     <button class="vid" data-vid="${id}" data-key="${key}" aria-label="Play: ${esc(name)}">
-      <span class="vid__name">${lines}</span>
+      <span class="vid__name">${twoLineTitle(name)}</span>
       <span class="vid__media">
         ${pic(`/assets/zkfm/thumbs/d${dd}v${v}.avif`, `class="vid__thumb" alt="ZKFM Day ${day} Video ${v}" loading="lazy"`)}
         <span class="vid__play" aria-hidden="true"></span>
