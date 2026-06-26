@@ -126,7 +126,8 @@ main { position: relative; z-index: 1; }
 .zk-hero__context a { color: var(--green); }
 
 /* ---- Featured launch broadcast (between hero and the frequencies) ---- */
-.zk-feature { max-width: 1180px; margin: 0 auto; padding: clamp(40px,8vw,84px) 24px; text-align: center; }
+/* Full-width plain band so the moving backdrop never shows behind the start-here video */
+.zk-feature { position: relative; background: var(--bg); padding: clamp(48px,9vw,104px) 24px; text-align: center; }
 .zk-feature__eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--green); margin-bottom: 18px; }
 .zk-feature__btn {
   position: relative; display: block; width: 100%; max-width: 1100px; margin: 0 auto;
@@ -203,7 +204,6 @@ main { position: relative; z-index: 1; }
 .act__head { max-width: 760px; margin: 0 auto; text-align: center; padding: clamp(52px,9vw,88px) 24px 6px; }
 .act__station { font-family: var(--mono); font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--vacc, var(--green)); }
 .act__name { font-family: var(--font-display); font-weight: 500; font-size: clamp(34px,7vw,64px); letter-spacing: -0.01em; line-height: 1.02; margin-top: 8px; }
-.act__range { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-top: 12px; }
 .act__blurb { max-width: 560px; margin: 14px auto 0; color: var(--ink); opacity: 0.82; font-size: clamp(15px,1.8vw,17px); }
 
 /* The frequency's portrait intro poster, highlighted among Day 1's posters */
@@ -214,8 +214,6 @@ main { position: relative; z-index: 1; }
 }
 .poster--intro .poster__zoom:hover img { border-color: var(--vacc, var(--green)); }
 .scene__posters--intro .poster { width: 260px; max-width: 31%; }
-.scene__posters--solo { justify-content: center; }
-.scene__posters--solo .poster { width: 240px; max-width: 60%; }
 /* Small screens: Day 1's three posters become a compact tappable shelf */
 @media (max-width: 760px) {
   .scene__posters--intro .poster { width: auto; max-width: none; flex: 1 1 0; min-width: 0; }
@@ -243,8 +241,7 @@ main { position: relative; z-index: 1; }
 .week__arrow:hover { border-color: var(--green); color: var(--green); }
 .week__arrow:disabled { opacity: 0.28; cursor: default; }
 .week__now { text-align: center; min-width: 0; }
-.week__num { display: block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; color: var(--vacc, var(--green)); }
-.week__title { display: block; font-family: var(--font-display); font-weight: 500; font-size: clamp(20px,3vw,30px); letter-spacing: -0.01em; line-height: 1.15; }
+.week__num { display: block; font-family: var(--mono); font-weight: 700; font-size: 16px; letter-spacing: 0.24em; color: var(--vacc, var(--green)); }
 
 /* Horizontal scroll-snap track. Vertical wheel still scrolls the page on to the
    next frequency; days are reached by swipe / arrows / day strip / trackpad. */
@@ -329,9 +326,10 @@ main { position: relative; z-index: 1; }
 .vid:hover .vid__media { border-color: var(--green); }
 .vid__thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
 .vid__name {
-  margin-top: 9px; font-family: var(--font-body); font-size: 13px; line-height: 1.35; color: var(--ink);
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0 0 10px; font-family: var(--font-accent); font-style: italic;
+  font-size: clamp(16px, 1.6vw, 20px); line-height: 1.18; color: var(--cream);
 }
+.vid__line { display: block; text-wrap: balance; }
 .vid__play {
   position: absolute; inset: 0; margin: auto; width: 58px; height: 58px; border-radius: 50%;
   background: rgba(7,8,11,0.6); border: 2px solid var(--green); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
@@ -350,11 +348,13 @@ main { position: relative; z-index: 1; }
 /* reveal states (no-JS / reduced-motion fallback) */
 .vid.is-in { opacity: 1; }
 
-/* ---- Special (CLAIRE) scene ---- */
-.scene--special { text-align: center; }
-.scene--special .scene__special { display: block; margin-bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta); }
-.scene__points { max-width: 560px; margin: 0 auto 18px; color: var(--muted); font-size: 15px; }
-.scene--special .scene__x { margin: 0; color: var(--green); }
+/* ---- Day 15 — Claire special feature (standalone, between Freq 02 and 03) ---- */
+.zk-claire { position: relative; z-index: 1; background: var(--bg); text-align: center; padding: clamp(56px,10vw,120px) 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.zk-claire__eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--magenta); }
+.zk-claire__title { font-family: var(--font-display); font-weight: 500; font-size: clamp(44px,9vw,96px); letter-spacing: 0.02em; line-height: 1; margin-top: 14px; color: var(--cream); }
+.zk-claire__text { max-width: 600px; margin: 20px auto 0; color: var(--ink); opacity: 0.85; font-size: clamp(16px,1.9vw,18px); line-height: 1.5; }
+.zk-claire__x { display: inline-flex; align-items: center; min-height: 44px; margin-top: 22px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--green); }
+.zk-claire__x:hover { color: var(--cream); }
 
 /* ---- Poster lightbox ---- */
 .lightbox {

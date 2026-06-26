@@ -175,13 +175,11 @@ const FREQUENCIES = [
     ],
   },
   {
-    n: "03", code: "ZKFM.128", name: "Witness This", range: "Days 15–21",
+    n: "03", code: "ZKFM.128", name: "Witness This", range: "Days 16–21",
     playlist: "PLQsApsP5iZuQ",
     blurb: "Product and endgame. The first fully decentralised privacy L2 — the token, the apps, the world.",
     fold: "cube", vibe: "witness",
     days: [
-      { day: 15, title: "CLAIRE", special: true, videos: [], x: "https://x.com/ZKFMradio/status/2061523549823602992",
-        points: "A special celebrating crypto marketer Claire Kart (@clairekart) — the rebrand, marketing privacy for founders, and the CMO every builder needs." },
       { day: 16, title: "Stake It. Use It. Shape It.", videos: [1, 2, 3, 4], x: "https://x.com/ZKFMradio/status/2061553373422461353" },
       { day: 17, title: "Over Their Dead Bodies", videos: [1, 2, 3, 4], x: "https://x.com/ZKFMradio/status/2062172457067299101" },
       { day: 18, title: "Route Through Aztec", videos: [1, 2, 3, 4], x: "https://x.com/ZKFMradio/status/2062263049634079049" },
@@ -191,6 +189,12 @@ const FREQUENCIES = [
     ],
   },
 ];
+
+// Day 15 — a standalone special feature (Claire), shown between Frequency 02 and 03.
+const CLAIRE = {
+  x: "https://x.com/ZKFMradio/status/2061523549823602992",
+  points: "A special celebrating crypto marketer Claire Kart (@clairekart) — the rebrand, marketing privacy for founders, and the CMO every builder needs.",
+};
 
 const pad = (n) => String(n).padStart(2, "0");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -206,15 +210,18 @@ function videoCard(day, v) {
   const meta = VIDEO_IDS[key] || {};
   const id = meta.id || "";
   const name = POSTER_NAMES[key] || meta.t || `Day ${day} · Video ${v}`;
-  const label = esc(name);
+  // Snappy titles: one sentence per line so a line never breaks mid-sentence.
+  // (No regex lookbehind — it SyntaxErrors on Safari < 16.4 and would kill the whole file.)
+  const lines = name.replace(/([.?!])\s+/g, "$1\n").split("\n").map((s) => s.trim()).filter(Boolean)
+    .map((s) => `<span class="vid__line">${esc(s)}</span>`).join("");
   return `
-    <button class="vid" data-vid="${id}" data-key="${key}" aria-label="Play: ${label}">
+    <button class="vid" data-vid="${id}" data-key="${key}" aria-label="Play: ${esc(name)}">
+      <span class="vid__name">${lines}</span>
       <span class="vid__media">
         ${pic(`/assets/zkfm/thumbs/d${dd}v${v}.avif`, `class="vid__thumb" alt="ZKFM Day ${day} Video ${v}" loading="lazy"`)}
         <span class="vid__play" aria-hidden="true"></span>
         <span class="vid__tag">D${day} · V${v}</span>
       </span>
-      <span class="vid__name">${label}</span>
     </button>`;
 }
 
@@ -230,25 +237,13 @@ function introPoster(f) {
           </figure>`;
 }
 
-// One day = one carousel panel. Day number + title + X link are surfaced by the
-// persistent weekbar (built in frequencyAct), so they live as data-* here.
-// isFirst === Day 1 of the frequency → carries the highlighted intro poster.
+// One day = one carousel panel. The day number is surfaced by the persistent
+// weekbar (built in frequencyAct). isFirst === Day 1 → carries the intro poster.
 function dayScene(d, freq, isFirst) {
   const dd = pad(d.day);
   const xHref = d.x || X_ACCOUNT;
-  const data = `data-day="${d.day}" data-num="DAY ${dd}" data-title="${esc(d.title)}"`;
+  const data = `data-day="${d.day}" data-num="DAY ${dd}"`;
   const intro = isFirst ? introPoster(freq) : "";
-  if (d.special) {
-    return `
-      <section class="scene scene--special" ${data}>
-        <div class="scene__inner">
-          ${intro ? `<div class="scene__posters scene__posters--solo">${intro}</div>` : ""}
-          <span class="scene__special">◉ Special Broadcast</span>
-          <p class="scene__points">${esc(d.points || "")}</p>
-          <a class="scene__x" href="${xHref}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
-        </div>
-      </section>`;
-  }
   const cards = d.videos.map((v) => videoCard(d.day, v)).join("");
   const briefing = d.briefing === false ? "" : `
           <figure class="poster poster--take">
@@ -284,7 +279,6 @@ function frequencyAct(f) {
       <header class="act__head">
         <p class="act__station">FREQ ${f.n} · ${esc(f.code)}</p>
         <h2 class="act__name">${esc(f.name)}</h2>
-        <p class="act__range">${esc(f.range)}</p>
         <p class="act__blurb">${esc(f.blurb)}</p>
       </header>
       <div class="act__week">
@@ -292,7 +286,6 @@ function frequencyAct(f) {
           <button class="week__arrow week__arrow--prev" type="button" aria-label="Previous day">‹</button>
           <p class="week__now" aria-live="polite">
             <span class="week__num">DAY ${pad(first.day)}</span>
-            <span class="week__title">${esc(first.title)}</span>
           </p>
           <button class="week__arrow week__arrow--next" type="button" aria-label="Next day">›</button>
         </div>
@@ -304,7 +297,21 @@ function frequencyAct(f) {
     </section>`;
 }
 
-document.getElementById("frequencies").innerHTML = FREQUENCIES.map(frequencyAct).join("");
+// Day 15 — a standalone "special feature" card, plain so it reads as an interlude.
+function claireFeature() {
+  return `
+    <section class="zk-claire" id="claire">
+      <p class="zk-claire__eyebrow">◉ Special broadcast · Day 15</p>
+      <h2 class="zk-claire__title">CLAIRE</h2>
+      <p class="zk-claire__text">${esc(CLAIRE.points)}</p>
+      <a class="zk-claire__x" href="${CLAIRE.x}" target="_blank" rel="noopener noreferrer">Watch on X →</a>
+    </section>`;
+}
+
+// Assemble: Freq 01, Freq 02, the Claire special, then Freq 03 (days 16–21).
+const acts = FREQUENCIES.map(frequencyAct);
+acts.splice(2, 0, claireFeature());
+document.getElementById("frequencies").innerHTML = acts.join("");
 const yEl = document.getElementById("year");
 if (yEl) yEl.textContent = new Date().getFullYear();
 
@@ -321,7 +328,6 @@ if (yEl) yEl.textContent = new Date().getFullYear();
     const prev = week.querySelector(".week__arrow--prev");
     const next = week.querySelector(".week__arrow--next");
     const numEl = week.querySelector(".week__num");
-    const titleEl = week.querySelector(".week__title");
     if (!panels.length) return;
     let cur = -1;
 
@@ -331,7 +337,6 @@ if (yEl) yEl.textContent = new Date().getFullYear();
       cur = i;
       const p = panels[i];
       numEl.textContent = p.dataset.num;
-      titleEl.textContent = p.dataset.title;
       dots.forEach((d, j) => {
         d.classList.toggle("is-active", j === i);
         if (j === i) d.setAttribute("aria-current", "true");
