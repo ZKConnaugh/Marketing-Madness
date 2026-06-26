@@ -529,9 +529,13 @@ a {
 }
 
 .site-footer__copy {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: var(--fg-faint);
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
 }
+.site-footer__copy a { color: var(--brand-green); text-decoration: underline; text-underline-offset: 2px; }
 
 .site-footer__admin {
   font-size: 0.78rem;

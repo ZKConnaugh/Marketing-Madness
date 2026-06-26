@@ -170,6 +170,7 @@ em { font-style: italic; }
 .cv-foot .cv-rule { margin: 0 0 22px; }
 .cv-foot p { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
 .cv-foot a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--lime); }
+.cv-foot__legal { margin-top: 14px; font-size: 11px; line-height: 1.65; max-width: 720px; opacity: 0.9; }
 
 a:focus-visible, summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 

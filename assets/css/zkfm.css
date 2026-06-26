@@ -396,6 +396,7 @@ main { position: relative; z-index: 1; }
 .zk-footer .zk-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
 .zk-footer .zk-social:hover { color: var(--green); }
 .zk-footer .zk-social:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 6px; }
+.zk-footer__legal { margin: 16px auto 0; max-width: 720px; font-size: 10px; line-height: 1.65; color: var(--muted); opacity: 0.92; }
 
 @media (max-width: 760px) {
   .scene__videos, .scene__videos[data-count="2"], .scene__videos[data-count="4"] { grid-template-columns: repeat(2, 1fr); }
