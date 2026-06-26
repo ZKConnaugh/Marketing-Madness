@@ -57,12 +57,22 @@ picture { display: contents; }
   position: sticky; top: 0; z-index: 100;
   background: rgba(7,8,11,0.95);
 }
-.zk-back, .zk-x { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
-.zk-back { color: var(--muted); }
-.zk-back:hover { color: var(--green); }
+.zk-x { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .zk-wordmark { font-family: var(--mono); font-weight: 700; letter-spacing: 0.35em; font-size: 15px; color: var(--green); text-shadow: 2px 0 var(--magenta), -2px 0 var(--cyan); }
 .zk-x { color: var(--ink); border: 1px solid var(--line); padding: 0 14px; border-radius: 999px; }
 .zk-x:hover { border-color: var(--green); color: var(--green); }
+
+/* Headshot home button + sibling-project cross-link */
+.zk-header__right { display: inline-flex; align-items: center; gap: 10px; }
+.zk-avatar { display: inline-flex; align-items: center; min-height: 44px; padding: 0; }
+.zk-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; border: 1.5px solid var(--green); box-shadow: 1px 0 var(--magenta), -1px 0 var(--cyan); transition: box-shadow 0.2s ease; }
+.zk-avatar:hover img { box-shadow: 0 0 10px rgba(205,238,74,0.45), 2px 0 var(--magenta), -2px 0 var(--cyan); }
+.zk-avatar:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 50%; }
+.zk-cross__short { display: none; }
+@media (max-width: 560px) {
+  .zk-cross__full { display: none; }
+  .zk-cross__short { display: inline; }
+}
 
 /* Sticky frequency tuner (in-page nav for the 21-day journey) */
 .zk-tuner {

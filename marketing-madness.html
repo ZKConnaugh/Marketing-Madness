@@ -34,7 +34,7 @@
   <!-- Preload the hero collage (the LCP element): small AVIF on phones, full on desktop -->
   <link rel="preload" as="image" href="assets/hero-collage-mobile.avif" type="image/avif" media="(max-width: 768px)" />
   <link rel="preload" as="image" href="assets/hero-collage.avif" type="image/avif" media="(min-width: 769px)" />
-  <link rel="stylesheet" href="assets/css/style.css?v=mm1" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mm2" />
 </head>
 <body>
   <!-- Shared MADNESS gradient used to fill the social icons -->
@@ -53,13 +53,19 @@
   </svg>
 
   <header class="site-header">
-    <a class="logo-link" href="/" aria-label="Marketing Madness — home">
-      <span class="wordmark wordmark--sm">
-        <span class="wordmark__marketing">Marketing</span>
-        <span class="wordmark__madness">Madness</span>
-      </span>
-    </a>
+    <div class="header-left">
+      <a class="avatar-link" href="/" aria-label="Connaugh Gaskin — home">
+        <picture><source type="image/avif" srcset="/assets/avatar.avif" /><img src="/assets/avatar.webp" alt="" width="40" height="40" decoding="async" /></picture>
+      </a>
+      <a class="logo-link" href="/" aria-label="Marketing Madness — home">
+        <span class="wordmark wordmark--sm">
+          <span class="wordmark__marketing">Marketing</span>
+          <span class="wordmark__madness">Madness</span>
+        </span>
+      </a>
+    </div>
     <div class="header-right">
+      <a class="header-cross" href="/zkfm" aria-label="Go to ZKFM — pirate radio project">ZKFM →</a>
       <span class="byline">By Connaugh</span>
       <span class="socials">
         <a class="social" href="https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/" target="_blank" rel="noopener noreferrer" aria-label="Connaugh on LinkedIn">

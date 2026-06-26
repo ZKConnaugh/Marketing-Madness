@@ -61,6 +61,8 @@ em { font-style: italic; }
 
 /* ---- Header ---- */
 .cv-head { padding: clamp(56px, 9vw, 110px) 0 36px; }
+.cv-portrait { display: block; margin-bottom: 24px; }
+.cv-portrait img { width: clamp(72px, 12vw, 104px); height: clamp(72px, 12vw, 104px); border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--lime); }
 .cv-eyebrow {
   font-family: var(--mono); font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase;
   color: var(--ink-soft); margin-bottom: 26px;

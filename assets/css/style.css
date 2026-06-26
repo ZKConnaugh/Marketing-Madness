@@ -131,6 +131,17 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+/* Headshot home button + left cluster (avatar + wordmark) */
+.header-left { display: inline-flex; align-items: center; gap: 0.75rem; }
+.avatar-link { display: inline-flex; border-radius: 50%; transition: opacity 0.2s var(--ease); }
+.avatar-link img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; border: 1.5px solid color-mix(in srgb, var(--brand-green) 70%, transparent); }
+.avatar-link:hover { opacity: 0.82; }
+.avatar-link:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 4px; }
+/* Cross-link to the ZKFM project */
+.header-cross { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em; color: var(--brand-green); text-decoration: none; transition: opacity 0.2s var(--ease); }
+.header-cross:hover { opacity: 0.8; }
+.header-cross:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 3px; border-radius: 4px; }
+
 /* header logo doubles as a home link */
 .logo-link {
   display: inline-flex;
