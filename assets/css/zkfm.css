@@ -68,11 +68,12 @@ picture { display: contents; }
 .zk-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; border: 1.5px solid var(--green); box-shadow: 1px 0 var(--magenta), -1px 0 var(--cyan); transition: box-shadow 0.2s ease; }
 .zk-avatar:hover img { box-shadow: 0 0 10px rgba(205,238,74,0.45), 2px 0 var(--magenta), -2px 0 var(--cyan); }
 .zk-avatar:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 50%; }
-.zk-cross__short { display: none; }
-@media (max-width: 560px) {
-  .zk-cross__full { display: none; }
-  .zk-cross__short { display: inline; }
-}
+.zk-cross { font-size: 14px; white-space: nowrap; }
+@media (max-width: 560px) { .zk-cross { font-size: 11px; padding: 0 9px; } }
+.zk-x-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--ink); transition: color 0.2s ease; }
+.zk-x-icon svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.zk-x-icon:hover { color: var(--green); }
+.zk-x-icon:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 6px; }
 
 /* Sticky frequency tuner (in-page nav for the 21-day journey) */
 .zk-tuner {

@@ -79,6 +79,10 @@ em { font-style: italic; }
 }
 .cv-role span { color: var(--ink-soft); }
 .cv-contact { margin-top: 12px; font-family: var(--mono); font-size: 13px; color: var(--ink-soft); }
+.cv-social { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; vertical-align: middle; color: var(--ink); transition: color 0.2s; }
+.cv-social svg { width: 17px; height: 17px; fill: currentColor; display: block; }
+.cv-social:hover { color: var(--lime); }
+.cv-social:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
 .cv-contact a { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--lime); }
 .cv-contact a:hover { color: var(--ink); }
 .cv-rule { height: 5px; background: var(--lime); margin: 30px 0 0; border-radius: 2px; }
