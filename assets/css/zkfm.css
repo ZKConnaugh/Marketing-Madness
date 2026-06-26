@@ -386,8 +386,11 @@ main { position: relative; z-index: 1; }
 }
 @media (max-width: 460px) {
   .scene__videos, .scene__videos[data-count="2"], .scene__videos[data-count="4"] { grid-template-columns: 1fr; }
-  .scene__posters { gap: 18px; }
-  .poster { width: 100%; max-width: 340px; }
+  /* Every day's posters stay in one row (like Day 1) so all panels are the same
+     height — otherwise Days 2+ stacked full-width and left huge dead space. */
+  .scene__posters { gap: 12px; }
+  .scene__posters .poster { width: auto; max-width: none; flex: 1 1 0; min-width: 0; }
+  .scene__posters figcaption { font-size: 10px; letter-spacing: 0.1em; margin-bottom: 7px; }
 }
 
 /* No-JS fallback */
