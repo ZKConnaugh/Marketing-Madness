@@ -5,6 +5,13 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  // ---- Landing hub <-> CV view (mirrors the :target CSS for browsers w/o :has) ----
+  function syncView() {
+    document.body.classList.toggle("cv-open", /^#(cv|profile|projects|experience|education)$/.test(location.hash));
+  }
+  syncView();
+  window.addEventListener("hashchange", syncView);
+
   // ---- Reading progress ----
   var prog = document.getElementById("progress");
   function onScroll() {

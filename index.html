@@ -33,7 +33,7 @@
   <link rel="preload" href="/assets/fonts/zkfm/arizona-regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/zkfm/arizona-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/zkfm/epilogue-var.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="/assets/css/home.css?v=cv6" />
+  <link rel="stylesheet" href="/assets/css/home.css?v=cv7" />
 
   <script type="application/ld+json">
   {
@@ -53,7 +53,36 @@
   </script>
 </head>
 <body>
-  <div class="cv-progress" id="progress" aria-hidden="true"></div>
+  <section class="hub" id="hub">
+    <div class="hub__inner">
+      <picture class="hub__photo"><source type="image/avif" srcset="/assets/avatar.avif" /><img src="/assets/avatar.webp" alt="Connaugh Gaskin" width="156" height="156" fetchpriority="high" decoding="async" /></picture>
+      <h1 class="hub__name">Connaugh Gaskin</h1>
+      <p class="hub__role">Marketing — Web3 · ZK · Privacy</p>
+      <nav class="hub__options" aria-label="Choose where to go">
+        <a class="hub-opt hub-opt--cv" href="#cv">
+          <span class="hub-opt__name">CV</span>
+          <span class="hub-opt__desc">Six years in tech marketing — the full story</span>
+          <span class="hub-opt__go" aria-hidden="true">→</span>
+        </a>
+        <div class="hub__projects">
+          <a class="hub-opt hub-opt--zkfm" href="/zkfm">
+            <span class="hub-opt__name">ZKFM</span>
+            <span class="hub-opt__desc">Pirate radio for an Aztec launch</span>
+            <span class="hub-opt__go" aria-hidden="true">→</span>
+          </a>
+          <a class="hub-opt hub-opt--mm" href="/marketing-madness.html">
+            <span class="hub-opt__name">Marketing Madness</span>
+            <span class="hub-opt__desc">A 49-issue magazine from 20 books</span>
+            <span class="hub-opt__go" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </nav>
+    </div>
+  </section>
+
+  <div class="cv-view" id="cv">
+    <a class="cv-back" href="#hub">← Menu</a>
+    <div class="cv-progress" id="progress" aria-hidden="true"></div>
 
   <nav class="cv-dial" aria-label="CV sections">
     <a href="#profile" data-sec="01"><span class="label">Profile</span> 01</a>
@@ -229,7 +258,8 @@
     <p>Connaugh Gaskin · United Kingdom · <a href="https://www.linkedin.com/in/connaugh-gaskin-content-marketer-web3-zk/" target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href="https://x.com/zkMarketer" target="_blank" rel="noopener noreferrer">@zkMarketer</a></p>
     <p class="cv-foot__legal">Personal portfolio — views my own. Names, marks &amp; content (incl. Aztec, Mina, o1Labs) belong to their owners and appear for portfolio &amp; commentary, not endorsement. Nothing here is financial advice or an inducement to buy, sell or stake any cryptoasset — these are high-risk and you could lose everything. No cookies or tracking. Provided as-is. Original work © <span id="year"></span> Connaugh Gaskin. <a href="/legal">Legal &amp; Privacy</a></p>
   </footer>
+  </div>
 
-  <script defer src="/assets/js/cv.js?v=cv2"></script>
+  <script defer src="/assets/js/cv.js?v=cv3"></script>
 </body>
 </html>
