@@ -391,6 +391,11 @@ main { position: relative; z-index: 1; }
 /* ---- Footer ---- */
 .zk-footer { text-align: center; padding: 50px 24px; color: var(--muted); font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; border-top: 1px solid var(--line); }
 .zk-footer a { color: var(--green); text-decoration: none; }
+.zk-footer__socials { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+.zk-footer .zk-social { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--muted); transition: color 0.2s ease; }
+.zk-footer .zk-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.zk-footer .zk-social:hover { color: var(--green); }
+.zk-footer .zk-social:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 6px; }
 
 @media (max-width: 760px) {
   .scene__videos, .scene__videos[data-count="2"], .scene__videos[data-count="4"] { grid-template-columns: repeat(2, 1fr); }
