@@ -270,6 +270,13 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .cv-jump__go { flex: none; font-family: var(--serif); font-size: 26px; line-height: 1; transition: transform 0.18s ease; }
 .cv-jump__card:hover .cv-jump__go { transform: translateX(4px); }
 .cv-jump__card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* Reusable project wordmark logos — scale to the container font-size, used in
+   the hub cards and the "Explore the projects" cards (match the CV portal marks) */
+.proj-logo--zk { font-family: var(--mono); font-weight: 800; letter-spacing: 0.06em; color: #cdee4a; text-shadow: 0.06em 0 #ff3d7f, -0.06em 0 #4ad9e0; line-height: 1; white-space: nowrap; }
+.proj-logo--mm { display: inline-flex; flex-direction: column; line-height: 1; }
+.proj-logo--mm .m1 { font-family: "Inter", system-ui, sans-serif; font-weight: 600; font-size: 0.28em; text-transform: uppercase; letter-spacing: 0.4em; color: rgba(255, 255, 255, 0.85); margin-left: 0.4em; margin-bottom: 0.5em; }
+.proj-logo--mm .m2 { font-family: "Inter", system-ui, sans-serif; font-weight: 900; letter-spacing: -0.01em; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 @media (max-width: 540px) { .cv-jump__grid { grid-template-columns: 1fr; } }
 
 .cv-foot { padding: 40px 0 70px; }
