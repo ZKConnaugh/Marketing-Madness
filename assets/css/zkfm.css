@@ -57,10 +57,14 @@ picture { display: contents; }
   position: sticky; top: 0; z-index: 100;
   background: rgba(7,8,11,0.95);
 }
-.zk-x { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .zk-wordmark { font-family: var(--mono); font-weight: 700; letter-spacing: 0.35em; font-size: 15px; color: var(--green); text-shadow: 2px 0 var(--magenta), -2px 0 var(--cyan); }
-.zk-x { color: var(--ink); border: 1px solid var(--line); padding: 0 14px; border-radius: 999px; }
-.zk-x:hover { border-color: var(--green); color: var(--green); }
+/* Marketing Madness cross-link rendered as the MM wordmark logo (matches the MM page) */
+@font-face { font-family: "Inter"; font-weight: 100 900; font-display: swap; src: url("/assets/fonts/inter-latin-var.woff2") format("woff2"); }
+.mm-logo { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; text-decoration: none; font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; transition: opacity 0.2s ease; }
+.mm-logo:hover { opacity: 0.82; }
+.mm-logo:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 4px; }
+.mm-logo__marketing { text-transform: uppercase; font-weight: 600; font-size: 7px; letter-spacing: 0.45em; margin-left: 0.45em; margin-bottom: 0.35em; color: rgba(255, 255, 255, 0.45); }
+.mm-logo__madness { font-weight: 900; letter-spacing: -0.02em; font-size: 1.3rem; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
 
 /* Headshot home button + sibling-project cross-link */
 .zk-header__right { display: inline-flex; align-items: center; gap: 10px; }
@@ -68,8 +72,7 @@ picture { display: contents; }
 .zk-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; border: 1.5px solid var(--green); box-shadow: 1px 0 var(--magenta), -1px 0 var(--cyan); transition: box-shadow 0.2s ease; }
 .zk-avatar:hover img { box-shadow: 0 0 10px rgba(205,238,74,0.45), 2px 0 var(--magenta), -2px 0 var(--cyan); }
 .zk-avatar:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; border-radius: 50%; }
-.zk-cross { font-size: 14px; white-space: nowrap; }
-@media (max-width: 560px) { .zk-cross { font-size: 11px; padding: 0 9px; } }
+@media (max-width: 560px) { .mm-logo__madness { font-size: 1.05rem; } .mm-logo__marketing { font-size: 6px; } }
 .zk-x-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; color: var(--ink); transition: color 0.2s ease; }
 .zk-x-icon svg { width: 18px; height: 18px; fill: currentColor; display: block; }
 .zk-x-icon:hover { color: var(--green); }
