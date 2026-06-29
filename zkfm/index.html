@@ -33,7 +33,7 @@
   <link rel="preload" href="/assets/fonts/zkfm/departure-mono.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/zkfm/epilogue-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
-  <link rel="stylesheet" href="/assets/css/zkfm.css?v=wk16" />
+  <link rel="stylesheet" href="/assets/css/zkfm.css?v=wk17" />
 </head>
 <body>
   <div id="bg-collage" class="zk-bg" aria-hidden="true"></div>
@@ -100,10 +100,16 @@
   </main>
 
   <nav class="zk-pagenav" aria-label="Keep exploring">
+    <p class="zk-pagenav__label">Next project</p>
     <a class="zk-pagenav__next" href="/marketing-madness.html">
-      <span class="zk-pagenav__eyebrow">Next project</span>
-      <span class="zk-pagenav__name">Marketing Madness <span aria-hidden="true">→</span></span>
-      <span class="zk-pagenav__sub">A 49-issue magazine from 20 books</span>
+      <picture class="zk-pagenav__art"><source type="image/avif" srcset="/assets/hero-collage.avif" /><img src="/assets/hero-collage.jpg" alt="" loading="lazy" decoding="async" /></picture>
+      <span class="zk-pagenav__overlay">
+        <span class="zk-pagenav__text">
+          <span class="zk-pagenav__name">Marketing Madness</span>
+          <span class="zk-pagenav__sub">A 49-issue magazine from 20 books</span>
+        </span>
+        <span class="zk-pagenav__go" aria-hidden="true">→</span>
+      </span>
     </a>
     <a class="zk-pagenav__top" href="#top">↑ Back to the top</a>
   </nav>
