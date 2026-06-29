@@ -396,7 +396,13 @@ main { position: relative; z-index: 1; }
 .zk-footer .zk-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
 .zk-footer .zk-social:hover { color: var(--green); }
 .zk-footer .zk-social:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 6px; }
-.zk-footer__legal { margin: 16px auto 0; max-width: 720px; font-size: 10px; line-height: 1.65; color: var(--muted); opacity: 0.92; }
+.foot-legal { margin-top: 14px; text-align: center; }
+.foot-legal > summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+.foot-legal > summary::-webkit-details-marker { display: none; }
+.foot-legal > summary::after { content: "▾"; transition: transform 0.2s ease; }
+.foot-legal[open] > summary::after { transform: rotate(180deg); }
+.foot-legal__body { margin: 10px auto 0; max-width: 720px; font-size: 10px; line-height: 1.65; color: var(--muted); }
+.foot-legal__body a { color: var(--green); }
 
 @media (max-width: 760px) {
   .scene__videos, .scene__videos[data-count="2"], .scene__videos[data-count="4"] { grid-template-columns: repeat(2, 1fr); }

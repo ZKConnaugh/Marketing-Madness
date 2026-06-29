@@ -536,6 +536,13 @@ a {
   margin: 0 auto;
 }
 .site-footer__copy a { color: var(--brand-green); text-decoration: underline; text-underline-offset: 2px; }
+.foot-legal { margin-top: 8px; text-align: center; }
+.foot-legal > summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.78rem; color: var(--brand-green); text-decoration: underline; text-underline-offset: 2px; }
+.foot-legal > summary::-webkit-details-marker { display: none; }
+.foot-legal > summary::after { content: "▾"; text-decoration: none; transition: transform 0.2s ease; }
+.foot-legal[open] > summary::after { transform: rotate(180deg); }
+.foot-legal__body { margin: 8px auto 0; max-width: 600px; font-size: 0.72rem; line-height: 1.6; color: var(--fg-faint); }
+.foot-legal__body a { color: var(--brand-green); }
 
 .site-footer__admin {
   font-size: 0.78rem;
