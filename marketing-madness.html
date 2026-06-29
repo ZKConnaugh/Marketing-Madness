@@ -34,7 +34,7 @@
   <!-- Preload the hero collage (the LCP element): small AVIF on phones, full on desktop -->
   <link rel="preload" as="image" href="assets/hero-collage-mobile.avif" type="image/avif" media="(max-width: 768px)" />
   <link rel="preload" as="image" href="assets/hero-collage.avif" type="image/avif" media="(min-width: 769px)" />
-  <link rel="stylesheet" href="assets/css/style.css?v=mm6" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mm7" />
 </head>
 <body>
   <!-- Shared MADNESS gradient used to fill the social icons -->
@@ -57,26 +57,15 @@
       <a class="avatar-link" href="/" aria-label="Connaugh Gaskin — home">
         <picture><source type="image/avif" srcset="/assets/avatar.avif" /><img src="/assets/avatar.webp" alt="" width="40" height="40" decoding="async" /></picture>
       </a>
-      <a class="logo-link" href="/" aria-label="Marketing Madness — home">
-        <span class="wordmark wordmark--sm">
-          <span class="wordmark__marketing">Marketing</span>
-          <span class="wordmark__madness">Madness</span>
-        </span>
-      </a>
     </div>
     <div class="header-right">
-      <a class="header-cross" href="/zkfm" aria-label="Go to ZKFM — pirate radio project">ZKFM</a>
       <span class="byline">By Connaugh</span>
-      <span class="socials">
-        <a class="social" href="https://x.com/zkMarketer" target="_blank" rel="noopener noreferrer" aria-label="Connaugh on X (Twitter)">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="#8FE000" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        </a>
-      </span>
+      <a class="header-cross" href="/zkfm" aria-label="Go to ZKFM — pirate radio project">ZKFM →</a>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" id="top">
       <div class="hero__bg" aria-hidden="true"></div>
       <div class="hero__inner">
         <h1 class="wordmark wordmark--lg">
@@ -104,10 +93,16 @@
       <div class="grid" id="episode-grid">
         <!-- Cards injected by assets/js/main.js -->
       </div>
-      <div class="episodes__foot">
-        <a class="back-to-top" href="#episodes">↑ Back to episode one</a>
-      </div>
     </section>
+
+    <nav class="page-nav" aria-label="Keep exploring">
+      <a class="page-nav__next" href="/zkfm">
+        <span class="page-nav__eyebrow">Next project</span>
+        <span class="page-nav__name">ZKFM <span aria-hidden="true">→</span></span>
+        <span class="page-nav__sub">Pirate radio for an Aztec launch</span>
+      </a>
+      <a class="page-nav__top" href="#top">↑ Back to the top</a>
+    </nav>
   </main>
 
   <footer class="site-footer">

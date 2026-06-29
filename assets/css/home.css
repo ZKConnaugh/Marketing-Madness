@@ -55,7 +55,7 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 /* CV = quieter secondary option; the projects lead. */
 .hub-opt {
   display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 16px;
-  padding: 14px 22px; border: 1px solid var(--line); border-radius: 12px; background: transparent;
+  padding: 14px 22px; border: 1px solid var(--line); border-radius: 12px; background: #fff;
   text-decoration: none; color: var(--ink); transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 .hub-opt:hover { transform: translateY(-3px); border-color: var(--ink); background: #fff; }
@@ -96,6 +96,9 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 @media (max-width: 540px) {
   .hub__projects { grid-template-columns: 1fr; }
   .hub-card__name { min-height: 0; }
+  /* centre the headshot so the fixed Home button doesn't clip it */
+  .cv-head { padding-top: 76px; }
+  .cv-portrait img { margin-left: auto; margin-right: auto; }
 }
 
 /* Back-to-menu pill, shown only inside the CV view */
@@ -138,10 +141,12 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 }
 .cv-eyebrow b { color: var(--ink); font-weight: 400; }
 .cv-name {
-  font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 11vw, 124px);
-  line-height: 0.92; letter-spacing: -0.01em;
+  font-family: var(--serif); font-weight: 400; font-size: clamp(52px, 11vw, 108px);
+  line-height: 0.96; letter-spacing: -0.01em;
 }
 .cv-name em { font-weight: 400; }
+/* keep each word whole — the per-char spans must never break mid-name */
+.cv-name__w { white-space: nowrap; }
 .cv-role {
   margin-top: 22px; font-family: var(--mono); font-size: clamp(13px, 2vw, 16px);
   letter-spacing: 0.14em; text-transform: uppercase;

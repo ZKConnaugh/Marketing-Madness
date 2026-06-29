@@ -114,10 +114,12 @@
       }
       return frag;
     }
-    [].slice.call(name.childNodes).forEach(function (node) {
-      if (node.nodeType === 3) { name.replaceChild(wrap(node.textContent), node); }
-      else if (node.nodeName === "EM") { var t = node.textContent; node.textContent = ""; node.appendChild(wrap(t)); }
-    });
+    (function walk(parent) {
+      [].slice.call(parent.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) { parent.replaceChild(wrap(node.textContent), node); }
+        else if (node.nodeType === 1) { walk(node); }
+      });
+    })(name);
     name.classList.add("split");
     requestAnimationFrame(function () { requestAnimationFrame(function () { name.classList.add("is-revealed"); }); });
   })();
