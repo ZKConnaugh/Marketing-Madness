@@ -293,6 +293,34 @@ a {
   box-shadow: 0 10px 30px rgba(143, 224, 0, 0.3);
 }
 
+.hero__more { margin-top: 1rem; }
+.hero__more > summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--brand-green);
+}
+.hero__more > summary::-webkit-details-marker { display: none; }
+.hero__more > summary::after { content: "↓"; transition: transform 0.2s var(--ease); }
+.hero__more[open] > summary::after { transform: rotate(180deg); }
+.hero__more-close { display: none; }
+.hero__more[open] .hero__more-open { display: none; }
+.hero__more[open] .hero__more-close { display: inline; }
+.hero__more-body {
+  margin: 1rem auto 0;
+  max-width: 560px;
+}
+.hero__more-body p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--fg-muted);
+}
+.hero__more-body p + p { margin-top: 0.85rem; }
+
 /* ---------- Episodes ---------- */
 .episodes {
   max-width: var(--max-width);

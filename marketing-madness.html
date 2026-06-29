@@ -34,7 +34,7 @@
   <!-- Preload the hero collage (the LCP element): small AVIF on phones, full on desktop -->
   <link rel="preload" as="image" href="assets/hero-collage-mobile.avif" type="image/avif" media="(max-width: 768px)" />
   <link rel="preload" as="image" href="assets/hero-collage.avif" type="image/avif" media="(min-width: 769px)" />
-  <link rel="stylesheet" href="assets/css/style.css?v=mm5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mm6" />
 </head>
 <body>
   <!-- Shared MADNESS gradient used to fill the social icons -->
@@ -84,10 +84,14 @@
           <span class="wordmark__madness">Madness</span>
         </h1>
         <p class="hero__subtitle">LinkedIn Magazine for Marketers</p>
-        <p class="hero__tagline">
-          Hey David, this project wrapped up two years ago, but I vibe coded this
-          site over the weekend just so you could see it properly.
-        </p>
+        <p class="hero__tagline">Marketing Madness was a year-long project I ran in 2022–2023 to kickstart my design and creative skills early in my career.</p>
+        <details class="hero__more">
+          <summary><span class="hero__more-open">Read more</span><span class="hero__more-close">Read less</span></summary>
+          <div class="hero__more-body">
+            <p>Each issue distilled ideas from marketing books and paired them with real-world examples across the discipline, which fast-tracked my knowledge and helped me build the mental models I still rely on today. It was also where I cut my teeth on early AI, experimenting with the first versions of ChatGPT and Midjourney.</p>
+            <p>By the end I'd concluded that LinkedIn carousels weren't the right home for this kind of content, so I pivoted to video. ZKFM is the most recent example of where my skills are now, but Marketing Madness is where it started.</p>
+          </div>
+        </details>
         <a class="hero__cta" href="#episodes">View the episodes ↓</a>
       </div>
     </section>
