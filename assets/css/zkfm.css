@@ -52,12 +52,14 @@ picture { display: contents; }
 
 /* ---- Header ---- */
 .zk-header {
-  display: flex; align-items: center; justify-content: space-between;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
   padding: 18px 24px; border-bottom: 1px solid var(--line);
   position: sticky; top: 0; z-index: 100;
   background: rgba(7,8,11,0.95);
 }
-.zk-wordmark { font-family: var(--mono); font-weight: 700; letter-spacing: 0.35em; font-size: 15px; color: var(--green); text-shadow: 2px 0 var(--magenta), -2px 0 var(--cyan); }
+.zk-header > .zk-avatar { justify-self: start; }
+.zk-header > .zk-x-icon { justify-self: center; }
+.zk-header > .mm-logo { justify-self: end; }
 /* Marketing Madness cross-link rendered as the MM wordmark logo (matches the MM page) */
 @font-face { font-family: "Inter"; font-weight: 100 900; font-display: swap; src: url("/assets/fonts/inter-latin-var.woff2") format("woff2"); }
 .mm-logo { display: inline-flex; flex-direction: column; align-items: center; line-height: 1; text-decoration: none; font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; transition: opacity 0.2s ease; }
@@ -67,7 +69,6 @@ picture { display: contents; }
 .mm-logo__madness { font-weight: 900; letter-spacing: -0.02em; font-size: 1.3rem; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
 
 /* Headshot home button + sibling-project cross-link */
-.zk-header__right { display: inline-flex; align-items: center; gap: 10px; }
 .zk-avatar { display: inline-flex; align-items: center; min-height: 44px; padding: 0; }
 .zk-avatar img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; border: 1.5px solid var(--green); box-shadow: 1px 0 var(--magenta), -1px 0 var(--cyan); transition: box-shadow 0.2s ease; }
 .zk-avatar:hover img { box-shadow: 0 0 10px rgba(205,238,74,0.45), 2px 0 var(--magenta), -2px 0 var(--cyan); }
