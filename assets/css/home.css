@@ -51,7 +51,14 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .hub__role { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); margin-top: 12px; }
 .hub__options { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; text-align: left; }
 .hub__label { margin: 18px 6px 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); }
-.hub__projects { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+/* Two rows: the cards share row 1 (so they stay equal height & the toggles align);
+   each project's drop-down lives in row 2 and expands independently. */
+.hub__projects { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; row-gap: 0; }
+.hub-proj { display: contents; }
+.hub-proj > .hub-opt { grid-row: 1; min-width: 0; }
+.hub-proj > .hub-ctx { grid-row: 2; min-width: 0; }
+.hub-proj:nth-child(1) > .hub-opt, .hub-proj:nth-child(1) > .hub-ctx { grid-column: 1; }
+.hub-proj:nth-child(2) > .hub-opt, .hub-proj:nth-child(2) > .hub-ctx { grid-column: 2; }
 .hub-opt {
   display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 16px;
   padding: 20px 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2);
@@ -72,7 +79,27 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .hub-opt__go { grid-column: 2; grid-row: 1 / span 2; font-size: 24px; color: var(--ink-soft); transition: transform 0.18s ease, color 0.18s ease; }
 .hub-opt:hover .hub-opt__go { transform: translateX(4px); color: var(--ink); }
 .hub-opt:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-@media (max-width: 540px) { .hub__projects { grid-template-columns: 1fr; } }
+/* Per-project "context window" drop-down — full description without leaving the hub. */
+.hub-ctx { margin-top: 8px; }
+.hub-ctx > summary {
+  cursor: pointer; list-style: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-soft); padding: 4px 4px 4px 2px;
+}
+.hub-ctx > summary::-webkit-details-marker { display: none; }
+.hub-ctx > summary::after { content: "▾"; transition: transform 0.2s ease; }
+.hub-ctx[open] > summary::after { transform: rotate(180deg); }
+.hub-ctx > summary:hover { color: var(--ink); }
+.hub-ctx > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+.hub-ctx__body { margin-top: 6px; padding: 14px 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.hub-ctx__body p { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+.hub-ctx__body p + p { margin-top: 10px; }
+@media (max-width: 540px) {
+  .hub__projects { grid-template-columns: 1fr; row-gap: 12px; }
+  .hub-proj { display: block; }
+  .hub-proj > .hub-opt, .hub-proj > .hub-ctx { grid-column: auto; grid-row: auto; }
+}
 
 /* Back-to-menu pill, shown only inside the CV view */
 .cv-back { position: fixed; top: 18px; left: 20px; z-index: 210; display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; }
