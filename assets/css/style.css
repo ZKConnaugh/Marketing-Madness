@@ -416,7 +416,7 @@ a {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 1rem 1.25rem; text-align: left;
   background: linear-gradient(to top, rgba(4, 4, 4, 0.92) 0%, rgba(4, 4, 4, 0.5) 48%, rgba(4, 4, 4, 0.1) 100%);
 }
-.page-nav__name { display: block; font-size: 1.7rem; font-weight: 700; line-height: 1.05; color: #fff; }
+.page-nav__name { display: block; font-family: "DepartureMono", ui-monospace, "SF Mono", Menlo, monospace; font-weight: 700; font-size: 1.7rem; letter-spacing: 0.22em; line-height: 1; color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0; }
 .page-nav__sub { display: block; margin-top: 0.2rem; font-size: 0.82rem; color: rgba(255, 255, 255, 0.82); }
 .page-nav__go { flex: none; font-size: 1.6rem; line-height: 1; color: #fff; transition: transform 0.2s var(--ease); }
 .page-nav__next:hover .page-nav__go { transform: translateX(4px); }
