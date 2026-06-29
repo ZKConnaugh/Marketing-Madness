@@ -73,11 +73,15 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
   background: var(--paper-2); transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
 }
 .hub-card:has(.hub-card__link:hover) { transform: translateY(-3px); border-color: var(--ink); background: #fff; }
-.hub-card__link { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 16px; padding: 22px 24px; text-decoration: none; color: var(--ink); }
-.hub-card__name { grid-column: 1; min-height: 2.2em; font-family: var(--serif); font-weight: 500; font-size: clamp(24px, 3.8vw, 34px); line-height: 1.1; }
-.hub-card__desc { grid-column: 1; margin-top: 2px; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em; color: var(--ink-soft); }
-.hub-card__go { grid-column: 2; grid-row: 1 / span 2; font-size: 28px; color: var(--ink-soft); transition: transform 0.18s ease, color 0.18s ease; }
-.hub-card:has(.hub-card__link:hover) .hub-card__go { transform: translateX(4px); color: var(--ink); }
+.hub-card__link { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; text-decoration: none; color: #fff; background: #16120b; }
+.hub-card__art { position: absolute; inset: 0; display: block; }
+.hub-card__art img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.hub-card:has(.hub-card__link:hover) .hub-card__art img { transform: scale(1.04); }
+.hub-card__overlay { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 16px 18px; background: linear-gradient(to top, rgba(8, 7, 11, 0.92) 0%, rgba(8, 7, 11, 0.5) 48%, rgba(8, 7, 11, 0.12) 100%); }
+.hub-card__name { display: block; font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 3.4vw, 30px); line-height: 1.05; }
+.hub-card__desc { display: block; margin-top: 3px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.82); }
+.hub-card__go { flex: none; font-family: var(--serif); font-size: 26px; line-height: 1; transition: transform 0.18s ease; }
+.hub-card:has(.hub-card__link:hover) .hub-card__go { transform: translateX(4px); }
 .hub-card__link:focus-visible { outline: 2px solid var(--ink); outline-offset: -3px; border-radius: 10px; }
 .hub-card__more { border-top: 1px solid var(--line); }
 .hub-card__more > summary {
@@ -95,7 +99,6 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .hub-card__body p + p { margin-top: 10px; }
 @media (max-width: 540px) {
   .hub__projects { grid-template-columns: 1fr; }
-  .hub-card__name { min-height: 0; }
   /* centre the headshot so the fixed Home button doesn't clip it */
   .cv-head { padding-top: 76px; }
   .cv-portrait img { margin-left: auto; margin-right: auto; }
@@ -188,11 +191,16 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 }
 .portal:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.28); }
 .portal:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
-.portal__art { height: 168px; display: grid; place-items: center; position: relative; overflow: hidden; }
-.portal--zkfm .portal__art { background: radial-gradient(70% 100% at 50% 50%, rgba(205,238,74,0.12), transparent 70%), #07080b; }
+/* Collage behind the whole panel: vivid in the art banner, darkened behind the text */
+.portal__bg { position: absolute; inset: 0; z-index: 0; }
+.portal__bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.portal__scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(7,8,11,0.5) 0%, rgba(7,8,11,0.66) 26%, rgba(7,8,11,0.9) 50%, rgba(7,8,11,0.96) 100%); }
+.portal__art, .portal__body { position: relative; z-index: 2; }
+.portal__art { height: 168px; display: grid; place-items: center; overflow: hidden; }
+.portal--zkfm .portal__art { background: radial-gradient(62% 90% at 50% 50%, rgba(7,8,11,0.5), transparent 80%); }
 .portal--zkfm .portal__art::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.35) 3px); }
 .portal--zkfm .pmark { font-family: var(--mono); font-weight: 800; font-size: 46px; letter-spacing: 0.08em; color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0; position: relative; z-index: 1; }
-.portal--mm .portal__art { background: #0d0f14; }
+.portal--mm .portal__art { background: radial-gradient(62% 90% at 50% 50%, rgba(7,8,11,0.5), transparent 80%); }
 .portal--mm .pmark { font-family: "Inter", system-ui, sans-serif; font-weight: 800; font-size: 30px; line-height: 1; text-align: center; }
 .portal--mm .pmark .m1 { display: block; color: #fff; }
 .portal--mm .pmark .m2 { display: block; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.05em; }

@@ -33,7 +33,7 @@
   <link rel="preload" href="/assets/fonts/zkfm/arizona-regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/zkfm/arizona-italic.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/zkfm/epilogue-var.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="/assets/css/home.css?v=cv16" />
+  <link rel="stylesheet" href="/assets/css/home.css?v=cv17" />
 
   <script type="application/ld+json">
   {
@@ -68,9 +68,14 @@
         <div class="hub__projects">
           <div class="hub-card hub-card--zkfm">
             <a class="hub-card__link" href="/zkfm">
-              <span class="hub-card__name">ZKFM</span>
-              <span class="hub-card__desc">Pirate radio for an Aztec launch</span>
-              <span class="hub-card__go" aria-hidden="true">→</span>
+              <picture class="hub-card__art"><source type="image/avif" srcset="/assets/zkfm/zkfm-collage.avif" /><img src="/assets/zkfm/zkfm-collage.jpg" alt="" loading="lazy" decoding="async" /></picture>
+              <span class="hub-card__overlay">
+                <span class="hub-card__text">
+                  <span class="hub-card__name">ZKFM</span>
+                  <span class="hub-card__desc">Pirate radio for an Aztec launch</span>
+                </span>
+                <span class="hub-card__go" aria-hidden="true">→</span>
+              </span>
             </a>
             <details class="hub-card__more">
               <summary>What is this?</summary>
@@ -81,9 +86,14 @@
           </div>
           <div class="hub-card hub-card--mm">
             <a class="hub-card__link" href="/marketing-madness.html">
-              <span class="hub-card__name">Marketing Madness</span>
-              <span class="hub-card__desc">A 49-issue magazine from 20 books</span>
-              <span class="hub-card__go" aria-hidden="true">→</span>
+              <picture class="hub-card__art"><source type="image/avif" srcset="/assets/hero-collage.avif" /><img src="/assets/hero-collage.jpg" alt="" loading="lazy" decoding="async" /></picture>
+              <span class="hub-card__overlay">
+                <span class="hub-card__text">
+                  <span class="hub-card__name">Marketing Madness</span>
+                  <span class="hub-card__desc">A 49-issue magazine from 20 books</span>
+                </span>
+                <span class="hub-card__go" aria-hidden="true">→</span>
+              </span>
             </a>
             <details class="hub-card__more">
               <summary>What is this?</summary>
@@ -131,6 +141,8 @@
       <p class="cv-projects__note reveal">Two self-directed builds, four years apart, both finished. I treat personal projects as my R&amp;D lab — the place to take swings that day-to-day roles rarely allow. <strong>Click in to explore each one live.</strong></p>
       <div class="cv-projects">
         <a class="portal portal--zkfm reveal" href="/zkfm" aria-label="Enter the ZKFM broadcast">
+          <picture class="portal__bg" aria-hidden="true"><source type="image/avif" srcset="/assets/zkfm/zkfm-collage.avif" /><img src="/assets/zkfm/zkfm-collage.jpg" alt="" loading="lazy" decoding="async" /></picture>
+          <span class="portal__scrim" aria-hidden="true"></span>
           <div class="portal__art" aria-hidden="true"><span class="pmark">ZKFM</span></div>
           <div class="portal__body">
             <span class="portal__name">ZK<em>FM</em></span>
@@ -147,6 +159,8 @@
         </a>
 
         <a class="portal portal--mm reveal" href="/marketing-madness.html" aria-label="Enter the Marketing Madness magazine">
+          <picture class="portal__bg" aria-hidden="true"><source type="image/avif" srcset="/assets/hero-collage.avif" /><img src="/assets/hero-collage.jpg" alt="" loading="lazy" decoding="async" /></picture>
+          <span class="portal__scrim" aria-hidden="true"></span>
           <div class="portal__art" aria-hidden="true"><span class="pmark"><span class="m1">Marketing</span><span class="m2">Madness</span></span></div>
           <div class="portal__body">
             <span class="portal__name">Mark<em>eting</em> Mad<em>ness</em></span>
