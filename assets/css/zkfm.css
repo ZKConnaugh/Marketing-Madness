@@ -390,7 +390,7 @@ main { position: relative; z-index: 1; }
 
 /* ---- End-of-page navigation: collage click-through to the other project + back to top ---- */
 .zk-pagenav { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 60px 24px 6px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
-.zk-pagenav__label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.zk-pagenav__label { font-family: var(--mono); font-weight: 700; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green); }
 .zk-pagenav__next { position: relative; overflow: hidden; display: block; width: 100%; max-width: 460px; aspect-ratio: 16 / 9; border: 1px solid var(--line); border-left: 3px solid var(--green); border-radius: 14px; background: #07080b; text-decoration: none; color: #fff; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
 .zk-pagenav__next:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45); border-color: var(--green); }
 .zk-pagenav__art { position: absolute; inset: 0; display: block; }
