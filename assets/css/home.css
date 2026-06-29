@@ -201,9 +201,9 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .portal--zkfm .portal__art::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(0,0,0,0.35) 3px); }
 .portal--zkfm .pmark { font-family: var(--mono); font-weight: 800; font-size: 46px; letter-spacing: 0.08em; color: #cdee4a; text-shadow: 3px 0 #ff3d7f, -3px 0 #4ad9e0; position: relative; z-index: 1; }
 .portal--mm .portal__art { background: radial-gradient(62% 90% at 50% 50%, rgba(7,8,11,0.5), transparent 80%); }
-.portal--mm .pmark { font-family: "Inter", system-ui, sans-serif; font-weight: 800; font-size: 30px; line-height: 1; text-align: center; }
-.portal--mm .pmark .m1 { display: block; color: #fff; }
-.portal--mm .pmark .m2 { display: block; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: 0.05em; }
+.portal--mm .pmark { font-family: "Inter", system-ui, sans-serif; font-weight: 800; font-size: 40px; line-height: 1; text-align: center; }
+.portal--mm .pmark .m1 { display: block; color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4em; margin-left: 0.4em; margin-bottom: 6px; }
+.portal--mm .pmark .m2 { display: block; font-size: 54px; font-weight: 900; letter-spacing: -0.01em; background: linear-gradient(100deg, #ff2d8a, #ff5d3a, #f5a623, #d4e000, #8fe000, #00c8a0, #00a8ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .portal__body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
 .portal__meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: #9a9488; margin: 6px 0 12px; }
 .portal__sub { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
