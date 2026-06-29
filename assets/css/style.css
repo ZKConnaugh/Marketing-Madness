@@ -138,7 +138,15 @@ a {
 .avatar-link:hover { opacity: 0.82; }
 .avatar-link:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 4px; }
 /* Cross-link to the ZKFM project */
-.header-cross { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.02em; color: var(--brand-green); text-decoration: none; transition: opacity 0.2s var(--ease); }
+/* ZKFM cross-link rendered as the ZKFM wordmark logo (matches the ZKFM page) */
+@font-face { font-family: "DepartureMono"; src: url("/assets/fonts/zkfm/departure-mono.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+.header-cross {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-family: "DepartureMono", ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 700; font-size: 16px; letter-spacing: 0.35em;
+  color: #cdee4a; text-shadow: 2px 0 #ff3d7f, -2px 0 #4ad9e0;
+  text-decoration: none; transition: opacity 0.2s var(--ease);
+}
 .header-cross:hover { opacity: 0.8; }
 .header-cross:focus-visible { outline: 2px solid var(--brand-green); outline-offset: 3px; border-radius: 4px; }
 
