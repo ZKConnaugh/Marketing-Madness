@@ -149,9 +149,6 @@ function initCoverRing() {
     btn.className = "ring__cover";
     btn.tabIndex = -1; // the grid below is the keyboard/AT path
     btn.style.setProperty("--i", i);
-    /* steadily increasing offset = uniform shingle: each cover sits on top
-       of the previous one all the way round */
-    btn.style.setProperty("--po", (i * 1.6).toFixed(1) + "px");
     btn.dataset.ep = item.ep;
     btn.dataset.accent = item.accent;
     const img = document.createElement("img");
