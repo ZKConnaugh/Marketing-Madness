@@ -101,8 +101,72 @@ a {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
 }
 
+/* ----- Glassy 3D treatment (hero wordmark only) -----
+   Same MADNESS gradient underneath; two text-clipped layers on top add
+   the glass optics, and glyph-shaped drop shadows lift it off the page. */
 .wordmark--lg .wordmark__madness {
   font-size: clamp(3.5rem, 13vw, 9rem);
+  position: relative;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.45))
+    drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 30px 60px rgba(0, 0, 0, 0.45));
+}
+
+/* curved-glass shading: a hard-edged specular reflection across the top
+   half, a gentle shaded dip, a bounce light near the bottom, and a thin
+   light rim on the glyph edges */
+.wordmark--lg .wordmark__madness::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.42) 20%,
+    rgba(255, 255, 255, 0.14) 34%,
+    rgba(255, 255, 255, 0.02) 35%,
+    rgba(0, 0, 0, 0.12) 56%,
+    rgba(255, 255, 255, 0.04) 78%,
+    rgba(255, 255, 255, 0.5) 93%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+}
+
+/* a specular band sweeps across the glass every few seconds */
+.wordmark--lg .wordmark__madness::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.7) 50%,
+    transparent 58%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: madness-sheen 7s ease-in-out infinite;
+}
+
+@keyframes madness-sheen {
+  0% {
+    background-position: 100% 0;
+  }
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
 }
 
 .wordmark--sm .wordmark__marketing {
@@ -835,6 +899,9 @@ a {
   .ring-hint {
     animation: none;
     opacity: 0.7;
+  }
+  .wordmark--lg .wordmark__madness::after {
+    animation: none;
   }
 }
 
