@@ -125,33 +125,203 @@ function setYear() {
   if (year) year.textContent = new Date().getFullYear();
 }
 
-/* Parallax: the hero collage follows the scroll at a slower rate. */
-function initHeroParallax() {
-  const bg = document.querySelector(".hero__bg");
+/* ============================================================
+   Immersive 3D cover ring — the camera sits inside a cylinder of
+   all 49 covers. Drag to spin (with inertia), slow idle drift,
+   click a cover for a fly-out preview with a Read link.
+   Reuses the grid's cover URLs, so nothing downloads twice.
+   ============================================================ */
+function initCoverRing() {
   const hero = document.querySelector(".hero");
-  if (!bg || !hero) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const viewport = document.getElementById("ring-viewport");
+  const ring = document.getElementById("cover-ring");
+  if (!hero || !viewport || !ring) return;
 
-  let ticking = false;
-  const update = () => {
-    const y = window.scrollY;
-    // only update while the hero is still on screen
-    if (y <= hero.offsetHeight + 100) {
-      bg.style.setProperty("--hero-shift", (y * 0.35).toFixed(1) + "px");
-    }
-    ticking = false;
+  const N = EPISODES.length;
+  const STEP = 360 / N;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ----- build the covers ----- */
+  const frag = document.createDocumentFragment();
+  EPISODES.forEach((item, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ring__cover";
+    btn.tabIndex = -1; // the grid below is the keyboard/AT path
+    btn.style.setProperty("--i", i);
+    btn.style.setProperty("--po", (i % 2) * 12 + "px");
+    btn.dataset.ep = item.ep;
+    btn.dataset.accent = item.accent;
+    const img = document.createElement("img");
+    img.src = `assets/covers/${item.ep}.avif`;
+    img.alt = "";
+    img.decoding = "async";
+    img.draggable = false;
+    img.addEventListener("load", () => img.classList.add("is-loaded"), {
+      once: true,
+    });
+    btn.appendChild(img);
+    frag.appendChild(btn);
+  });
+  ring.appendChild(frag);
+  const covers = ring.children;
+
+  /* ----- geometry (kept in sync with the CSS vars) ----- */
+  let P = 700; // camera distance (perspective)
+  let R = 1250; // cylinder radius
+  const readGeometry = () => {
+    const cs = getComputedStyle(hero);
+    R = parseFloat(cs.getPropertyValue("--ring-r")) || R;
+    P = parseFloat(cs.getPropertyValue("--ring-persp")) || P;
   };
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
+  readGeometry();
+  window.addEventListener("resize", readGeometry);
+
+  /* ----- fly-out preview ----- */
+  const overlay = document.createElement("div");
+  overlay.className = "ring-preview";
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="ring-preview__card">
+      <button class="ring-preview__close" type="button" aria-label="Close preview">✕</button>
+      <img class="ring-preview__img" alt="" decoding="async" />
+      <span class="ring-preview__badge"></span>
+      <a class="ring-preview__read">Read episode →</a>
+    </div>`;
+  document.body.appendChild(overlay);
+  let previewOpen = false;
+  let overlayTimer;
+
+  function openPreview(ep, accent) {
+    overlay.style.setProperty("--accent", accent);
+    const img = overlay.querySelector(".ring-preview__img");
+    img.src = `assets/covers/${ep}.avif`;
+    img.alt = `Marketing Madness ${ep} cover`;
+    overlay.querySelector(".ring-preview__badge").textContent = ep;
+    overlay.querySelector(".ring-preview__read").href = `episodes/${ep}.html`;
+    clearTimeout(overlayTimer);
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add("is-open"));
+    previewOpen = true;
+  }
+
+  function closePreview() {
+    overlay.classList.remove("is-open");
+    previewOpen = false;
+    overlayTimer = setTimeout(() => {
+      overlay.hidden = true;
+    }, 320);
+  }
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay || e.target.closest(".ring-preview__close")) {
+      closePreview();
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && previewOpen) closePreview();
+  });
+
+  /* ----- drag to spin, with inertia ----- */
+  const SENS = 0.1; // degrees per pixel of drag
+  let rot = 0;
+  let vel = 0; // degrees per second
+  let dragging = false;
+  let lastX = 0;
+  let lastMoveT = 0;
+  let moved = 0;
+  let lastInteract = 0;
+
+  hero.addEventListener("pointerdown", (e) => {
+    if (previewOpen || e.button !== 0) return;
+    dragging = true;
+    moved = 0;
+    vel = 0;
+    lastX = e.clientX;
+    lastMoveT = performance.now();
+    lastInteract = lastMoveT;
+    hero.classList.add("is-dragging");
+  });
+
+  window.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const now = performance.now();
+    const dx = e.clientX - lastX;
+    const dt = Math.max(now - lastMoveT, 1) / 1000;
+    lastX = e.clientX;
+    lastMoveT = now;
+    moved += Math.abs(dx);
+    /* drag right pulls the wall in front of you to the right (panorama feel) */
+    rot -= dx * SENS;
+    vel = vel * 0.7 + (-dx * SENS / dt) * 0.3;
+    lastInteract = now;
+  });
+
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    hero.classList.remove("is-dragging");
+    lastInteract = performance.now();
+  };
+  window.addEventListener("pointerup", endDrag);
+  window.addEventListener("pointercancel", endDrag);
+
+  /* a real drag must not fire the click underneath it */
+  hero.addEventListener(
+    "click",
+    (e) => {
+      if (moved > 8) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
       }
+      const btn = e.target.closest(".ring__cover");
+      if (btn) openPreview(btn.dataset.ep, btn.dataset.accent);
     },
-    { passive: true }
+    true
   );
-  update();
+
+  /* ----- animation loop: one rotateY per frame + cull what's behind you ----- */
+  const IDLE_SPEED = 2.2; // deg/sec drift when nobody is touching it
+  const MAX_VEL = 480;
+  let prevT = performance.now();
+  let lastCullRot = -1e9;
+
+  function frame(t) {
+    const dt = Math.min((t - prevT) / 1000, 0.05);
+    prevT = t;
+
+    if (!dragging) {
+      vel = Math.max(-MAX_VEL, Math.min(MAX_VEL, vel));
+      rot += vel * dt;
+      vel *= Math.pow(0.1, dt); // exponential friction
+      if (Math.abs(vel) < 0.5) vel = 0;
+      const idle = !reduce && !previewOpen && t - lastInteract > 2500;
+      if (idle && vel === 0) rot += IDLE_SPEED * dt;
+    }
+
+    ring.style.transform = `rotateY(${rot}deg)`;
+
+    /* covers behind the camera would project as mirrored smears — hide them.
+       Also apply light depth fog so the far wall reads as far away. */
+    if (Math.abs(rot - lastCullRot) > 0.15) {
+      lastCullRot = rot;
+      for (let i = 0; i < N; i++) {
+        const a = (((i * STEP + rot) % 360) + 360) % 360;
+        const z = -R * Math.cos((a * Math.PI) / 180); // + is toward the camera
+        const el = covers[i];
+        if (z > P - 80) {
+          el.style.visibility = "hidden";
+        } else {
+          el.style.visibility = "visible";
+          const depth = (z + R) / (P - 80 + R); // 0 = far wall, 1 = at camera
+          el.style.opacity = (0.72 + 0.28 * depth).toFixed(3);
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 /* Remember the grid scroll position so "Go back" from an episode returns
@@ -225,7 +395,7 @@ function initReturnToEpisode() {
 document.addEventListener("DOMContentLoaded", () => {
   renderGrid();
   setYear();
-  initHeroParallax();
+  initCoverRing();
   initScrollMemory();
   initBackToTop();
   initReturnToEpisode();

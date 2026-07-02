@@ -31,12 +31,9 @@
 
   <!-- Self-hosted Inter (variable) — preloaded so text paints without a round-trip -->
   <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
-  <!-- Preload the hero collage (the LCP element): small AVIF on phones, full on desktop -->
-  <link rel="preload" as="image" href="assets/hero-collage-mobile.avif" type="image/avif" media="(max-width: 768px)" />
-  <link rel="preload" as="image" href="assets/hero-collage.avif" type="image/avif" media="(min-width: 769px)" />
   <!-- ZKFM wordmark font for the cross-link logo -->
   <link rel="preload" href="assets/fonts/zkfm/departure-mono.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/css/style.css?v=mm11" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mm12" />
 </head>
 <body>
   <!-- Shared MADNESS gradient used to fill the social icons -->
@@ -68,7 +65,11 @@
 
   <main>
     <section class="hero" id="top">
-      <div class="hero__bg" aria-hidden="true"></div>
+      <!-- Immersive 3D ring: all 49 covers wrap around the viewer.
+           Covers injected by main.js; hidden from AT (the grid below is the accessible path). -->
+      <div class="ring-viewport" id="ring-viewport" aria-hidden="true">
+        <div class="ring" id="cover-ring"></div>
+      </div>
       <div class="hero__inner">
         <h1 class="wordmark wordmark--lg">
           <span class="wordmark__marketing">Marketing</span>
@@ -84,6 +85,7 @@
           </div>
         </details>
         <a class="hero__cta" href="#episodes">View the episodes ↓</a>
+        <p class="ring-hint" aria-hidden="true">Drag to spin · pick a cover</p>
       </div>
     </section>
 
@@ -137,6 +139,6 @@
     </details>
   </footer>
 
-  <script defer src="assets/js/main.js?v=mm1"></script>
+  <script defer src="assets/js/main.js?v=mm2"></script>
 </body>
 </html>
