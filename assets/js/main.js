@@ -149,7 +149,9 @@ function initCoverRing() {
     btn.className = "ring__cover";
     btn.tabIndex = -1; // the grid below is the keyboard/AT path
     btn.style.setProperty("--i", i);
-    btn.style.setProperty("--po", (i % 2) * 12 + "px");
+    /* steadily increasing offset = uniform shingle: each cover sits on top
+       of the previous one all the way round */
+    btn.style.setProperty("--po", (i * 1.6).toFixed(1) + "px");
     btn.dataset.ep = item.ep;
     btn.dataset.accent = item.accent;
     const img = document.createElement("img");
@@ -266,6 +268,29 @@ function initCoverRing() {
   window.addEventListener("pointerup", endDrag);
   window.addEventListener("pointercancel", endDrag);
 
+  /* trackpad/mouse horizontal scroll also spins the ring */
+  hero.addEventListener(
+    "wheel",
+    (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // vertical = page scroll
+      e.preventDefault();
+      rot -= e.deltaX * 0.05;
+      vel = 0;
+      lastInteract = performance.now();
+    },
+    { passive: false }
+  );
+
+  /* pause the idle drift while a mouse is over the ring, so a hovered
+     cover doesn't slide out from under the cursor */
+  let mouseOver = false;
+  hero.addEventListener("pointerenter", (e) => {
+    if (e.pointerType === "mouse") mouseOver = true;
+  });
+  hero.addEventListener("pointerleave", (e) => {
+    if (e.pointerType === "mouse") mouseOver = false;
+  });
+
   /* a real drag must not fire the click underneath it */
   hero.addEventListener(
     "click",
@@ -296,27 +321,20 @@ function initCoverRing() {
       rot += vel * dt;
       vel *= Math.pow(0.1, dt); // exponential friction
       if (Math.abs(vel) < 0.5) vel = 0;
-      const idle = !reduce && !previewOpen && t - lastInteract > 2500;
+      const idle =
+        !reduce && !previewOpen && !mouseOver && t - lastInteract > 2500;
       if (idle && vel === 0) rot += IDLE_SPEED * dt;
     }
 
     ring.style.transform = `rotateY(${rot}deg)`;
 
-    /* covers behind the camera would project as mirrored smears — hide them.
-       Also apply light depth fog so the far wall reads as far away. */
+    /* covers behind the camera would project as mirrored smears — hide them */
     if (Math.abs(rot - lastCullRot) > 0.15) {
       lastCullRot = rot;
       for (let i = 0; i < N; i++) {
         const a = (((i * STEP + rot) % 360) + 360) % 360;
         const z = -R * Math.cos((a * Math.PI) / 180); // + is toward the camera
-        const el = covers[i];
-        if (z > P - 80) {
-          el.style.visibility = "hidden";
-        } else {
-          el.style.visibility = "visible";
-          const depth = (z + R) / (P - 80 + R); // 0 = far wall, 1 = at camera
-          el.style.opacity = (0.72 + 0.28 * depth).toFixed(3);
-        }
+        covers[i].style.visibility = z > P - 80 ? "hidden" : "visible";
       }
     }
     requestAnimationFrame(frame);
