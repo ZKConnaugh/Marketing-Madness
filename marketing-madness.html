@@ -33,7 +33,7 @@
   <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin />
   <!-- ZKFM wordmark font for the cross-link logo -->
   <link rel="preload" href="assets/fonts/zkfm/departure-mono.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/css/style.css?v=mm18" />
+  <link rel="stylesheet" href="assets/css/style.css?v=mm19" />
 </head>
 <body>
   <!-- Shared MADNESS gradient used to fill the social icons -->
@@ -65,17 +65,21 @@
 
   <main>
     <section class="hero" id="top">
-      <!-- Immersive 3D ring: all 49 covers wrap around the viewer.
-           Covers injected by main.js; hidden from AT (the grid below is the accessible path). -->
-      <div class="ring-viewport" id="ring-viewport" aria-hidden="true">
-        <div class="ring" id="cover-ring"></div>
-      </div>
-      <div class="hero__inner">
+      <div class="hero__inner hero__inner--head">
         <h1 class="wordmark wordmark--lg">
           <span class="wordmark__marketing">Marketing</span>
           <span class="wordmark__madness" data-text="Madness">Madness</span>
         </h1>
         <p class="hero__subtitle">LinkedIn Magazine for Marketers</p>
+      </div>
+      <!-- Immersive 3D ring: all 49 covers wrap around the viewer.
+           Covers injected by main.js; hidden from AT (the grid below is the accessible path).
+           In-flow band between the title and the description, so text never covers the magazines. -->
+      <div class="ring-viewport" id="ring-viewport" aria-hidden="true">
+        <div class="ring" id="cover-ring"></div>
+      </div>
+      <div class="hero__inner hero__inner--desc">
+        <p class="ring-hint" aria-hidden="true">Drag to spin · pick a cover</p>
         <p class="hero__tagline">Marketing Madness was a year-long project I ran in 2022–2023 to kickstart my design and creative skills early in my career.</p>
         <details class="hero__more">
           <summary><span class="hero__more-open">Read more</span><span class="hero__more-close">Read less</span></summary>
@@ -85,7 +89,6 @@
           </div>
         </details>
         <a class="hero__cta" href="#episodes">View the episodes ↓</a>
-        <p class="ring-hint" aria-hidden="true">Drag to spin · pick a cover</p>
       </div>
     </section>
 
