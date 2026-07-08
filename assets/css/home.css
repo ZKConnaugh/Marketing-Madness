@@ -217,6 +217,14 @@ body:has(#cv:target) .hub, body:has(.cv-view :target) .hub { display: none; }
 .portal__enter span { display: inline-block; transition: transform 0.2s ease; }
 .portal:hover .portal__enter span { transform: translateX(6px); }
 .cv-projects__note { font-family: var(--serif); font-style: italic; color: var(--ink-soft); font-size: 16px; margin-bottom: 22px; max-width: 760px; }
+/* Text-only project card (no live destination) — matches the portal look, no hover/click affordance */
+.cv-engine {
+  grid-column: 1 / -1; display: flex; flex-direction: column;
+  background: #07080b; color: #f2ead8; border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08); padding: 22px;
+}
+.cv-engine__name { font-family: var(--mono); font-weight: 800; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+.cv-engine .portal__desc { max-width: 760px; }
 
 /* ---- Experience ---- */
 .role { border-top: 1px solid var(--line); }
